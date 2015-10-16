@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Little Riak Core Book documentation build configuration file, created by
-# sphinx-quickstart on Fri Oct 16 23:57:23 2015.
+# sphinx-quickstart on Mon Oct 12 14:52:56 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -14,6 +14,7 @@
 
 import sys
 import os
+import alabaster
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -28,7 +29,7 @@ import os
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+extensions = ['alabaster']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -67,7 +68,7 @@ release = '1.0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -98,7 +99,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -106,7 +107,7 @@ html_theme = 'default'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = [alabaster.get_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -144,6 +145,15 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {
+        '**': [
+            'about.html',
+            'navigation.html',
+            'relations.html',
+            'searchbox.html',
+            'donate.html',
+            ]
+        }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -256,73 +266,3 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-
-
-# -- Options for Epub output ----------------------------------------------
-
-# Bibliographic Dublin Core info.
-epub_title = u'Little Riak Core Book'
-epub_author = u'Mariano Guerra'
-epub_publisher = u'Mariano Guerra'
-epub_copyright = u'2015, Mariano Guerra'
-
-# The basename for the epub file. It defaults to the project name.
-#epub_basename = u'Little Riak Core Book'
-
-# The HTML theme for the epub output. Since the default themes are not optimized
-# for small screen space, using the same theme for HTML and epub output is
-# usually not wise. This defaults to 'epub', a theme designed to save visual
-# space.
-#epub_theme = 'epub'
-
-# The language of the text. It defaults to the language option
-# or en if the language is not set.
-#epub_language = ''
-
-# The scheme of the identifier. Typical schemes are ISBN or URL.
-#epub_scheme = ''
-
-# The unique identifier of the text. This can be a ISBN number
-# or the project homepage.
-#epub_identifier = ''
-
-# A unique identification for the text.
-#epub_uid = ''
-
-# A tuple containing the cover image and cover page html template filenames.
-#epub_cover = ()
-
-# A sequence of (type, uri, title) tuples for the guide element of content.opf.
-#epub_guide = ()
-
-# HTML files that should be inserted before the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-#epub_pre_files = []
-
-# HTML files shat should be inserted after the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-#epub_post_files = []
-
-# A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
-
-# The depth of the table of contents in toc.ncx.
-#epub_tocdepth = 3
-
-# Allow duplicate toc entries.
-#epub_tocdup = True
-
-# Choose between 'default' and 'includehidden'.
-#epub_tocscope = 'default'
-
-# Fix unsupported image types using the PIL.
-#epub_fix_images = False
-
-# Scale large images.
-#epub_max_image_width = 0
-
-# How to display URL addresses: 'footnote', 'no', or 'inline'.
-#epub_show_urls = 'inline'
-
-# If false, no index is generated.
-#epub_use_index = True
