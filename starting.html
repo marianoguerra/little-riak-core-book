@@ -1,0 +1,532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Starting &mdash; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="prev" title="Welcome to Little Riak Core Book’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="starting">
+<h1>Starting<a class="headerlink" href="#starting" title="Permalink to this headline">¶</a></h1>
+<p>We are going to build a system on top of riak_core, for that we will use some
+tools and to avoid copy paste and boilerplate we will use a template to get
+started.</p>
+<div class="section" id="tools">
+<h2>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.rebar3.org/docs/getting-started">rebar3</a>: The build tool, click on the link to see how to install it.</li>
+<li><a class="reference external" href="http://www.erlang.org/">erlang</a>: Our programming language, we assume erlang version to be at least 17.0</li>
+</ul>
+<p>I also assume a unix-like environment with a shell similar to bash or zsh.</p>
+</div>
+<div class="section" id="installing-the-template">
+<h2>Installing the Template<a class="headerlink" href="#installing-the-template" title="Permalink to this headline">¶</a></h2>
+<p>At this point you should have <a class="reference external" href="http://www.erlang.org/">erlang</a> and <a class="reference external" href="http://www.rebar3.org/docs/getting-started">rebar3</a> installed, now let&#8217;s install the
+template we are going to use.</p>
+<div class="highlight-sh"><div class="highlight"><pre>mkdir -p ~/.config/rebar3/templates
+git clone https://github.com/marianoguerra/rebar3_template_riak_core/ ~/.config/rebar3/templates/rebar3_template_riak_core
+</pre></div>
+</div>
+<p>We just created the folder <cite>~/.config/rebar3/templates</cite> for the templates in
+case it wasn&#8217;t there and cloned our template inside of it.</p>
+<p>You can read more about <a class="reference external" href="http://www.rebar3.org/docs/using-templates">rebar3 templates here</a>.</p>
+</div>
+<div class="section" id="creating-our-project">
+<h2>Creating our Project<a class="headerlink" href="#creating-our-project" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have our tools and our template installed we can start by asking
+rebar3 to create a new project we will call tanodb using the <a class="reference external" href="https://github.com/basho/riak_core">riak_core</a> template
+we just installed:</p>
+<div class="highlight-sh"><div class="highlight"><pre>rebar3 new rebar3_riak_core <span class="nv">name</span><span class="o">=</span>tanodb
+</pre></div>
+</div>
+<p>If it fails saying it can&#8217;t find rebar3 check that it&#8217;s in your <cite>$PATH</cite>
+environment variable.</p>
+<p>The output should be something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>===&gt; Writing tanodb/apps/tanodb/src/tanodb.app.src
+===&gt; Writing tanodb/apps/tanodb/src/tanodb.erl
+===&gt; Writing tanodb/apps/tanodb/src/tanodb_app.erl
+===&gt; Writing tanodb/apps/tanodb/src/tanodb_sup.erl
+===&gt; Writing tanodb/apps/tanodb/src/tanodb_console.erl
+===&gt; Writing tanodb/apps/tanodb/src/tanodb_vnode.erl
+===&gt; Writing tanodb/rebar.config
+===&gt; Writing tanodb/.editorconfig
+===&gt; Writing tanodb/.gitignore
+===&gt; Writing tanodb/README.rst
+===&gt; Writing tanodb/Makefile
+===&gt; Writing tanodb/config/nodetool
+===&gt; Writing tanodb/config/extended_bin
+===&gt; Writing tanodb/config/admin_bin
+===&gt; Writing tanodb/config/config.schema
+===&gt; Writing tanodb/config/advanced.config
+===&gt; Writing tanodb/config/sys.config
+===&gt; Writing tanodb/config/vars.config
+===&gt; Writing tanodb/config/vars_dev1.config
+===&gt; Writing tanodb/config/vars_dev2.config
+===&gt; Writing tanodb/config/vars_dev3.config
+===&gt; Writing tanodb/config/vm.args
+===&gt; Writing tanodb/config/dev1_vm.args
+===&gt; Writing tanodb/config/dev2_vm.args
+===&gt; Writing tanodb/config/dev3_vm.args
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-and-running">
+<h2>Building and Running<a class="headerlink" href="#building-and-running" title="Permalink to this headline">¶</a></h2>
+<p>Before explaining what the files mean so you get an idea what just happened
+let&#8217;s run it!</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>tanodb
+rebar3 release
+rebar3 run
+</pre></div>
+</div>
+<p><cite>rebar3 release</cite> asks rebar3 to build a release of our project, for that it uses a tool called <a class="reference external" href="https://github.com/erlware/relx">relx</a>.</p>
+<p>The initial build may take a while since it has to fetch all the dependencies
+and build them.</p>
+<p>After the release is built (you can check the result by inspecting the folder
+<cite>_build/default/rel/tanodb/</cite>) we can run it, for this we use a rebar3 plugin
+called <a class="reference external" href="https://github.com/tsloughter/rebar3_run">rebar3_run</a></p>
+<p>When we run <cite>rebar3 run</cite> we get some noisy output that should end with something like this:</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">Eshell V7.0  (abort with ^G)</span>
+<span class="go">(tanodb@127.0.0.1)1&gt;</span>
+</pre></div>
+</div>
+<p>This is the erlang shell, something like a REPL connected to our system,
+we now can test our system by calling <cite>tanodb:ping()</cite> on it.</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb:ping().</span>
+<span class="go">{pong,1347321821914426127719021955160323408745312813056}</span>
+</pre></div>
+</div>
+<p>The response is the atom <cite>pong</cite> and a huge number that we will explain later,
+but to make it short, it&#8217;s the id of the process that replied to us.</p>
+</div>
+<div class="section" id="exploring-the-template-files">
+<h2>Exploring the Template Files<a class="headerlink" href="#exploring-the-template-files" title="Permalink to this headline">¶</a></h2>
+<p>The template created a lot of files and you are like me, you don&#8217;t like things
+that make magic and don&#8217;t explain what&#8217;s going on, that&#8217;s why we will get a
+brief overview of the files created here.</p>
+<p>First this files are created:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">src</span>
+<span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">erl</span>
+<span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_app</span><span class="o">.</span><span class="n">erl</span>
+<span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_sup</span><span class="o">.</span><span class="n">erl</span>
+<span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_console</span><span class="o">.</span><span class="n">erl</span>
+<span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_vnode</span><span class="o">.</span><span class="n">erl</span>
+</pre></div>
+</div>
+<p>Those are the meat of this project, the source code we start with, if you
+know a little of erlang you will recognice them many of them, let&#8217;s explain them briefly,
+if you think you need more information I recommend you this awesome book which
+you can read online: <a class="reference external" href="http://learnyousomeerlang.com/">Learn You Some Erlang for great good!</a></p>
+<dl class="docutils">
+<dt>tanodb.app.src</dt>
+<dd>This file is &#8220;The Application Resource File&#8221;, you can read it, it&#8217;s quite self descriptive.
+You can read more about it in the
+<a class="reference external" href="http://learnyousomeerlang.com/building-otp-applications">Building OTP Applications Section of Learn You Some Erlang</a>
+or in the <a class="reference external" href="http://www.erlang.org/doc/man/app.html">man page for app in the erlang documentation</a>.</dd>
+<dt>tanodb.erl</dt>
+<dd>This file is the main API of our application, here we expose all the things
+you can ask our application to do, for now it can only handle the <cite>ping()</cite>
+command but we will add some more in the future.</dd>
+<dt>tanodb_app.erl</dt>
+<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/applications.html">application behaviour</a> it&#8217;s a set of callbacks
+that the erlang runtime calls to start and stop our application.</dd>
+<dt>tanodb_sup.erl</dt>
+<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/sup_princ.html">supervisor behaviour</a> it&#8217;s a set of callbacks
+that the erlang runtime calls to build the supervisor hierarchy.</dd>
+<dt>tanodb_console.erl</dt>
+<dd>This file is specific to riak_core, it&#8217;s a set of callbacks that will be
+called by the <cite>tanodb-admin</cite> command.</dd>
+<dt>tanodb_vnode.erl</dt>
+<dd>This file is specific to riak_core, it implements the riak_code_vnode
+behaviour, which is a set of callbacks that riak_core will call to
+acomplish different tasks, it&#8217;s the main file we will edit to add new
+features.</dd>
+</dl>
+<p>Those were the source code files, but the template also created other files,
+let&#8217;s review them</p>
+<dl class="docutils">
+<dt>rebar.config</dt>
+<dd>This is the file that rebar3 reads to get information about our project
+like dependencies and build configuration, you can read more about it
+on the <a class="reference external" href="http://www.rebar3.org/docs/basic-usage">rebar3 documentation</a></dd>
+<dt>.editorconfig</dt>
+<dd>This file describes the coding style for this project, if your text editor
+understands editorconfig files then it will change it&#8217;s setting for this
+project to the ones described in this file, read more about editor config
+on the <a class="reference external" href="http://editorconfig.org/">editorconfig website</a></dd>
+<dt>.gitignore</dt>
+<dd>A file to tell git which files to ignore from the repository.</dd>
+<dt>README.rst</dt>
+<dd>The README of the project</dd>
+<dt>Makefile</dt>
+<dd>A make file with some targets that will make it easier to achieve some
+complex tasks without copying and pasting to much.</dd>
+<dt>config/nodetool</dt>
+<dd>An <a class="reference external" href="http://www.erlang.org/doc/man/escript.html">escript</a> that makes it
+easier to interact with an erlang node from the command line, it will be
+used by the <cite>tanodb</cite> and <cite>tanodb-admin</cite> commands.</dd>
+<dt>config/extended_bin</dt>
+<dd>A template for the <cite>tanodb</cite> command with some changes to support <a class="reference external" href="https://github.com/basho/cuttlefish">cuttlefish</a>
+which is the library we use to load and validate our configuration</dd>
+<dt>config/admin_bin</dt>
+<dd>A template for the <cite>tanodb-admin</cite> command.</dd>
+<dt>config/config.schema</dt>
+<dd>The <a class="reference external" href="https://github.com/basho/cuttlefish/wiki">cuttlefish schema</a> file
+that describes what configuration our application supports, it starts with
+some example configuration fields that we will
+use as the application grows.</dd>
+<dt>config/advanced.config</dt>
+<dd>This file is where we configure some advanced things of our application
+that don&#8217;t go on our <cite>tanodb.config</cite> file, here we configure riak_core and
+our <a class="reference external" href="https://github.com/basho/lager/">logging library</a></dd>
+<dt>config/sys.config</dt>
+<dd>This is a standard erlang application file, you can read more about it
+in the <a class="reference external" href="http://www.erlang.org/doc/man/config.html">erlang documentation for sys.config</a></dd>
+<dt>config/vars.config</dt>
+<dd>This file contains variables used by relx to build a release, you can
+read more about it in the <a class="reference external" href="http://www.rebar3.org/docs/releases">rebar3 release documentation</a></dd>
+</dl>
+<p>The following files are like vars.config but with slight differences to allow
+running more than one node on the same machine:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">config</span><span class="o">/</span><span class="n">vars_dev1</span><span class="o">.</span><span class="n">config</span>
+<span class="n">config</span><span class="o">/</span><span class="n">vars_dev2</span><span class="o">.</span><span class="n">config</span>
+<span class="n">config</span><span class="o">/</span><span class="n">vars_dev3</span><span class="o">.</span><span class="n">config</span>
+</pre></div>
+</div>
+<p>Normally when you have a cluster for your application one operating system
+instance runs one instance of your application and you have many operating
+system instances, but to test the clustering features of riak_core we will
+build 3 releases of our application using offsets for ports and changing the
+application name to avoid collitions.</p>
+<dl class="docutils">
+<dt>config/vm.args</dt>
+<dd>A file used to pass options to the erlang VM when starting our application.</dd>
+</dl>
+<p>The following files are like vars_dev*.config but for vm.args:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">config</span><span class="o">/</span><span class="n">dev1_vm</span><span class="o">.</span><span class="n">args</span>
+<span class="n">config</span><span class="o">/</span><span class="n">dev2_vm</span><span class="o">.</span><span class="n">args</span>
+<span class="n">config</span><span class="o">/</span><span class="n">dev3_vm</span><span class="o">.</span><span class="n">args</span>
+</pre></div>
+</div>
+<p>Those are all the files, follow the links to know more about them.</p>
+</div>
+<div class="section" id="playing-with-clustering">
+<h2>Playing with Clustering<a class="headerlink" href="#playing-with-clustering" title="Permalink to this headline">¶</a></h2>
+<p>Before starting to add features, let&#8217;s first play with clustering so we undertand
+all those config files above work.</p>
+<p>Build 3 releases that can run on the same machine:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel
+</pre></div>
+</div>
+<p>This will build 3 releases of the application using different parameters (the
+dev1, dev2 and dev3 files we saw earlier) and will place them under:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">_build</span><span class="o">/</span><span class="n">dev1</span>
+<span class="n">_build</span><span class="o">/</span><span class="n">dev2</span>
+<span class="n">_build</span><span class="o">/</span><span class="n">dev3</span>
+</pre></div>
+</div>
+<p>This is achived by using the <a class="reference external" href="http://www.rebar3.org/docs/profiles">profiles feature from rebar3</a>.</p>
+<p>Now open 3 consoles and run the following commands one on each console:</p>
+<div class="highlight-python"><div class="highlight"><pre>make dev1-console
+make dev2-console
+make dev3-console
+</pre></div>
+</div>
+<p>This will start the 3 nodes but the won&#8217;t know about eachother, for them
+to know about eachother we need to &#8220;join&#8221; them, that is to tell one of them
+about the other two, this is achieved using the tanodb-admin command, here is
+how you should run it manually (don&#8217;t run them):</p>
+<div class="highlight-python"><div class="highlight"><pre>_build/dev2/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
+_build/dev3/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
+</pre></div>
+</div>
+<p>We tell dev2 and dev3 to join tanodb1 (dev1), to make this easier and less
+error prone run the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-join
+</pre></div>
+</div>
+<p>Now let&#8217;s check the status of the cluster:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-status
+</pre></div>
+</div>
+<p>You can read the Makefile to get an idea of what those commands do, in this case
+devrel-status does the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>_build/dev1/rel/tanodb/bin/tanodb-admin member-status
+</pre></div>
+</div>
+<p>You should see something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+Status     Ring    Pending    Node
+-------------------------------------------------------------------------------
+joining     0.0%      --      &#39;tanodb2@127.0.0.1&#39;
+joining     0.0%      --      &#39;tanodb3@127.0.0.1&#39;
+valid     100.0%      --      &#39;tanodb1@127.0.0.1&#39;
+-------------------------------------------------------------------------------
+Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0
+</pre></div>
+</div>
+<p>It should say that 3 nodes are joining, now check the cluster plan:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-cluster-plan
+</pre></div>
+</div>
+<p>The output should be something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes ================================
+Action         Details(s)
+-------------------------------------------------------------------------------
+join           &#39;tanodb2@127.0.0.1&#39;
+join           &#39;tanodb3@127.0.0.1&#39;
+-------------------------------------------------------------------------------
+
+
+NOTE: Applying these changes will result in 1 cluster transition
+
+###############################################################################
+                         After cluster transition 1/1
+###############################################################################
+
+================================= Membership ==================================
+Status     Ring    Pending    Node
+-------------------------------------------------------------------------------
+valid     100.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
+valid       0.0%     32.8%    &#39;tanodb2@127.0.0.1&#39;
+valid       0.0%     32.8%    &#39;tanodb3@127.0.0.1&#39;
+-------------------------------------------------------------------------------
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+
+WARNING: Not all replicas will be on distinct nodes
+
+Transfers resulting from cluster changes: 42
+  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb3@127.0.0.1&#39;
+  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb2@127.0.0.1&#39;
+</pre></div>
+</div>
+<p>Now we can commit the plan:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-cluster-commit
+</pre></div>
+</div>
+<p>Which should say something like:</p>
+<div class="highlight-python"><div class="highlight"><pre>Cluster changes committed
+</pre></div>
+</div>
+<p>Now riak_core started an internal process to join the nodes to the cluster,
+this involve some complex processes that we will explore in the following
+chapters.</p>
+<p>You should see on the consoles where the nodes are running that some logging
+is happening describing the process.</p>
+<p>Check the status of the cluster again:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-status
+</pre></div>
+</div>
+<p>You can see the vnodes transfering, this means the content of some virtual
+nodes on one tanodb node are being transfered to another tanodb node:</p>
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+Status     Ring    Pending    Node
+-------------------------------------------------------------------------------
+valid      75.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
+valid       9.4%     32.8%    &#39;tanodb2@127.0.0.1&#39;
+valid       7.8%     32.8%    &#39;tanodb3@127.0.0.1&#39;
+-------------------------------------------------------------------------------
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+</pre></div>
+</div>
+<p>At some point you should see something like this, which means that the nodes
+are joined and balanced:</p>
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+Status     Ring    Pending    Node
+-------------------------------------------------------------------------------
+valid      34.4%      --      &#39;tanodb1@127.0.0.1&#39;
+valid      32.8%      --      &#39;tanodb2@127.0.0.1&#39;
+valid      32.8%      --      &#39;tanodb3@127.0.0.1&#39;
+-------------------------------------------------------------------------------
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+</pre></div>
+</div>
+<p>When you are bored you can stop them:</p>
+<div class="highlight-python"><div class="highlight"><pre>make devrel-stop
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-a-production-release">
+<h2>Building a Production Release<a class="headerlink" href="#building-a-production-release" title="Permalink to this headline">¶</a></h2>
+<p>Even when our application doesn&#8217;t have the features to merit a production
+release we are going to learn how to do it here since you can later do it at
+any step and get a full release of the app:</p>
+<div class="highlight-python"><div class="highlight"><pre>rebar3 as prod release
+</pre></div>
+</div>
+<p>In that command we as rebar3 to run the release task using the prod profile,
+which has some configuration differences with the dev profiles we use so that
+it builds something we can unpack and run on another operating system without
+installing anything.</p>
+<p>In my case I&#8217;m developing this on ubuntu, to show you that it works I will
+copy the release to a clean ubuntu 15.04 Virtualbox and run it there:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir vm-ubuntu-1504
+cd vm-ubuntu-1504
+</pre></div>
+</div>
+<p>Inside I will create a file called <cite>Vagrantfile</cite> with the following
+content:</p>
+<div class="highlight-python"><div class="highlight"><pre>Vagrant.configure(2) do |config|
+  config.vm.box = &quot;ubuntu/vivid64&quot;
+  config.vm.provider &quot;virtualbox&quot; do |vb|
+    vb.memory = &quot;1024&quot;
+  end
+end
+</pre></div>
+</div>
+<p>And then run:</p>
+<div class="highlight-python"><div class="highlight"><pre>vagrant up
+</pre></div>
+</div>
+<p>To start the virutal machine.</p>
+<p>Now let&#8217;s package our release and copy it to a place where the VM can see it:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd _build/prod/rel
+tar -czf tanodb.tgz tanodb
+cd -
+mv _build/prod/rel/tanodb.tgz vm-ubuntu-1504
+</pre></div>
+</div>
+<p>Let&#8217;s ssh into the virtual machine:</p>
+<div class="highlight-python"><div class="highlight"><pre>export TERM=xterm
+vagrant ssh
+</pre></div>
+</div>
+<p>Inside the virtual machine run:</p>
+<div class="highlight-python"><div class="highlight"><pre>cp /vagrant/tanodb.tgz .
+tar -xzf tanodb.tgz
+./tanodb/bin/tanodb console
+</pre></div>
+</div>
+<p>And it runs!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You should build the production release on the same operating system
+version you are intending to run it to avoid version problems, the
+main source of headaches are C extensions disagreeing on libc versions
+and similar.</p>
+<p class="last">So, even when you could build it on a version that is close and test
+it it&#8217;s better to build releases on the same version to avoid
+problems. More so if you are packaging the Erlang runtime with the
+release as we are doing here.</p>
+</div>
+</div>
+<div class="section" id="wrapping-up">
+<h2>Wrapping Up<a class="headerlink" href="#wrapping-up" title="Permalink to this headline">¶</a></h2>
+<p>Now you know how to create a riak_core app from a template, how to build a
+release and run it, how to build releases for a development cluster, run
+the nodes, join them and inspect the cluster status and how to build a
+production release and run it on a fresh server.</p>
+<p>Quite a lot for the first chapter I would say...</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Starting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tools">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-template">Installing the Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-our-project">Creating our Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-and-running">Building and Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-the-template-files">Exploring the Template Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#playing-with-clustering">Playing with Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-a-production-release">Building a Production Release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wrapping-up">Wrapping Up</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Little Riak Core Book&#8217;s documentation!</a></li>
+      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Mariano Guerra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/starting.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

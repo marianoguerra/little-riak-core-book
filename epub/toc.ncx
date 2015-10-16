@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta name="dtb:uid" content="unknown"/>
+    <meta name="dtb:depth" content="3"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>Little Riak Core Book 1.0 documentation</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="navPoint1" playOrder="1">
+      <navLabel>
+        <text>Welcome to Little Riak Core Book</text>
+      </navLabel>
+      <content src="index.html" />
+    </navPoint>
+    <navPoint id="navPoint2" playOrder="2">
+      <navLabel>
+        <text>Starting</text>
+      </navLabel>
+      <content src="starting.html" />
+      <navPoint id="navPoint3" playOrder="2">
+        <navLabel>
+          <text>Starting</text>
+        </navLabel>
+        <content src="starting.html" />
+      </navPoint>
+      <navPoint id="navPoint4" playOrder="3">
+        <navLabel>
+          <text>Tools</text>
+        </navLabel>
+        <content src="starting.html#tools" />
+      </navPoint>
+      <navPoint id="navPoint5" playOrder="4">
+        <navLabel>
+          <text>Installing the Template</text>
+        </navLabel>
+        <content src="starting.html#installing-the-template" />
+      </navPoint>
+      <navPoint id="navPoint6" playOrder="5">
+        <navLabel>
+          <text>Creating our Project</text>
+        </navLabel>
+        <content src="starting.html#creating-our-project" />
+      </navPoint>
+      <navPoint id="navPoint7" playOrder="6">
+        <navLabel>
+          <text>Building and Running</text>
+        </navLabel>
+        <content src="starting.html#building-and-running" />
+      </navPoint>
+      <navPoint id="navPoint8" playOrder="7">
+        <navLabel>
+          <text>Exploring the Template Files</text>
+        </navLabel>
+        <content src="starting.html#exploring-the-template-files" />
+      </navPoint>
+      <navPoint id="navPoint9" playOrder="8">
+        <navLabel>
+          <text>Playing with Clustering</text>
+        </navLabel>
+        <content src="starting.html#playing-with-clustering" />
+      </navPoint>
+      <navPoint id="navPoint10" playOrder="9">
+        <navLabel>
+          <text>Building a Production Release</text>
+        </navLabel>
+        <content src="starting.html#building-a-production-release" />
+      </navPoint>
+      <navPoint id="navPoint11" playOrder="10">
+        <navLabel>
+          <text>Wrapping Up</text>
+        </navLabel>
+        <content src="starting.html#wrapping-up" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="navPoint12" playOrder="11">
+      <navLabel>
+        <text>Riak Core Metadata</text>
+      </navLabel>
+      <content src="riak_core_metadata.html" />
+      <navPoint id="navPoint13" playOrder="11">
+        <navLabel>
+          <text>Riak Core Metadata</text>
+        </navLabel>
+        <content src="riak_core_metadata.html" />
+      </navPoint>
+      <navPoint id="navPoint14" playOrder="12">
+        <navLabel>
+          <text>1. Overview</text>
+        </navLabel>
+        <content src="riak_core_metadata.html#overview" />
+        <navPoint id="navPoint15" playOrder="12">
+          <navLabel>
+            <text>1. Overview</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#overview" />
+        </navPoint>
+        <navPoint id="navPoint16" playOrder="13">
+          <navLabel>
+            <text>1.1 Data Model</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#data-model" />
+        </navPoint>
+        <navPoint id="navPoint17" playOrder="14">
+          <navLabel>
+            <text>1.2 Storage</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#storage" />
+        </navPoint>
+        <navPoint id="navPoint18" playOrder="15">
+          <navLabel>
+            <text>1.3 Consistency</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#consistency" />
+        </navPoint>
+        <navPoint id="navPoint19" playOrder="16">
+          <navLabel>
+            <text>1.4 Replication</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#replication" />
+        </navPoint>
+      </navPoint>
+      <navPoint id="navPoint20" playOrder="17">
+        <navLabel>
+          <text>2. API</text>
+        </navLabel>
+        <content src="riak_core_metadata.html#api" />
+        <navPoint id="navPoint21" playOrder="17">
+          <navLabel>
+            <text>2. API</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#api" />
+        </navPoint>
+        <navPoint id="navPoint22" playOrder="18">
+          <navLabel>
+            <text>2.1 Reading and Writing</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#reading-and-writing" />
+        </navPoint>
+        <navPoint id="navPoint23" playOrder="19">
+          <navLabel>
+            <text>2.2 Iterators</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#iterators" />
+        </navPoint>
+        <navPoint id="navPoint24" playOrder="20">
+          <navLabel>
+            <text>2.3 Conflict Resolution</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#conflict-resolution" />
+        </navPoint>
+        <navPoint id="navPoint25" playOrder="21">
+          <navLabel>
+            <text>2.4 Detecting Changes in Groups of Keys</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#detecting-changes-in-groups-of-keys" />
+        </navPoint>
+      </navPoint>
+      <navPoint id="navPoint26" playOrder="22">
+        <navLabel>
+          <text>3. Common Pitfalls &amp; Other Notes</text>
+        </navLabel>
+        <content src="riak_core_metadata.html#common-pitfalls-other-notes" />
+        <navPoint id="navPoint27" playOrder="22">
+          <navLabel>
+            <text>3. Common Pitfalls &amp; Other Notes</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#common-pitfalls-other-notes" />
+        </navPoint>
+        <navPoint id="navPoint28" playOrder="23">
+          <navLabel>
+            <text>3.1 Storage Limitations</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#storage-limitations" />
+        </navPoint>
+        <navPoint id="navPoint29" playOrder="24">
+          <navLabel>
+            <text>3.2 Replication Limitations</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#replication-limitations" />
+        </navPoint>
+        <navPoint id="navPoint30" playOrder="25">
+          <navLabel>
+            <text>3.3 Last-Write Wins</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#last-write-wins" />
+        </navPoint>
+        <navPoint id="navPoint31" playOrder="26">
+          <navLabel>
+            <text>3.4 &#8220;Pathological Eventual Consistency&#8221;</text>
+          </navLabel>
+          <content src="riak_core_metadata.html#pathological-eventual-consistency" />
+        </navPoint>
+      </navPoint>
+      <navPoint id="navPoint32" playOrder="27">
+        <navLabel>
+          <text>4. Playing in the REPL</text>
+        </navLabel>
+        <content src="riak_core_metadata.html#playing-in-the-repl" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="navPoint33" playOrder="28">
+      <navLabel>
+        <text>Riak Core Security</text>
+      </navLabel>
+      <content src="riak_core_security.html" />
+      <navPoint id="navPoint34" playOrder="28">
+        <navLabel>
+          <text>Riak Core Security</text>
+        </navLabel>
+        <content src="riak_core_security.html" />
+      </navPoint>
+      <navPoint id="navPoint35" playOrder="29">
+        <navLabel>
+          <text>Implementation</text>
+        </navLabel>
+        <content src="riak_core_security.html#implementation" />
+      </navPoint>
+      <navPoint id="navPoint36" playOrder="30">
+        <navLabel>
+          <text>Vocabulary</text>
+        </navLabel>
+        <content src="riak_core_security.html#vocabulary" />
+        <navPoint id="navPoint37" playOrder="30">
+          <navLabel>
+            <text>Vocabulary</text>
+          </navLabel>
+          <content src="riak_core_security.html#vocabulary" />
+        </navPoint>
+        <navPoint id="navPoint38" playOrder="31">
+          <navLabel>
+            <text>Context</text>
+          </navLabel>
+          <content src="riak_core_security.html#context" />
+        </navPoint>
+        <navPoint id="navPoint39" playOrder="32">
+          <navLabel>
+            <text>Permission</text>
+          </navLabel>
+          <content src="riak_core_security.html#permission" />
+        </navPoint>
+        <navPoint id="navPoint40" playOrder="33">
+          <navLabel>
+            <text>Role</text>
+          </navLabel>
+          <content src="riak_core_security.html#role" />
+        </navPoint>
+        <navPoint id="navPoint41" playOrder="34">
+          <navLabel>
+            <text>Source</text>
+          </navLabel>
+          <content src="riak_core_security.html#source" />
+        </navPoint>
+      </navPoint>
+      <navPoint id="navPoint42" playOrder="35">
+        <navLabel>
+          <text>Extra Features</text>
+        </navLabel>
+        <content src="riak_core_security.html#extra-features" />
+      </navPoint>
+      <navPoint id="navPoint43" playOrder="36">
+        <navLabel>
+          <text>API Overview</text>
+        </navLabel>
+        <content src="riak_core_security.html#api-overview" />
+        <navPoint id="navPoint44" playOrder="36">
+          <navLabel>
+            <text>API Overview</text>
+          </navLabel>
+          <content src="riak_core_security.html#api-overview" />
+        </navPoint>
+        <navPoint id="navPoint45" playOrder="37">
+          <navLabel>
+            <text>check_permission</text>
+          </navLabel>
+          <content src="riak_core_security.html#check-permission" />
+        </navPoint>
+        <navPoint id="navPoint46" playOrder="38">
+          <navLabel>
+            <text>check_permissions</text>
+          </navLabel>
+          <content src="riak_core_security.html#check-permissions" />
+        </navPoint>
+        <navPoint id="navPoint47" playOrder="39">
+          <navLabel>
+            <text>get_username</text>
+          </navLabel>
+          <content src="riak_core_security.html#get-username" />
+        </navPoint>
+        <navPoint id="navPoint48" playOrder="40">
+          <navLabel>
+            <text>authenticate</text>
+          </navLabel>
+          <content src="riak_core_security.html#authenticate" />
+        </navPoint>
+        <navPoint id="navPoint49" playOrder="41">
+          <navLabel>
+            <text>add_user</text>
+          </navLabel>
+          <content src="riak_core_security.html#add-user" />
+        </navPoint>
+        <navPoint id="navPoint50" playOrder="42">
+          <navLabel>
+            <text>add_group</text>
+          </navLabel>
+          <content src="riak_core_security.html#add-group" />
+        </navPoint>
+        <navPoint id="navPoint51" playOrder="43">
+          <navLabel>
+            <text>alter_user</text>
+          </navLabel>
+          <content src="riak_core_security.html#alter-user" />
+        </navPoint>
+        <navPoint id="navPoint52" playOrder="44">
+          <navLabel>
+            <text>alter_group</text>
+          </navLabel>
+          <content src="riak_core_security.html#alter-group" />
+        </navPoint>
+        <navPoint id="navPoint53" playOrder="45">
+          <navLabel>
+            <text>del_user</text>
+          </navLabel>
+          <content src="riak_core_security.html#del-user" />
+        </navPoint>
+        <navPoint id="navPoint54" playOrder="46">
+          <navLabel>
+            <text>del_group</text>
+          </navLabel>
+          <content src="riak_core_security.html#del-group" />
+        </navPoint>
+        <navPoint id="navPoint55" playOrder="47">
+          <navLabel>
+            <text>add_grant</text>
+          </navLabel>
+          <content src="riak_core_security.html#add-grant" />
+        </navPoint>
+        <navPoint id="navPoint56" playOrder="48">
+          <navLabel>
+            <text>add_revoke</text>
+          </navLabel>
+          <content src="riak_core_security.html#add-revoke" />
+        </navPoint>
+        <navPoint id="navPoint57" playOrder="49">
+          <navLabel>
+            <text>add_source</text>
+          </navLabel>
+          <content src="riak_core_security.html#add-source" />
+        </navPoint>
+        <navPoint id="navPoint58" playOrder="50">
+          <navLabel>
+            <text>del_source</text>
+          </navLabel>
+          <content src="riak_core_security.html#del-source" />
+        </navPoint>
+        <navPoint id="navPoint59" playOrder="51">
+          <navLabel>
+            <text>is_enabled</text>
+          </navLabel>
+          <content src="riak_core_security.html#is-enabled" />
+        </navPoint>
+        <navPoint id="navPoint60" playOrder="52">
+          <navLabel>
+            <text>enable</text>
+          </navLabel>
+          <content src="riak_core_security.html#enable" />
+        </navPoint>
+        <navPoint id="navPoint61" playOrder="53">
+          <navLabel>
+            <text>disable</text>
+          </navLabel>
+          <content src="riak_core_security.html#disable" />
+        </navPoint>
+        <navPoint id="navPoint62" playOrder="54">
+          <navLabel>
+            <text>status</text>
+          </navLabel>
+          <content src="riak_core_security.html#status" />
+        </navPoint>
+      </navPoint>
+      <navPoint id="navPoint63" playOrder="55">
+        <navLabel>
+          <text>Playing in the REPL</text>
+        </navLabel>
+        <content src="riak_core_security.html#playing-in-the-repl" />
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>
