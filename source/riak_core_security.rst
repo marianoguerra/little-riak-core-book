@@ -140,7 +140,7 @@ add_user
 Valid options:
 
 * password
-* groups
+* groups: groups must be a string with comma separated groups, like "g1,g2"
 
 .. code-block:: erlang
 
@@ -414,7 +414,7 @@ And try again
                [{<<"bucket_sandy">>,["tanodb.get"]}],
                {1444,659568,779759}}}
 
-cReate some groups, each group belongs to the previous one
+Create some groups, each group belongs to the previous one
 
 .. code-block:: erlang
 
@@ -614,6 +614,12 @@ Let's clean everything up
 
     (tanodb@127.0.0.1)44> riak_core_security:del_source(all, Source1).
     ok
+
+If you want to create a user that is member a more than one group at the same time in the same add_user call you have to pass a string with comma separated names of the groups the user is going to be member of, like this:
+
+.. code-block:: erlang
+
+    riak_core_security:add_user(User1, [{"password", binary_to_list(Pass1)}, {"groups", "readers,writers"}]).
 
 If you want to retry from scratch removing all state you can do the following::
 

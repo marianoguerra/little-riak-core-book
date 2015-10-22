@@ -160,7 +160,7 @@ don&#8217;t need this feature specify a generic source for all your users.</p>
 <p>Valid options:</p>
 <ul class="simple">
 <li>password</li>
-<li>groups</li>
+<li>groups: groups must be a string with comma separated groups, like &#8220;g1,g2&#8221;</li>
 </ul>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="nf">add_user</span><span class="p">(</span><span class="nv">Username</span><span class="p">,</span> <span class="nv">Options</span><span class="p">)</span>
 </pre></div>
@@ -382,7 +382,7 @@ rebar3 run
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">779759</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>cReate some groups, each group belongs to the previous one</p>
+<p>Create some groups, each group belongs to the previous one</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">20</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_group</span><span class="p">(</span><span class="nv">GroupReader</span><span class="p">,</span> <span class="p">[]).</span>
 <span class="nf">ok</span>
 
@@ -537,6 +537,10 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
 
 <span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">44</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">del_source</span><span class="p">(</span><span class="n">all</span><span class="p">,</span> <span class="nv">Source1</span><span class="p">).</span>
 <span class="n">ok</span>
+</pre></div>
+</div>
+<p>If you want to create a user that is member a more than one group at the same time in the same add_user call you have to pass a string with comma separated names of the groups the user is going to be member of, like this:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="nb">binary_to_list</span><span class="p">(</span><span class="nv">Pass1</span><span class="p">)},</span> <span class="p">{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="s">&quot;readers,writers&quot;</span><span class="p">}]).</span>
 </pre></div>
 </div>
 <p>If you want to retry from scratch removing all state you can do the following:</p>
