@@ -10,5 +10,6 @@ Little Riak Core Book
    :maxdepth: 2
 
    starting
+   ping-as-a-service
    riak_core_metadata
    riak_core_security
