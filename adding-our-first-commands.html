@@ -161,7 +161,132 @@ in the <a class="reference external" href="https://github.com/marianoguerra/tano
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>:)</p>
+</div>
+</div>
+<div class="section" id="implementing-delete">
+<h2>Implementing Delete<a class="headerlink" href="#implementing-delete" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s implement the delete command and REST API so our API is complete.</p>
+<p>We start as usual <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-afa3f67ec87f742d64ee9ed311455777R4">adding the metrics for the delete command</a>, then <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-6f7251bf9e224ebabd766f0331b848adR19">add the delete function on the tanodb module</a> which is really similar to get.</p>
+<p>After that we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-942e4ef944df628266f096d2fbcd4348R53">add the new function clause in handle_command in our vnode</a>, notice that it returns the same values as get, this is to get
+back the last value in case it was found or inform us that there wasn&#8217;t a value
+with that bucket and key.</p>
+<p>Finally we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-49cafd1f97d6013b2a41319db4c7961fR36">handle the DELETE HTTP method in our cowboy handler</a>.</p>
+<div class="section" id="id2">
+<h3>Test it<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s start by testing the core API, we get a key that is not there:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">not_found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+           <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>Then set it to the value 42:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Get it to make sure it&#8217;s there:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+       <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}}</span>
+</pre></div>
+</div>
+<p>Proceed to delete it, notice that it returns the last seen value and the
+result has the same shape as a get call:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+       <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}}</span>
+</pre></div>
+</div>
+<p>We get it again to make sure it was deleted:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">not_found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+           <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>And try to delete it again to see how it handles trying to delete a key that
+is not there:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">not_found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+           <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>Now that we checked it works on the erlang shell, let&#8217;s try the REST API, we
+will do the same as before, first get and expect not found:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket/bob
+
+HTTP/1.1 <span class="m">404</span> Not Found
+content-length: 0
+content-type: application/json
+date: Fri, <span class="m">30</span> Oct <span class="m">2015</span> 17:32:17 GMT
+server: Cowboy
+</pre></div>
+</div>
+<p>Then POST a value:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:32:21 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>GET it to make sure it&#8217;s there:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">31</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:32:23 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bob&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>DELETE it:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http delete localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:32:27 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>GET it back to make sure it&#8217;s actually deleted:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">404</span> <span class="ne">Not Found</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:32:28 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>DELETE it again to see how it handles a missing delete:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http delete localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">404</span> <span class="ne">Not Found</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:43:03 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -194,6 +319,7 @@ in the <a class="reference external" href="https://github.com/marianoguerra/tano
 <li class="toctree-l1 current"><a class="current reference internal" href="">Adding our First Commands</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#riak-core-api">Riak Core API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rest-api">REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-delete">Implementing Delete</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>

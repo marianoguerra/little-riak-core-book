@@ -156,4 +156,163 @@ And try to get it again:
         "name": "bob"
     }
 
-:)
+Implementing Delete
+-------------------
+
+Let's implement the delete command and REST API so our API is complete.
+
+We start as usual `adding the metrics for the delete command <https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-afa3f67ec87f742d64ee9ed311455777R4>`_, then `add the delete function on the tanodb module <https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-6f7251bf9e224ebabd766f0331b848adR19>`_ which is really similar to get.
+
+After that we `add the new function clause in handle_command in our vnode <https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-942e4ef944df628266f096d2fbcd4348R53>`_, notice that it returns the same values as get, this is to get
+back the last value in case it was found or inform us that there wasn't a value
+with that bucket and key.
+
+Finally we `handle the DELETE HTTP method in our cowboy handler <https://github.com/marianoguerra/tanodb/commit/735058ec0c00f1045682982f527cfe0a70a21537#diff-49cafd1f97d6013b2a41319db4c7961fR36>`_.
+
+Test it
+.......
+
+Let's start by testing the core API, we get a key that is not there:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)1> tanodb:get({<<"mybucket">>, <<"k1">>}).
+
+    {not_found,228359630832953580969325755111919221821239459840,
+               {<<"mybucket">>,<<"k1">>}}
+
+Then set it to the value 42:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)2> tanodb:put({<<"mybucket">>, <<"k1">>}, 42).
+
+    {ok,228359630832953580969325755111919221821239459840}
+
+Get it to make sure it's there:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)3> tanodb:get({<<"mybucket">>, <<"k1">>}).
+
+    {found,228359630832953580969325755111919221821239459840,
+           {{<<"mybucket">>,<<"k1">>},{{<<"mybucket">>,<<"k1">>},42}}}
+
+Proceed to delete it, notice that it returns the last seen value and the
+result has the same shape as a get call:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)4> tanodb:delete({<<"mybucket">>, <<"k1">>}).
+
+    {found,228359630832953580969325755111919221821239459840,
+           {{<<"mybucket">>,<<"k1">>},{{<<"mybucket">>,<<"k1">>},42}}}
+
+We get it again to make sure it was deleted:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)5> tanodb:get({<<"mybucket">>, <<"k1">>}).
+
+    {not_found,228359630832953580969325755111919221821239459840,
+               {<<"mybucket">>,<<"k1">>}}
+
+And try to delete it again to see how it handles trying to delete a key that
+is not there:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)6> tanodb:delete({<<"mybucket">>, <<"k1">>}).
+
+    {not_found,228359630832953580969325755111919221821239459840,
+               {<<"mybucket">>,<<"k1">>}}
+
+Now that we checked it works on the erlang shell, let's try the REST API, we
+will do the same as before, first get and expect not found:
+
+.. code-block:: sh
+
+    $ http localhost:8080/store/mybucket/bob
+
+    HTTP/1.1 404 Not Found
+    content-length: 0
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:32:17 GMT
+    server: Cowboy
+
+Then POST a value:
+
+.. code-block:: sh
+
+    $ http post localhost:8080/store/mybucket/bob name=bob color=yellow
+
+.. code-block:: http
+
+    HTTP/1.1 204 No Content
+    content-length: 0
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:32:21 GMT
+    server: Cowboy
+
+GET it to make sure it's there:
+
+.. code-block:: sh
+
+    $ http localhost:8080/store/mybucket/bob
+
+.. code-block:: http
+
+    HTTP/1.1 200 OK
+    content-length: 31
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:32:23 GMT
+    server: Cowboy
+
+    {
+        "color": "yellow",
+        "name": "bob"
+    }
+
+DELETE it:
+
+.. code-block:: sh
+
+    $ http delete localhost:8080/store/mybucket/bob
+
+.. code-block:: http
+
+    HTTP/1.1 204 No Content
+    content-length: 0
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:32:27 GMT
+    server: Cowboy
+
+GET it back to make sure it's actually deleted:
+
+.. code-block:: sh
+
+    $ http localhost:8080/store/mybucket/bob
+
+.. code-block:: http
+
+    HTTP/1.1 404 Not Found
+    content-length: 0
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:32:28 GMT
+    server: Cowboy
+
+DELETE it again to see how it handles a missing delete:
+
+.. code-block:: sh
+
+    $ http delete localhost:8080/store/mybucket/bob
+
+.. code-block:: http
+
+    HTTP/1.1 404 Not Found
+    content-length: 0
+    content-type: application/json
+    date: Fri, 30 Oct 2015 17:43:03 GMT
+    server: Cowboy
+
+
