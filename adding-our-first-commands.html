@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adding our First Commands &mdash; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="prev" title="How a Command Works" href="how-a-command-works.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adding-our-first-commands">
+<h1>Adding our First Commands<a class="headerlink" href="#adding-our-first-commands" title="Permalink to this headline">¶</a></h1>
+<p>Now that we have everything set up and we know how commands are implemented it&#8217;s
+time to implement our own.</p>
+<p>To start we are going to implement a simple in memory key value store, the
+first two commands we are going to implement are the basic ones we need to see
+if it works: put and get</p>
+<p>To hold the values we are going to use the <a class="reference external" href="http://www.erlang.org/doc/man/ets.html">Erlang Term Storage (ETS)</a>.</p>
+<div class="section" id="riak-core-api">
+<h2>Riak Core API<a class="headerlink" href="#riak-core-api" title="Permalink to this headline">¶</a></h2>
+<p>First we start by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-afa3f67ec87f742d64ee9ed311455777R4">creating the two new metrics</a> for our new commands.</p>
+<p>Then we add the commands to tanodb.erl, <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-6f7251bf9e224ebabd766f0331b848adR15">get</a> and
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-6f7251bf9e224ebabd766f0331b848adR19">put</a> we extract the common code to hash
+the key to a vnode to a private function called <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-6f7251bf9e224ebabd766f0331b848adR25">send_to_one</a>.</p>
+<p>On the riak_core side, that is, in the tanodb_vnode module, on init <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-942e4ef944df628266f096d2fbcd4348R30">we create
+our ETS table</a>, the name is tanodb_&lt;partition&gt; where &lt;partition&gt; is the partition id.</p>
+<p>Then we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-942e4ef944df628266f096d2fbcd4348R41">add two new function clauses to handle_command</a>, one for put and one for get. The logic is quite simple.</p>
+<div class="section" id="test-it">
+<h3>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
+<p>Stop, build, start and in the console we run some commands.</p>
+<p>First try getting the key &#8220;k1&#8221; from bucket &#8220;mybucket&#8221;, which doesn&#8217;t exist:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">not_found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+           <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>We get not_found back with the partition that handled the command and the bucket
+and key that wasn&#8217;t found.</p>
+<p>Now let&#8217;s put that key:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We just get ok back, let&#8217;s try to get it again:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+       <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}}</span>
+</pre></div>
+</div>
+<p>Now we get the value back.</p>
+<p>Let&#8217;s try the same with another key:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">not_found</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">,</span>
+           <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>Notice that the partition id changed, this is because the key hashed to a different
+vnode.</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">7</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">get</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">,</span>
+       <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="rest-api">
+<h2>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s expose our new functions as a REST API, first we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/88afaad754db69b1c8967e2fe6e4625aab6fe6aa#diff-4477d4dd0aa2db0e274a56c9158207bdR74">add a new route to
+cowboy for our store</a>, the API will be like this:</p>
+<ul class="simple">
+<li>POST /store/:bucket/:key &lt;json-body&gt;: stores &lt;json-body&gt; under {:bucket, :key}<ul>
+<li>returns 204 No Content on success</li>
+</ul>
+</li>
+<li>GET /store/:bucket/:key:<ul>
+<li>returns 404 if :key doesn&#8217;t exist on :bucket</li>
+<li>returns 200 and the value stored under {:bucket, :key} if found</li>
+</ul>
+</li>
+</ul>
+<p>The implementation of the store api is quite simple if you know cowboy, it&#8217;s
+in the <a class="reference external" href="https://github.com/marianoguerra/tanodb/blob/88afaad754db69b1c8967e2fe6e4625aab6fe6aa/apps/tanodb/src/tanodb_http_store.erl">tanodb_http_store.erl file</a>.</p>
+<div class="section" id="id1">
+<h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Do the usual stop, build, run and then from another shell:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<p>Returns</p>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">404</span> <span class="ne">Not Found</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:16:16 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>Let&#8217;s put something on that bucket/key:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:17:25 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>And try to get it again:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket/bob
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">31</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Fri, 30 Oct 2015 17:18:06 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+
+<span class="p">{</span>
+    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bob&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>:)</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Adding our First Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#riak-core-api">Riak Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rest-api">REST API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="how-a-command-works.html" title="previous chapter">How a Command Works</a></li>
+      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Mariano Guerra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/adding-our-first-commands.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

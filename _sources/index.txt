@@ -14,5 +14,6 @@ Little Riak Core Book
    metrics
    users-groups-and-permissions
    how-a-command-works
+   adding-our-first-commands
    riak_core_metadata
    riak_core_security
