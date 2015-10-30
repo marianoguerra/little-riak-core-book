@@ -239,3 +239,114 @@ And request count by endpoint:
 
                   {count,[{<<"ping">>,[{count,1},{one,1}]}]}]}]},
 
+Exposing Metrics as a REST resource
+...................................
+
+This one will be simple, first we `add the route to cowboy <https://github.com/marianoguerra/tanodb/commit/de3dde8187ceefdeb787eb835a6e36e80528de6f#diff-4477d4dd0aa2db0e274a56c9158207bdR33>`_ then `add the metrics endpoint to the list of endpoints we want to collect metrics <https://github.com/marianoguerra/tanodb/commit/de3dde8187ceefdeb787eb835a6e36e80528de6f#diff-afa3f67ec87f742d64ee9ed311455777R6>`_ (metricception) and finally `we implement the cowboy handler to return the json <https://github.com/marianoguerra/tanodb/blob/de3dde8187ceefdeb787eb835a6e36e80528de6f/apps/tanodb/src/tanodb_http_metrics.erl>`_.
+
+Test it
+:::::::
+
+Stop, build, start and make some requests:
+
+.. code-block:: sh
+
+    http localhost:8080/ping
+
+And then make a request for the metrics (result edited since it's quite big):
+
+.. code-block:: sh
+
+    $ http localhost:8080/metrics
+
+    HTTP/1.1 200 OK
+    content-length: 8079
+    content-type: application/json
+    date: Fri, 30 Oct 2015 10:39:27 GMT
+    server: Cowboy
+
+    {
+        "core": {
+            "ping": { "count": 2, "one": 1 }
+        },
+        "http": {
+            "req": {
+                "active": { "ms_since_reset": 279958, "value": 1 },
+                "count": {
+                    "metrics": { "count": 1, "one": 0 },
+                    "ping": { "count": 2, "one": 1 }
+                },
+                "time": {
+                    "metrics": {
+                        "50": 0,
+                        "75": 0,
+                        "90": 0,
+                        "95": 0,
+                        "99": 0,
+                        "999": 0,
+                        "max": 0,
+                        "mean": 0,
+                        "median": 0,
+                        "min": 0,
+                        "n": 0
+                    },
+                    "ping": {
+                        "50": 0,
+                        "75": 349,
+                        "90": 349,
+                        "95": 349,
+                        "99": 349,
+                        "999": 349,
+                        "max": 349,
+                        "mean": 349,
+                        "median": 349,
+                        "min": 349,
+                        "n": 3
+                    }
+                }
+            },
+            "resp": {
+                "by_code": {
+                    "200": { "count": 3, "one": 1 },
+                    "201": { "count": 0, "one": 0 },
+                    ...
+                    "400": { "count": 0, "one": 0 },
+                    "401": { "count": 0, "one": 0 },
+                    ...
+                    "404": { "count": 0, "one": 0 },
+                    ...
+                    "500": { "count": 0, "one": 0 },
+                    ...
+                }
+            }
+        },
+        "node": {
+            "abs": {
+                "error_logger_queue_len": 0,
+                "memory_atoms": 471362,
+                "memory_bin": 224392,
+                "memory_ets": 1579592,
+                "memory_procs": 31886248,
+                "memory_total": 51342840,
+                "process_count": 432,
+                "run_queue": 0
+            },
+            "inc": {
+                "bytes_in": 0,
+                "bytes_out": 0,
+                "gc_count": 2,
+                "gc_words_reclaimed": 6624,
+                "reductions": 695770,
+                "scheduler_usage": {
+                    "1": 0.16108125753314584,
+                    "2": 0.5187896583972728,
+                    "3": 0.18046079477682214,
+                    "4": 0.15292436095407036
+                }
+            }
+        },
+        "tanodb": {
+            ...
+        }
+    }
+
