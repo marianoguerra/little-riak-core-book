@@ -59,24 +59,24 @@ add metrics, for this we will use <a class="reference external" href="https://gi
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>Stop, build a release and run the server (I won&#8217;t tell you how from now on, check previous chapters to see how).</p>
 <p>On the server shell run:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go"> ...</span>
+ <span class="p">...</span>
 
-<span class="go"> {core,[{ping,[{count,0},{one,0}]}]}]</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]}]}]</span>
 
-<span class="go">(tanodb@127.0.0.1)2&gt; tanodb:ping().</span>
-<span class="go">{pong,593735040165679310520246963290989976735222595584}</span>
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">ping</span><span class="p">().</span>
+<span class="p">{</span><span class="n">pong</span><span class="p">,</span><span class="mi">593735040165679310520246963290989976735222595584</span><span class="p">}</span>
 
-<span class="go">(tanodb@127.0.0.1)3&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go"> ...</span>
+ <span class="p">...</span>
 
-<span class="go"> {core,[{ping,[{count,1},{one,1}]}]}]</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]</span>
 
-<span class="go">(tanodb@127.0.0.1)4&gt;</span>
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>The <cite>...</cite> are there to skip a lot of metrics about riak_core itself that
@@ -84,26 +84,26 @@ are quite useful but not important at this point.</p>
 <p>Let&#8217;s see the shell session step by step, first we call tanodb_metrics:all()
 and get the core ping metrics, in this case count and one are 0 since we
 didn&#8217;t call ping yet.</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go"> ...</span>
+ <span class="p">...</span>
 
-<span class="go"> {core,[{ping,[{count,0},{one,0}]}]}]</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]}]}]</span>
 </pre></div>
 </div>
 <p>Then we call ping once.</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)2&gt; tanodb:ping().</span>
-<span class="go">{pong,593735040165679310520246963290989976735222595584}</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">ping</span><span class="p">().</span>
+<span class="p">{</span><span class="n">pong</span><span class="p">,</span><span class="mi">593735040165679310520246963290989976735222595584</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And ask for the metrics again, we can see that now it registered our call.</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)3&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go"> ...</span>
+ <span class="p">...</span>
 
-<span class="go"> {core,[{ping,[{count,1},{one,1}]}]}]</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]</span>
 </pre></div>
 </div>
 </div>
@@ -118,29 +118,29 @@ a nice API.</p>
 <div class="section" id="id1">
 <h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Stop, build a release and run. In the shell run:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go">    ...</span>
+    <span class="p">...</span>
 
-<span class="go"> {node,[{abs,[{process_count,377},</span>
-<span class="go">              {run_queue,0},</span>
-<span class="go">              {error_logger_queue_len,0},</span>
-<span class="go">              {memory_total,30418240},</span>
-<span class="go">              {memory_procs,11745496},</span>
-<span class="go">              {memory_atoms,458994},</span>
-<span class="go">              {memory_bin,232112},</span>
-<span class="go">              {memory_ets,1470872}]},</span>
-<span class="go">        {inc,[{bytes_in,11737},</span>
-<span class="go">              {bytes_out,2470},</span>
-<span class="go">              {gc_count,7},</span>
-<span class="go">              {gc_words_reclaimed,29948},</span>
-<span class="go">              {reductions,2601390},</span>
-<span class="go">              {scheduler_usage,[{1,0.9291112866248371},</span>
-<span class="go">                                {2,0.04754016011809648},</span>
-<span class="go">                                {3,0.04615958261183974},</span>
-<span class="go">                                {4,0.03682005933534583}]}]}]},</span>
-<span class="go"> {core,[{ping,[{count,0},{one,0}]}]}]</span>
+ <span class="p">{</span><span class="nb">node</span><span class="p">,[{</span><span class="nb">abs</span><span class="p">,[{</span><span class="n">process_count</span><span class="p">,</span><span class="mi">377</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">run_queue</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">error_logger_queue_len</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_total</span><span class="p">,</span><span class="mi">30418240</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_procs</span><span class="p">,</span><span class="mi">11745496</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_atoms</span><span class="p">,</span><span class="mi">458994</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_bin</span><span class="p">,</span><span class="mi">232112</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_ets</span><span class="p">,</span><span class="mi">1470872</span><span class="p">}]},</span>
+        <span class="p">{</span><span class="n">inc</span><span class="p">,[{</span><span class="n">bytes_in</span><span class="p">,</span><span class="mi">11737</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">bytes_out</span><span class="p">,</span><span class="mi">2470</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">gc_count</span><span class="p">,</span><span class="mi">7</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">gc_words_reclaimed</span><span class="p">,</span><span class="mi">29948</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">reductions</span><span class="p">,</span><span class="mi">2601390</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">scheduler_usage</span><span class="p">,[{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">9291112866248371</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">04754016011809648</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">04615958261183974</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">03682005933534583</span><span class="p">}]}]}]},</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]}]}]</span>
 </pre></div>
 </div>
 <p>The metrics should be self explanatory, check <a class="reference external" href="http://ferd.github.io/recon/">the recon documentation</a> for details.</p>
@@ -161,85 +161,85 @@ to register metrics on all requests, for that we need to <a class="reference ext
 </pre></div>
 </div>
 <p>and then on the node shell ask for the metrics:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
-<span class="go">[{tanodb,[</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
-<span class="go">    ...</span>
+    <span class="p">...</span>
 
-<span class="go"> {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},</span>
-<span class="go">                         {201,[{count,0},{one,0}]},</span>
-<span class="go">                         {202,[{count,0},{one,0}]},</span>
-<span class="go">                         {203,[{count,0},{one,0}]},</span>
-<span class="go">                         {204,[{count,0},{one,0}]},</span>
-<span class="go">                         {205,[{count,0},{one,0}]},</span>
-<span class="go">                         {206,[{count,0},{one,0}]},</span>
-<span class="go">                         {300,[{count,0},{one,0}]},</span>
-<span class="go">                         {301,[{count,0},{one,0}]},</span>
-<span class="go">                         {302,[{count,0},{one,0}]},</span>
-<span class="go">                         {303,[{count,0},{one,0}]},</span>
-<span class="go">                         {304,[{count,0},{one,0}]},</span>
-<span class="go">                         {305,[{count,0},{one,0}]},</span>
-<span class="go">                         {306,[{count,0},{one,...}]},</span>
-<span class="go">                         {307,[{count,...},{...}]},</span>
-<span class="go">                         {308,[{...}|...]},</span>
-<span class="go">                         {400,[...]},</span>
-<span class="go">                         {401,...},</span>
-<span class="go">                         {...}|...]}]},</span>
-<span class="go">        {req,[{time,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,</span>
-<span class="go">                      [{n,3},</span>
-<span class="go">                       {mean,44126},</span>
-<span class="go">                       {min,44126},</span>
-<span class="go">                       {max,44126},</span>
-<span class="go">                       {median,44126},</span>
-<span class="go">                       {50,0},</span>
-<span class="go">                       {75,44126},</span>
-<span class="go">                       {90,44126},</span>
-<span class="go">                       {95,44126},</span>
-<span class="go">                       {99,44126},</span>
-<span class="go">                       {999,44126}]}]},</span>
-<span class="go">              {active,[{value,0},{ms_since_reset,11546}]},</span>
-<span class="go">              {count,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,[{count,1},{one,1}]}]}]}]},</span>
-<span class="go"> {node,[{abs,[{process_count,428},</span>
-<span class="go">              {run_queue,0},</span>
-<span class="go">              {error_logger_queue_len,0},</span>
-<span class="go">              {memory_total,50301760},</span>
-<span class="go">              {memory_procs,30854096},</span>
-<span class="go">              {memory_atoms,471201},</span>
-<span class="go">              {memory_bin,222648},</span>
-<span class="go">              {memory_ets,1574728}]},</span>
-<span class="go">        {inc,[{bytes_in,11737},</span>
-<span class="go">              {bytes_out,2470},</span>
-<span class="go">              {gc_count,6},</span>
-<span class="go">              {gc_words_reclaimed,29747},</span>
-<span class="go">              {reductions,2848780},</span>
-<span class="go">              {scheduler_usage,[{1,0.05329944038387727},</span>
-<span class="go">                                {2,0.8991375098414373},</span>
-<span class="go">                                {3,0.03932163131802264},</span>
-<span class="go">                                {4,0.05719991628720056}]}]}]},</span>
-<span class="go"> {core,[{ping,[{count,1},{one,1}]}]}]</span>
+ <span class="p">{</span><span class="n">http</span><span class="p">,[{</span><span class="n">resp</span><span class="p">,[{</span><span class="n">by_code</span><span class="p">,[{</span><span class="mi">200</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">201</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">202</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">203</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">204</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">205</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">206</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">300</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">301</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">302</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">303</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">304</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">305</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">0</span><span class="p">}]},</span>
+                         <span class="p">{</span><span class="mi">306</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">one</span><span class="p">,...}]},</span>
+                         <span class="p">{</span><span class="mi">307</span><span class="p">,[{</span><span class="n">count</span><span class="p">,...},{...}]},</span>
+                         <span class="p">{</span><span class="mi">308</span><span class="p">,[{...}|...]},</span>
+                         <span class="p">{</span><span class="mi">400</span><span class="p">,[...]},</span>
+                         <span class="p">{</span><span class="mi">401</span><span class="p">,...},</span>
+                         <span class="p">{...}|...]}]},</span>
+        <span class="p">{</span><span class="n">req</span><span class="p">,[{</span><span class="n">time</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+                      <span class="p">[{</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+                       <span class="p">{</span><span class="n">mean</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="n">min</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="n">max</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="n">median</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">75</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">90</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">95</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">99</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+                       <span class="p">{</span><span class="mi">999</span><span class="p">,</span><span class="mi">44126</span><span class="p">}]}]},</span>
+              <span class="p">{</span><span class="n">active</span><span class="p">,[{</span><span class="n">value</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">ms_since_reset</span><span class="p">,</span><span class="mi">11546</span><span class="p">}]},</span>
+              <span class="p">{</span><span class="n">count</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]}]},</span>
+ <span class="p">{</span><span class="nb">node</span><span class="p">,[{</span><span class="nb">abs</span><span class="p">,[{</span><span class="n">process_count</span><span class="p">,</span><span class="mi">428</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">run_queue</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">error_logger_queue_len</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_total</span><span class="p">,</span><span class="mi">50301760</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_procs</span><span class="p">,</span><span class="mi">30854096</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_atoms</span><span class="p">,</span><span class="mi">471201</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_bin</span><span class="p">,</span><span class="mi">222648</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">memory_ets</span><span class="p">,</span><span class="mi">1574728</span><span class="p">}]},</span>
+        <span class="p">{</span><span class="n">inc</span><span class="p">,[{</span><span class="n">bytes_in</span><span class="p">,</span><span class="mi">11737</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">bytes_out</span><span class="p">,</span><span class="mi">2470</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">gc_count</span><span class="p">,</span><span class="mi">6</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">gc_words_reclaimed</span><span class="p">,</span><span class="mi">29747</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">reductions</span><span class="p">,</span><span class="mi">2848780</span><span class="p">},</span>
+              <span class="p">{</span><span class="n">scheduler_usage</span><span class="p">,[{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">05329944038387727</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">8991375098414373</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">03932163131802264</span><span class="p">},</span>
+                                <span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">05719991628720056</span><span class="p">}]}]}]},</span>
+ <span class="p">{</span><span class="n">core</span><span class="p">,[{</span><span class="n">ping</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]</span>
 </pre></div>
 </div>
 <p>You can see on this line that I made one request to ping and it returned 200:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">{http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">http</span><span class="p">,[{</span><span class="n">resp</span><span class="p">,[{</span><span class="n">by_code</span><span class="p">,[{</span><span class="mi">200</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]},</span>
 </pre></div>
 </div>
 <p>You can also see request time stats per endpoint:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">{req,[{time,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,</span>
-<span class="go">              [{n,3},</span>
-<span class="go">               {mean,44126},</span>
-<span class="go">               {min,44126},</span>
-<span class="go">               {max,44126},</span>
-<span class="go">               {median,44126},</span>
-<span class="go">               {50,0},</span>
-<span class="go">               {75,44126},</span>
-<span class="go">               {90,44126},</span>
-<span class="go">               {95,44126},</span>
-<span class="go">               {99,44126},</span>
-<span class="go">               {999,44126}]}]},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">req</span><span class="p">,[{</span><span class="n">time</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+              <span class="p">[{</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
+               <span class="p">{</span><span class="n">mean</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="n">min</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="n">max</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="n">median</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">50</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">75</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">90</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">95</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">99</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
+               <span class="p">{</span><span class="mi">999</span><span class="p">,</span><span class="mi">44126</span><span class="p">}]}]},</span>
 </pre></div>
 </div>
 <p>And request count by endpoint:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">{count,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,[{count,1},{one,1}]}]}]}]},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">count</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]}]},</span>
 </pre></div>
 </div>
 </div>

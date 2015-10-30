@@ -29,7 +29,7 @@ Stop, build a release and run the server (I won't tell you how from now on, chec
 
 On the server shell run:
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[
@@ -57,7 +57,7 @@ Let's see the shell session step by step, first we call tanodb_metrics:all()
 and get the core ping metrics, in this case count and one are 0 since we
 didn't call ping yet.
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[
@@ -68,14 +68,14 @@ didn't call ping yet.
 
 Then we call ping once.
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)2> tanodb:ping().
     {pong,593735040165679310520246963290989976735222595584}
 
 And ask for the metrics again, we can see that now it registered our call.
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)3> tanodb_metrics:all().
     [{tanodb,[
@@ -99,7 +99,7 @@ Test it
 
 Stop, build a release and run. In the shell run:
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[
@@ -151,7 +151,7 @@ After all of this, stop, build, run and make some requests:
 
 and then on the node shell ask for the metrics:
 
-.. code-block:: erl
+.. code-block:: erlang
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[
@@ -212,13 +212,13 @@ and then on the node shell ask for the metrics:
 
 You can see on this line that I made one request to ping and it returned 200:
 
-.. code-block:: erl
+.. code-block:: erlang
 
      {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},
 
 You can also see request time stats per endpoint:
 
-.. code-block:: erl
+.. code-block:: erlang
 
             {req,[{time,[{<<"ping">>,
                           [{n,3},
@@ -235,7 +235,7 @@ You can also see request time stats per endpoint:
 
 And request count by endpoint:
 
-.. code-block:: erl
+.. code-block:: erlang
 
                   {count,[{<<"ping">>,[{count,1},{one,1}]}]}]}]},
 
