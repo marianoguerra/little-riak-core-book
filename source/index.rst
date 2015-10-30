@@ -11,5 +11,6 @@ Little Riak Core Book
 
    starting
    ping-as-a-service
+   metrics
    riak_core_metadata
    riak_core_security

@@ -34,14 +34,14 @@ To interact with the REST API we will use httpie since it's simpler to read
 
 First we build it and run it as usual (this may be the last time I show you explicitly how to do it, so learn it :):
 
-.. code-block:: shell
+.. code-block:: sh
 
     rebar3 release
     rebar3 run
 
 Now on another shell we will make an HTTP request to our ping resource:
 
-.. code-block:: shell
+.. code-block:: sh
 
     http localhost:8080/ping
 
@@ -76,13 +76,13 @@ Search for 8080 and change it for 8081, save and close and stop the server if yo
 Now we will run it again buit manually to avoid rebar3 from overriding our
 change:
 
-.. code-block:: shell
+.. code-block:: sh
 
     ./_build/default/rel/tanodb/bin/tanodb console
 
 And try a request to see if the port is actually changed:
 
-.. code-block:: shell
+.. code-block:: sh
 
     http localhost:8081/ping
 

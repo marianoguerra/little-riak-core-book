@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
-    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="next" title="Metrics" href="metrics.html" />
     <link rel="prev" title="Starting" href="starting.html" />
    
   
@@ -64,12 +64,12 @@ we <a class="reference external" href="https://github.com/marianoguerra/tanodb/c
 (and write) than curl, check how to install it on
 <a class="reference external" href="http://httpie.org">the httpie website</a></p>
 <p>First we build it and run it as usual (this may be the last time I show you explicitly how to do it, so learn it :):</p>
-<div class="highlight-shell"><div class="highlight"><pre>rebar3 release
+<div class="highlight-sh"><div class="highlight"><pre>rebar3 release
 rebar3 run
 </pre></div>
 </div>
 <p>Now on another shell we will make an HTTP request to our ping resource:</p>
-<div class="highlight-shell"><div class="highlight"><pre>http localhost:8080/ping
+<div class="highlight-sh"><div class="highlight"><pre>http localhost:8080/ping
 </pre></div>
 </div>
 <p>And this is what I get:</p>
@@ -98,11 +98,11 @@ to change the configuration, we can do this by editing the file:</p>
 <p>Search for 8080 and change it for 8081, save and close and stop the server if you are running it.</p>
 <p>Now we will run it again buit manually to avoid rebar3 from overriding our
 change:</p>
-<div class="highlight-shell"><div class="highlight"><pre>./_build/default/rel/tanodb/bin/tanodb console
+<div class="highlight-sh"><div class="highlight"><pre>./_build/default/rel/tanodb/bin/tanodb console
 </pre></div>
 </div>
 <p>And try a request to see if the port is actually changed:</p>
-<div class="highlight-shell"><div class="highlight"><pre>http localhost:8081/ping
+<div class="highlight-sh"><div class="highlight"><pre>http localhost:8081/ping
 </pre></div>
 </div>
 <p>And this is what I get:</p>
@@ -154,6 +154,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 <li class="toctree-l2"><a class="reference internal" href="#changing-some-configuration">Changing Some Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
@@ -163,7 +164,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="starting.html" title="previous chapter">Starting</a></li>
-      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+      <li>Next: <a href="metrics.html" title="next chapter">Metrics</a></li>
   </ul></li>
 </ul>
 </div>
