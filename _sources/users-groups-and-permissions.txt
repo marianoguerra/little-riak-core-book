@@ -58,12 +58,12 @@ to do this run:
 
 Once the server is running open http://http://localhost:8080/ui/admin/index.html with your browser, you should see something like this:
 
-.. image:: /images/rcs_cowboy_1.png
+.. image:: ../images/rcs_cowboy_1.png
 
 Login with user `admin` and password `secret`, then you should see something
 like this:
 
-.. image:: /images/rcs_cowboy_2.png
+.. image:: ../images/rcs_cowboy_2.png
 
 Riak Core Security Model
 ------------------------

@@ -13,5 +13,6 @@ Little Riak Core Book
    ping-as-a-service
    metrics
    users-groups-and-permissions
+   how-a-command-works
    riak_core_metadata
    riak_core_security
