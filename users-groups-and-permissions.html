@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Users, Groups and Permissions &mdash; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="prev" title="Metrics" href="metrics.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="users-groups-and-permissions">
+<h1>Users, Groups and Permissions<a class="headerlink" href="#users-groups-and-permissions" title="Permalink to this headline">¶</a></h1>
+<p>Now that we exposed metrics through our REST API we may want to restrict its
+access to only some users, for that we will need at least users and
+permissions.</p>
+<p>Luckily riak_core provides support for users, groups and permissions built in,
+the module that provides it is riak_core_security, in a later chapter we
+explore the module in detail, but for now let&#8217;s use some libraries to get
+ourself started fast.</p>
+<p>For this we will a library called <a class="reference external" href="https://github.com/marianoguerra/rcs_cowboy">rcs_cowboy</a> which exposes riak_core_security API through cowboy. But since
+doing HTTP calls to handle our users is a little bit annoying we will also
+use a project called <a class="reference external" href="https://github.com/marianoguerra/iorioui">iorioui</a> which
+is a ui for the API exposed by rcs_cowboy.</p>
+<p>Let&#8217;s get started!</p>
+<p>As usual we start by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-31d7a50c99c265ca2793c20961b60979R8">adding the dependency for rcs_cowboy</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>At the moment there&#8217;s a <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-31d7a50c99c265ca2793c20961b60979R102">hack</a> where we add a compiler flag to export all
+functions from riak_core since riak_core_security doesn&#8217;t export the
+get_context function and rcs_cowboy needs it.</p>
+<p class="last">Alternatives would be to fork riak_core or copy the riak_core_security
+module and export the function or replicate get_context in another module,
+for now to avoid complications we use this hack.</p>
+</div>
+<p>Since we need permissions to manage we need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-d7bbf2e51e9fbed2475374becbaf8b48R6">uncomment the configuration in
+config/advanced.config</a> to list the permissions that our app allows.</p>
+<p>We also need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR74">add the cowboy routes for rcs_cowboy</a>, read <a class="reference external" href="https://github.com/marianoguerra/rcs_cowboy/blob/master/README.rst">the readme of rcs_cowboy</a> for details.</p>
+<p>Since we need to login to the admin ui, we need to ensure that at least there&#8217;s
+a user available, for that <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR54">we ensure that there are 2 users and 2 groups by
+default</a> and we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR19">call
+the setup function during startup</a></p>
+<p>For now session management will be weak since it&#8217;s not our focus at the moment,
+this means that when rcs_cowboy calls us to provide a response with a session
+token <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR31">we return a fixed token</a> and when rcs_cowboy calls us to check if a request is authorized (the ui
+will send us back the token we returned in the X-Session header), <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR64">we say always
+that it&#8217;s authorized</a>.</p>
+<p>Finally we copy the files from iorioui under <a class="reference external" href="https://github.com/marianoguerra/tanodb/tree/a18de393b76a2e64da600c26706b4f01e01152bc/apps/tanodb/priv/ui/admin">apps/tanodb/priv/ui/admin</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/a18de393b76a2e64da600c26706b4f01e01152bc#diff-4477d4dd0aa2db0e274a56c9158207bdR76">add a cowboy static route to serve the static files</a>. Read more about cowboy static file serving in the <a class="reference external" href="http://ninenines.eu/docs/en/cowboy/1.0/manual/cowboy_static/">cowboy&#8217;s page for cowboy_static</a>.</p>
+<p>Now do the usual process of stop, build and run, but before running, in case
+you were playing with users and groups you can remove the folder that contains
+that data so you start from scratch and users and groups are created correctly,
+to do this run:</p>
+<div class="highlight-sh"><div class="highlight"><pre>rm -r _build/default/rel/tanodb_data/cluster_meta
+</pre></div>
+</div>
+<p>Once the server is running open <a class="reference external" href="http://http://localhost:8080/ui/admin/index.html">http://http://localhost:8080/ui/admin/index.html</a> with your browser, you should see something like this:</p>
+<img alt="images/rcs_cowboy_1.png" src="images/rcs_cowboy_1.png" />
+<p>Login with user <cite>admin</cite> and password <cite>secret</cite>, then you should see something
+like this:</p>
+<img alt="images/rcs_cowboy_2.png" src="images/rcs_cowboy_2.png" />
+<div class="section" id="riak-core-security-model">
+<h2>Riak Core Security Model<a class="headerlink" href="#riak-core-security-model" title="Permalink to this headline">¶</a></h2>
+<p>The riak_core_security module provides a security model that contains 4 main
+elements:</p>
+<dl class="docutils">
+<dt>Users</dt>
+<dd>Usernames and passwords as usual, users can belong to groups,
+a user inherits the permissions of the groups it belongs.</dd>
+<dt>Groups</dt>
+<dd>A group has a name and can belong to other groups, a group inherits the
+permissions of the groups it belongs.</dd>
+<dt>Grants</dt>
+<dd><p class="first">A grant is a rule that says that a user or group has permission to do
+something on a resource, a permission is a string composed of the app name
+and the permission name joined by a dot as a string, for example
+&#8220;tanodb.get&#8221;.</p>
+<p>The meaning of permissions is given by your application
+logic by checking for specific permissions when an operation is requested
+on a resource.</p>
+<p class="last">The list of valid permissions for your app is defined in the file
+config/advanced.config.</p>
+</dd>
+<dt>Resources</dt>
+<dd><p class="first">Riak Core allows you to apply grants to a bucket or a bucket/key pair, a
+bucket is like a namespace for keys, you can have the same key in two
+different buckets and they mean different things.</p>
+<p class="last">For example you could assign one bucket to each user or something else,
+the use of buckets and keys is defined by your application.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Users, Groups and Permissions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#riak-core-security-model">Riak Core Security Model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="metrics.html" title="previous chapter">Metrics</a></li>
+      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Mariano Guerra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/users-groups-and-permissions.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

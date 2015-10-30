@@ -12,5 +12,6 @@ Little Riak Core Book
    starting
    ping-as-a-service
    metrics
+   users-groups-and-permissions
    riak_core_metadata
    riak_core_security
