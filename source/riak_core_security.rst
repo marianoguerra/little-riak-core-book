@@ -615,14 +615,61 @@ Let's clean everything up
     (tanodb@127.0.0.1)44> riak_core_security:del_source(all, Source1).
     ok
 
-If you want to create a user that is member a more than one group at the same time in the same add_user call you have to pass a string with comma separated names of the groups the user is going to be member of, like this:
-
-.. code-block:: erlang
-
-    riak_core_security:add_user(User1, [{"password", binary_to_list(Pass1)}, {"groups", "readers,writers"}]).
-
 If you want to retry from scratch removing all state you can do the following::
 
     rm -rf _build/default/rel
     rebar3 release
     rebar3 run
+
+API Gotchas
+-----------
+
+Groups Value is a CSV
+.....................
+
+If you want to create a user that is member a more than one group at the same
+time in the same add_user call you have to pass a string with comma separated
+names of the groups the user is going to be member of, like this:
+
+.. code-block:: erlang
+
+    riak_core_security:add_user(User1, [{"password", binary_to_list(Pass1)}, {"groups", "readers,writers"}]).
+
+Prefixing Users and Groups to avoid Potential Conflict
+......................................................
+
+Since there's only one function to add grants and there's no restriction on
+usernames or groupnames it may happen that there's a group and a user with the
+same name, if this is the case then we get an error back saying that there are
+duplicated roles, this means riak_core doesn't know if you want to add the
+grant to the user or the group.
+
+Let's try it, this assumes you have a clean state on riak_core_security and
+that you uncommented the permissions section in advanced.config for this app:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)1> riak_core_security:add_user(<<"admin">>, [{"password", "secret"}]).
+    ok
+
+    (tanodb@127.0.0.1)2> riak_core_security:add_group(<<"admin">>, []).
+    ok
+
+    (tanodb@127.0.0.1)3> riak_core_security:add_grant([<<"admin">>], {<<"bucket">>, <<"key">>}, ["tanodb.get"]).
+
+    {error,{duplicate_roles,[<<"admin">>]}}
+
+As you can see we got the duplcate_roles error.
+
+To solve this ambiguity we can prefix the role with the type of it, let's try it:
+
+.. code-block:: erlang
+
+    (tanodb@127.0.0.1)4> riak_core_security:add_grant([<<"group/admin">>], {<<"bucket">>, <<"key">>}, ["tanodb.get"]).
+    ok
+
+    (tanodb@127.0.0.1)5> riak_core_security:add_grant([<<"user/admin">>], {<<"bucket">>, <<"key">>}, ["tanodb.put"]).
+    ok
+
+Now we assigned `tanodb.get` to the admin group and `tanodb.put` to the admin
+user.

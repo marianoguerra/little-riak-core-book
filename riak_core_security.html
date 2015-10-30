@@ -539,15 +539,55 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>If you want to create a user that is member a more than one group at the same time in the same add_user call you have to pass a string with comma separated names of the groups the user is going to be member of, like this:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="nb">binary_to_list</span><span class="p">(</span><span class="nv">Pass1</span><span class="p">)},</span> <span class="p">{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="s">&quot;readers,writers&quot;</span><span class="p">}]).</span>
-</pre></div>
-</div>
 <p>If you want to retry from scratch removing all state you can do the following:</p>
 <div class="highlight-python"><div class="highlight"><pre>rm -rf _build/default/rel
 rebar3 release
 rebar3 run
 </pre></div>
+</div>
+</div>
+<div class="section" id="api-gotchas">
+<h2>API Gotchas<a class="headerlink" href="#api-gotchas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="groups-value-is-a-csv">
+<h3>Groups Value is a CSV<a class="headerlink" href="#groups-value-is-a-csv" title="Permalink to this headline">¶</a></h3>
+<p>If you want to create a user that is member a more than one group at the same
+time in the same add_user call you have to pass a string with comma separated
+names of the groups the user is going to be member of, like this:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="nb">binary_to_list</span><span class="p">(</span><span class="nv">Pass1</span><span class="p">)},</span> <span class="p">{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="s">&quot;readers,writers&quot;</span><span class="p">}]).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prefixing-users-and-groups-to-avoid-potential-conflict">
+<h3>Prefixing Users and Groups to avoid Potential Conflict<a class="headerlink" href="#prefixing-users-and-groups-to-avoid-potential-conflict" title="Permalink to this headline">¶</a></h3>
+<p>Since there&#8217;s only one function to add grants and there&#8217;s no restriction on
+usernames or groupnames it may happen that there&#8217;s a group and a user with the
+same name, if this is the case then we get an error back saying that there are
+duplicated roles, this means riak_core doesn&#8217;t know if you want to add the
+grant to the user or the group.</p>
+<p>Let&#8217;s try it, this assumes you have a clean state on riak_core_security and
+that you uncommented the permissions section in advanced.config for this app:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="s">&quot;secret&quot;</span><span class="p">}]).</span>
+<span class="nf">ok</span>
+
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_group</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="p">[]).</span>
+<span class="nf">ok</span>
+
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="o">&lt;&lt;</span><span class="s">&quot;admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">],</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;key&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="p">[</span><span class="s">&quot;tanodb.get&quot;</span><span class="p">]).</span>
+
+<span class="p">{</span><span class="n">error</span><span class="p">,{</span><span class="n">duplicate_roles</span><span class="p">,[</span><span class="o">&lt;&lt;</span><span class="s">&quot;admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}}</span>
+</pre></div>
+</div>
+<p>As you can see we got the duplcate_roles error.</p>
+<p>To solve this ambiguity we can prefix the role with the type of it, let&#8217;s try it:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="o">&lt;&lt;</span><span class="s">&quot;group/admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">],</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;key&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="p">[</span><span class="s">&quot;tanodb.get&quot;</span><span class="p">]).</span>
+<span class="nf">ok</span>
+
+<span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="o">&lt;&lt;</span><span class="s">&quot;user/admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">],</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;key&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="p">[</span><span class="s">&quot;tanodb.put&quot;</span><span class="p">]).</span>
+<span class="n">ok</span>
+</pre></div>
+</div>
+<p>Now we assigned <cite>tanodb.get</cite> to the admin group and <cite>tanodb.put</cite> to the admin
+user.</p>
 </div>
 </div>
 </div>
@@ -573,6 +613,8 @@ rebar3 run
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Riak Core Security</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a></li>
@@ -580,6 +622,7 @@ rebar3 run
 <li class="toctree-l2"><a class="reference internal" href="#extra-features">Extra Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#api-overview">API Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#playing-in-the-repl">Playing in the REPL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-gotchas">API Gotchas</a></li>
 </ul>
 </li>
 </ul>
