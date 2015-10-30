@@ -94,8 +94,8 @@ a nice API.
 
 We start by `adding recon as a dependency <https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-31d7a50c99c265ca2793c20961b60979R6>`_,  then we `create the function tanodb_metrics:node_stats/0 <https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-afa3f67ec87f742d64ee9ed311455777R24>`_ and add it to `tanodb_metrics:all/0 <https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-afa3f67ec87f742d64ee9ed311455777R10>`_.
 
-Testing it
-..........
+Test it
+.......
 
 Stop, build a release and run. In the shell run:
 
@@ -126,3 +126,116 @@ Stop, build a release and run. In the shell run:
      {core,[{ping,[{count,0},{one,0}]}]}]
 
 The metrics should be self explanatory, check `the recon documentation <http://ferd.github.io/recon/>`_ for details.
+
+Web Server Metrics (Cowboy)
+---------------------------
+
+We will start with some generic web server metrics, you can add specific ones
+with what you have learned in this chapter and by reading `the exometer docs <https://github.com/Feuerlabs/exometer/tree/master/doc>`_.
+
+For the generic metrics we will use `cowboy_exometer <https://github.com/marianoguerra/cowboy_exometer>`_ which is a module I just wrote since it was quite generic :)
+
+We start by adding the `cowboy_exometer dependency <https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-31d7a50c99c265ca2793c20961b60979R7>`_, this module exposes a middleware and a response hook
+to register metrics on all requests, for that we need to `initialize it providing the endpoints we care about <https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-afa3f67ec87f742d64ee9ed311455777R20>`_ and when we want to collect the metrics we `call cowboy_exometer:stats/1 passing the same endpoints we passed on init <https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-afa3f67ec87f742d64ee9ed311455777R11>`_.
+
+Finally we need to tell cowboy that we will `add a middleware and a response hook <https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-4477d4dd0aa2db0e274a56c9158207bdR38>`_.
+
+Test it
+.......
+
+After all of this, stop, build, run and make some requests:
+
+.. code-block:: sh
+
+    http localhost:8080/ping
+
+and then on the node shell ask for the metrics:
+
+.. code-block:: erl
+
+    (tanodb@127.0.0.1)1> tanodb_metrics:all().
+    [{tanodb,[
+
+        ...
+
+     {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},
+                             {201,[{count,0},{one,0}]},
+                             {202,[{count,0},{one,0}]},
+                             {203,[{count,0},{one,0}]},
+                             {204,[{count,0},{one,0}]},
+                             {205,[{count,0},{one,0}]},
+                             {206,[{count,0},{one,0}]},
+                             {300,[{count,0},{one,0}]},
+                             {301,[{count,0},{one,0}]},
+                             {302,[{count,0},{one,0}]},
+                             {303,[{count,0},{one,0}]},
+                             {304,[{count,0},{one,0}]},
+                             {305,[{count,0},{one,0}]},
+                             {306,[{count,0},{one,...}]},
+                             {307,[{count,...},{...}]},
+                             {308,[{...}|...]},
+                             {400,[...]},
+                             {401,...},
+                             {...}|...]}]},
+            {req,[{time,[{<<"ping">>,
+                          [{n,3},
+                           {mean,44126},
+                           {min,44126},
+                           {max,44126},
+                           {median,44126},
+                           {50,0},
+                           {75,44126},
+                           {90,44126},
+                           {95,44126},
+                           {99,44126},
+                           {999,44126}]}]},
+                  {active,[{value,0},{ms_since_reset,11546}]},
+                  {count,[{<<"ping">>,[{count,1},{one,1}]}]}]}]},
+     {node,[{abs,[{process_count,428},
+                  {run_queue,0},
+                  {error_logger_queue_len,0},
+                  {memory_total,50301760},
+                  {memory_procs,30854096},
+                  {memory_atoms,471201},
+                  {memory_bin,222648},
+                  {memory_ets,1574728}]},
+            {inc,[{bytes_in,11737},
+                  {bytes_out,2470},
+                  {gc_count,6},
+                  {gc_words_reclaimed,29747},
+                  {reductions,2848780},
+                  {scheduler_usage,[{1,0.05329944038387727},
+                                    {2,0.8991375098414373},
+                                    {3,0.03932163131802264},
+                                    {4,0.05719991628720056}]}]}]},
+     {core,[{ping,[{count,1},{one,1}]}]}]
+
+You can see on this line that I made one request to ping and it returned 200:
+
+.. code-block:: erl
+
+     {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},
+
+You can also see request time stats per endpoint:
+
+.. code-block:: erl
+
+            {req,[{time,[{<<"ping">>,
+                          [{n,3},
+                           {mean,44126},
+                           {min,44126},
+                           {max,44126},
+                           {median,44126},
+                           {50,0},
+                           {75,44126},
+                           {90,44126},
+                           {95,44126},
+                           {99,44126},
+                           {999,44126}]}]},
+
+And request count by endpoint:
+
+.. code-block:: erl
+
+                  {count,[{<<"ping">>,[{count,1},{one,1}]}]}]}]},
+

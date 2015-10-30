@@ -115,8 +115,8 @@ have some metrics about the Erlang Runtime, like memory, GC, processes,
 schedulers etc. For that we will use a really nice library called <a class="reference external" href="https://github.com/ferd/recon">recon</a> which unified all the information gathering behind
 a nice API.</p>
 <p>We start by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-31d7a50c99c265ca2793c20961b60979R6">adding recon as a dependency</a>,  then we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-afa3f67ec87f742d64ee9ed311455777R24">create the function tanodb_metrics:node_stats/0</a> and add it to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8d6535f360d24a1486bd7b1ed14d7fcde8c465bb#diff-afa3f67ec87f742d64ee9ed311455777R10">tanodb_metrics:all/0</a>.</p>
-<div class="section" id="testing-it">
-<h3>Testing it<a class="headerlink" href="#testing-it" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Stop, build a release and run. In the shell run:</p>
 <div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
 <span class="go">[{tanodb,[</span>
@@ -146,6 +146,104 @@ a nice API.</p>
 <p>The metrics should be self explanatory, check <a class="reference external" href="http://ferd.github.io/recon/">the recon documentation</a> for details.</p>
 </div>
 </div>
+<div class="section" id="web-server-metrics-cowboy">
+<h2>Web Server Metrics (Cowboy)<a class="headerlink" href="#web-server-metrics-cowboy" title="Permalink to this headline">¶</a></h2>
+<p>We will start with some generic web server metrics, you can add specific ones
+with what you have learned in this chapter and by reading <a class="reference external" href="https://github.com/Feuerlabs/exometer/tree/master/doc">the exometer docs</a>.</p>
+<p>For the generic metrics we will use <a class="reference external" href="https://github.com/marianoguerra/cowboy_exometer">cowboy_exometer</a> which is a module I just wrote since it was quite generic :)</p>
+<p>We start by adding the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-31d7a50c99c265ca2793c20961b60979R7">cowboy_exometer dependency</a>, this module exposes a middleware and a response hook
+to register metrics on all requests, for that we need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-afa3f67ec87f742d64ee9ed311455777R20">initialize it providing the endpoints we care about</a> and when we want to collect the metrics we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-afa3f67ec87f742d64ee9ed311455777R11">call cowboy_exometer:stats/1 passing the same endpoints we passed on init</a>.</p>
+<p>Finally we need to tell cowboy that we will <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8fb792bc01ac58fbdc709a0c9d2f960605255e54#diff-4477d4dd0aa2db0e274a56c9158207bdR38">add a middleware and a response hook</a>.</p>
+<div class="section" id="id2">
+<h3>Test it<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>After all of this, stop, build, run and make some requests:</p>
+<div class="highlight-sh"><div class="highlight"><pre>http localhost:8080/ping
+</pre></div>
+</div>
+<p>and then on the node shell ask for the metrics:</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().</span>
+<span class="go">[{tanodb,[</span>
+
+<span class="go">    ...</span>
+
+<span class="go"> {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},</span>
+<span class="go">                         {201,[{count,0},{one,0}]},</span>
+<span class="go">                         {202,[{count,0},{one,0}]},</span>
+<span class="go">                         {203,[{count,0},{one,0}]},</span>
+<span class="go">                         {204,[{count,0},{one,0}]},</span>
+<span class="go">                         {205,[{count,0},{one,0}]},</span>
+<span class="go">                         {206,[{count,0},{one,0}]},</span>
+<span class="go">                         {300,[{count,0},{one,0}]},</span>
+<span class="go">                         {301,[{count,0},{one,0}]},</span>
+<span class="go">                         {302,[{count,0},{one,0}]},</span>
+<span class="go">                         {303,[{count,0},{one,0}]},</span>
+<span class="go">                         {304,[{count,0},{one,0}]},</span>
+<span class="go">                         {305,[{count,0},{one,0}]},</span>
+<span class="go">                         {306,[{count,0},{one,...}]},</span>
+<span class="go">                         {307,[{count,...},{...}]},</span>
+<span class="go">                         {308,[{...}|...]},</span>
+<span class="go">                         {400,[...]},</span>
+<span class="go">                         {401,...},</span>
+<span class="go">                         {...}|...]}]},</span>
+<span class="go">        {req,[{time,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,</span>
+<span class="go">                      [{n,3},</span>
+<span class="go">                       {mean,44126},</span>
+<span class="go">                       {min,44126},</span>
+<span class="go">                       {max,44126},</span>
+<span class="go">                       {median,44126},</span>
+<span class="go">                       {50,0},</span>
+<span class="go">                       {75,44126},</span>
+<span class="go">                       {90,44126},</span>
+<span class="go">                       {95,44126},</span>
+<span class="go">                       {99,44126},</span>
+<span class="go">                       {999,44126}]}]},</span>
+<span class="go">              {active,[{value,0},{ms_since_reset,11546}]},</span>
+<span class="go">              {count,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,[{count,1},{one,1}]}]}]}]},</span>
+<span class="go"> {node,[{abs,[{process_count,428},</span>
+<span class="go">              {run_queue,0},</span>
+<span class="go">              {error_logger_queue_len,0},</span>
+<span class="go">              {memory_total,50301760},</span>
+<span class="go">              {memory_procs,30854096},</span>
+<span class="go">              {memory_atoms,471201},</span>
+<span class="go">              {memory_bin,222648},</span>
+<span class="go">              {memory_ets,1574728}]},</span>
+<span class="go">        {inc,[{bytes_in,11737},</span>
+<span class="go">              {bytes_out,2470},</span>
+<span class="go">              {gc_count,6},</span>
+<span class="go">              {gc_words_reclaimed,29747},</span>
+<span class="go">              {reductions,2848780},</span>
+<span class="go">              {scheduler_usage,[{1,0.05329944038387727},</span>
+<span class="go">                                {2,0.8991375098414373},</span>
+<span class="go">                                {3,0.03932163131802264},</span>
+<span class="go">                                {4,0.05719991628720056}]}]}]},</span>
+<span class="go"> {core,[{ping,[{count,1},{one,1}]}]}]</span>
+</pre></div>
+</div>
+<p>You can see on this line that I made one request to ping and it returned 200:</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">{http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},</span>
+</pre></div>
+</div>
+<p>You can also see request time stats per endpoint:</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">{req,[{time,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,</span>
+<span class="go">              [{n,3},</span>
+<span class="go">               {mean,44126},</span>
+<span class="go">               {min,44126},</span>
+<span class="go">               {max,44126},</span>
+<span class="go">               {median,44126},</span>
+<span class="go">               {50,0},</span>
+<span class="go">               {75,44126},</span>
+<span class="go">               {90,44126},</span>
+<span class="go">               {95,44126},</span>
+<span class="go">               {99,44126},</span>
+<span class="go">               {999,44126}]}]},</span>
+</pre></div>
+</div>
+<p>And request count by endpoint:</p>
+<div class="highlight-erl"><div class="highlight"><pre><span class="go">{count,[{&lt;&lt;&quot;ping&quot;&gt;&gt;,[{count,1},{one,1}]}]}]}]},</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -173,6 +271,7 @@ a nice API.</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#api-metrics">API Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#erlang-runtime-metrics">Erlang Runtime Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-server-metrics-cowboy">Web Server Metrics (Cowboy)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
