@@ -16,5 +16,6 @@ Little Riak Core Book
    how-a-command-works
    adding-our-first-commands
    listing-keys-from-a-bucket
+   tolerating-node-failures
    riak_core_metadata
    riak_core_security

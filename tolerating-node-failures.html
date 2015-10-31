@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tolerating Node Failures &mdash; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="prev" title="Listing Keys from a Bucket" href="listing-keys-from-a-bucket.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tolerating-node-failures">
+<h1>Tolerating Node Failures<a class="headerlink" href="#tolerating-node-failures" title="Permalink to this headline">¶</a></h1>
+<p>You know computers cannot be trusted, so we may want to run our commands in
+more than one vnode and wait for a subset (or all of them) to finish before
+considering the operation to be successful, for this when a command is ran we
+will send the command to a number of vnodes, let&#8217;s call it W and wait for a
+number of them to succeed, let&#8217;s call it N.</p>
+<p>To do this we will need to do something similar than what we did with coverage
+calls, we will need to setup a process that will send the command to a number
+of vnodes and accumulate the responses or timeout if it takes to long, then
+send the result back to the caller. We will also need a supervisor for it and
+to register this supervisor in our main supervisor tree.</p>
+<p>Again I won&#8217;t go into details on the fsm and supervisor implementations, maybe
+I will add an annex later or comment the code heavily in case you want to
+understand how it works, but just for you to know, I tend to copy those fsms
+from other projects and adapt them to my needs, just don&#8217;t tell anybody ;)</p>
+<p>Here is a diagram of how it works:</p>
+<div class="highlight-python"><div class="highlight"><pre>+------+    +---------+    +---------+    +---------+              +------+
+|      |    |         |    |         |    |         |remaining = 0 |      |
+| Init +---&gt;| Prepare +---&gt;| Execute +---&gt;| Waiting +-------------&gt;| Stop |
+|      |    |         |    |         |    |         |              |      |
++------+    +---------+    +---------+    +-------+-+              +------+
+                                              ^   | |
+                                              |   | |        +---------+
+                                              +---+ +-------&gt;|         |
+                                                             | Timeout |
+                                      remaining &gt; 0  timeout |         |
+                                                             +---------+
+</pre></div>
+</div>
+<div class="section" id="implementing-it">
+<h2>Implementing it<a class="headerlink" href="#implementing-it" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="test-it">
+<h2>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h2>
+<p>We start by listing the bucket&#8217;s keys to make sure it&#8217;s empty:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[]</span>
+</pre></div>
+</div>
+<p>Then we put a value on that bucket:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="n">ok</span><span class="p">,</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">},</span>
+     <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">251195593916248939066258330623111144003363405824</span><span class="p">},</span>
+     <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}]}</span>
+</pre></div>
+</div>
+<p>Now we list the keys again, but this time there&#8217;s something different, 3
+vnodes returned that they have the key <cite>k1</cite>, this means that our put wrote
+to 3 vnodes instead of 1 as before.</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[{</span><span class="mi">251195593916248939066258330623111144003363405824</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]},</span>
+ <span class="p">{</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]},</span>
+ <span class="p">{</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}]</span>
+</pre></div>
+</div>
+<p>Let&#8217;s delete that key to see if it deletes in the 3 vnodes:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="n">found</span><span class="p">,</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">,</span>
+            <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}},</span>
+     <span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+            <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}},</span>
+     <span class="p">{</span><span class="n">found</span><span class="p">,</span><span class="mi">251195593916248939066258330623111144003363405824</span><span class="p">,</span>
+            <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}}]}</span>
+</pre></div>
+</div>
+<p>Listing the keys from the bucket shows that the key went away from all vnodes:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tolerating Node Failures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-it">Implementing it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-it">Test it</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="listing-keys-from-a-bucket.html" title="previous chapter">Listing Keys from a Bucket</a></li>
+      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Mariano Guerra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/tolerating-node-failures.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
