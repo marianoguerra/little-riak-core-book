@@ -83,14 +83,14 @@ some reserved roles:
 Source
 ......
 
-The source where the user is authenticating, it can be an ip or something else,
+The source where the user is authenticating, it can be an IP or something else,
 you can allow a user to authenticate from a source but not another.
 
 Extra Features
 --------------
 
 * Certificate Authentication
-* Plugable Authentication
+* Pluggable Authentication
 
 API Overview
 ------------
@@ -199,7 +199,7 @@ Deletes group and associated grants
 add_grant
 .........
 
-Add Grants to RoleList on Bucket, RoleList can be the atom **all** to asign
+Add Grants to RoleList on Bucket, RoleList can be the atom **all** to assign
 Grants to all roles in that Bucket.
 
 Bucket can be a binary to assign to the whole bucket or {binary(), binary()},
@@ -304,8 +304,6 @@ Playing in the REPL
 -------------------
 
 First we will need to uncomment the permissions for our app in config/advanced.config
-
-TODO: commit hash here
 
 Then we build again and run it:
 
