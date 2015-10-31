@@ -149,6 +149,10 @@ After all of this, stop, build, run and make some requests:
 
     http localhost:8080/ping
 
+.. raw:: latex
+
+    \newpage
+
 and then on the node shell ask for the metrics:
 
 .. code-block:: erlang

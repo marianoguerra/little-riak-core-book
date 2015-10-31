@@ -27,6 +27,10 @@ Here is a diagram of how it works::
                                           remaining > 0  timeout |         | 
                                                                  +---------+ 
 
+.. raw:: latex
+
+    \newpage
+
 Quorum Based Writes and Deletes
 -------------------------------
 
@@ -145,6 +149,10 @@ Listing the keys from the bucket shows that the key went away from all vnodes:
 
     []
 
+.. raw:: latex
+
+    \newpage
+
 Handoffs
 --------
 
@@ -215,6 +223,10 @@ The signature of all the responses is:
     {forward, NewModState::term()} |
     {drop, NewModState::term()} |
     {stop, Reason::term(), NewModState::term()}.
+
+.. raw:: latex
+
+    \newpage
 
 A diagram of the flow is as follows::
 

@@ -193,7 +193,7 @@ htmlhelp_basename = 'LittleRiakCoreBookdoc'
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+'papersize': 'a4paper',
 
 # The font size ('10pt', '11pt' or '12pt').
 #'pointsize': '10pt',
@@ -206,7 +206,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'LittleRiakCoreBook.tex', u'Little Riak Core Book Documentation',
+  ('index', 'LittleRiakCoreBook.tex', u'Little Riak Core Book',
    u'Mariano Guerra', 'manual'),
 ]
 

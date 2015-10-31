@@ -210,6 +210,10 @@ In this case riak_core defines a behavior with a set of functions we must
 implement to be a valid riak_core vnode, you can get an idea of the kind of
 functionality we need by looking at the exported functions:
 
+.. raw:: latex
+
+    \newpage
+
 .. code-block:: erlang
 
     -export([start_vnode/1,

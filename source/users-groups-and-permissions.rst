@@ -65,6 +65,10 @@ like this:
 
 .. image:: ../images/rcs_cowboy_2.png
 
+.. raw:: latex
+
+    \newpage
+
 Riak Core Security Model
 ------------------------
 

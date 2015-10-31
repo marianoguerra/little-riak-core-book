@@ -44,6 +44,10 @@ we just installed:
 If it fails saying it can't find rebar3 check that it's in your `$PATH`
 environment variable.
 
+.. raw:: latex
+
+    \newpage
+
 The output should be something like this::
 
     ===> Writing tanodb/apps/tanodb/src/tanodb.app.src
@@ -112,6 +116,10 @@ we now can test our system by calling `tanodb:ping()` on it.
 
 The response is the atom `pong` and a huge number that we will explain later,
 but to make it short, it's the id of the process that replied to us.
+
+.. raw:: latex
+
+    \newpage
 
 Exploring the Template Files
 ----------------------------
