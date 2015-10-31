@@ -15,5 +15,6 @@ Little Riak Core Book
    users-groups-and-permissions
    how-a-command-works
    adding-our-first-commands
+   listing-keys-from-a-bucket
    riak_core_metadata
    riak_core_security

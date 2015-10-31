@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Listing Keys from a Bucket &mdash; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="prev" title="Adding our First Commands" href="adding-our-first-commands.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="listing-keys-from-a-bucket">
+<h1>Listing Keys from a Bucket<a class="headerlink" href="#listing-keys-from-a-bucket" title="Permalink to this headline">¶</a></h1>
+<p>Since we already implemented some commands you may be asking yourself, why do
+we need a full chapter for another command? well, think again...</p>
+<p>Since bucket and key are hashed together to decide to which vnode a request
+will go it means that the keys for a given bucket may be distributed in
+multiple vnodes, and in case you are running in a cluster this means your keys
+are distributed in multiple physical nodes.</p>
+<p>This means that to list all the keys from a bucket we have to ask all the
+vnodes for the keys on a given bucket and then put the responses together and
+return the set of all responses.</p>
+<p>For this Riak Core provides something called coverage calls, which are a way
+to handle this process of running a command on all vnodes and gathering the
+responses.</p>
+<p>In this chapter we are going to implement the <cite>tanodb:keys(Bucket)</cite> function
+using coverage calls.</p>
+<div class="section" id="implementing-the-core-api">
+<h2>Implementing the CORE API<a class="headerlink" href="#implementing-the-core-api" title="Permalink to this headline">¶</a></h2>
+<p>We start as usual by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-afa3f67ec87f742d64ee9ed311455777R4">adding the metric for the keys function</a>.</p>
+<p>Then implement <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-6f7251bf9e224ebabd766f0331b848adR27">tanodb:keys/1</a>, but as you
+may notice it&#8217;s not similar to the previous ones because of what we talked about
+in the introduction.</p>
+<p>In this case we call <cite>tanodb_coverage_fsm:start({keys, Bucket}, Timeout)</cite>, which
+is a new module, it implements a behaviour called <cite>riak_core_coverage_fsm</cite>, short
+for riak_core_coverage <a class="reference external" href="https://en.wikipedia.org/wiki/Finite-state_machine">finite state machine</a>, it implements some predefined callbacks that are called on different
+states of a finite state machine.</p>
+<p>The start function calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R20">tanodb_coverage_fsm_sup:start_fsm([ReqId, self(), Request, Timeout])</a> which starts a supervisor for this new process.</p>
+<p>We also need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-8ca11d5e05a10f28aec8ac9694b1c14fR27">register the supervisor in the supervisor tree</a>.</p>
+<p>As a side note, tanodb_coverage_fsm uses a module called time_compat to avoid
+problems with deprecated uses of time in erlang, for that we need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-31d7a50c99c265ca2793c20961b60979R10">add the
+module as a dependency</a>.</p>
+<p>When we start the fsm with a command ({keys, Bucket}) and a timeout in milliseconds,
+it starts a supervisor that starts the finite state machine process, it first
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R27">calls the init function</a> which initializes
+the state of the process and returns some information to riak_core so it knows
+what kind of coverage call we want to do, then riak_core calls the
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-942e4ef944df628266f096d2fbcd4348R90">handle_coverage</a> function on each vnode and
+with each response it <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R31">calls process_results</a>
+in our process, when all the results are received or if an error happens
+(such as a timeout) it will call the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R40">finish callback</a>
+there we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R41">send the results</a> to the calling
+process which <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R21">is waiting for it</a>.</p>
+<p>The <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-942e4ef944df628266f096d2fbcd4348R92">handle_coverage implementation</a> is
+really simple, it uses the <a class="reference external" href="http://www.erlang.org/doc/man/ets.html#match-2">ets:match/2 function</a> to match against all the entries with the given bucket and returns the key
+from the matched results.</p>
+<p>You can read more about ets match specs in the <a class="reference external" href="http://www.erlang.org/doc/apps/erts/match_spec.html">match spec chapter on the erlang documentation</a>.</p>
+<div class="section" id="test-it">
+<h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s start by checking keys on an empty bucket.</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="mi">1347321821914426127719021955160323408745312813056</span><span class="p">,</span>
+      <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,[]},</span>
+
+     <span class="p">...</span>
+
+     <span class="p">{</span><span class="mi">959110449498405040071168171470060731649205731328</span><span class="p">,</span>
+      <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,...},</span>
+     <span class="p">{</span><span class="mi">411047335499316445744786359201454599278231027712</span><span class="p">,...},</span>
+     <span class="p">{...}|...]}</span>
+</pre></div>
+</div>
+<p>The output is quite verbose, here is redacted for clarity, but we get back:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="p">[{</span><span class="nv">Partition</span><span class="p">,</span> <span class="nv">Node</span><span class="p">,</span> <span class="nv">ListOfKeys</span><span class="p">}</span><span class="o">*</span><span class="mi">64</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>That means 64 3-item tuples (one for each vnode) with the partition id, the
+node where the partition is and the list of keys for that vnode, in this
+case all of them are empty and in the following cases most of them will be emtpy
+so we will filter them to clean the output.</p>
+<p>Now let&#8217;s put a value:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>And try again listing keys but this time filtering the empty results:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[{</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}]</span>
+</pre></div>
+</div>
+<p>We get one partition that returns the key that we just inserted, you can also
+check that the partition id is the same as the result from the put call before.</p>
+<p>Now let&#8217;s insert another value:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">43</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>And list again, now we get two partitions with keys:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[{</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">]},</span>
+ <span class="p">{</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}]</span>
+</pre></div>
+</div>
+<p>Yet another value:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k3&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">44</span><span class="p">).</span>
+
+<span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1073290264914881830555831049026020342559825461248</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>And the list again:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">7</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+                                      <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
+                                  <span class="k">end</span><span class="p">,</span>
+                                  <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
+
+<span class="p">[{</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">]},</span>
+ <span class="p">{</span><span class="mi">1073290264914881830555831049026020342559825461248</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k3&quot;</span><span class="o">&gt;&gt;</span><span class="p">]},</span>
+ <span class="p">{</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">,</span>
+  <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="implementing-the-rest-api">
+<h2>Implementing the REST API<a class="headerlink" href="#implementing-the-rest-api" title="Permalink to this headline">¶</a></h2>
+<p>The REST API is quite straight forward, we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-4477d4dd0aa2db0e274a56c9158207bdR74">add a new route to cowboy</a>  allowing to do <cite>GET /store/:bucket</cite> without specifying the key,
+we will interpret this as a request to &#8220;get the bucket&#8221; which for us means to
+return the keys.</p>
+<p>Then when doing a GET and key is undefined we assume it&#8217;s a request to list
+the bucket&#8217;s keys so we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR44">request the keys</a>
+and deduplicate them by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR39">using them as keys in a map with the values set to
+true</a> and then <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR49">collecting the keys of the map</a>.</p>
+<div class="section" id="id1">
+<h3>Test It<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Like in the previous test, let&#8217;s start listing an empty bucket:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">2</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:12:52 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+
+<span class="p">[]</span>
+</pre></div>
+</div>
+<p>Let&#8217;s put a value in that bucket:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:12:58 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>And list it again:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">7</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:00 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+
+<span class="p">[</span>
+    <span class="s2">&quot;bob&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Yet another one:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/patrick <span class="nv">name</span><span class="o">=</span>patrick <span class="nv">color</span><span class="o">=</span>pink
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:18 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+</pre></div>
+</div>
+<p>List again:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">content-length</span><span class="o">:</span> <span class="l">17</span>
+<span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:20 GMT</span>
+<span class="na">server</span><span class="o">:</span> <span class="l">Cowboy</span>
+
+<span class="p">[</span>
+    <span class="s2">&quot;bob&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;patrick&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Listing Keys from a Bucket</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-the-core-api">Implementing the CORE API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-the-rest-api">Implementing the REST API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="adding-our-first-commands.html" title="previous chapter">Adding our First Commands</a></li>
+      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Mariano Guerra.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/listing-keys-from-a-bucket.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
