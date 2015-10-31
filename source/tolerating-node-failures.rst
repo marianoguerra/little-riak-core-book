@@ -28,7 +28,7 @@ Here is a diagram of how it works::
                                                                  +---------+ 
 
 Quorum Based Writes and Deletes
-...............................
+-------------------------------
 
 To implement quorum based writes and deletes we will introduce two new modules,
 a gen_fsm implementation called `tanodb_write_fsm <https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R1>`_

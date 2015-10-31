@@ -108,9 +108,8 @@ receive waiting for the req_id we sent</a> if the response doesn&#8217;t come af
 return an error.</p>
 <p>The changes on the <cite>tanodb_vnode</cite> module are that the <cite>put</cite> and <cite>delete</cite>
 commands now receive an extra argument, <cite>ReqId</cite> that is <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44">returned in the reply</a>.</p>
-</div>
 <div class="section" id="test-it">
-<h2>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h2>
+<h3>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>We start by listing the bucket&#8217;s keys to make sure it&#8217;s empty:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
@@ -164,8 +163,10 @@ to 3 vnodes instead of 1 as before.</p>
 <span class="p">[]</span>
 </pre></div>
 </div>
+</div>
+</div>
 <div class="section" id="handoffs">
-<h3>Handoffs<a class="headerlink" href="#handoffs" title="Permalink to this headline">¶</a></h3>
+<h2>Handoffs<a class="headerlink" href="#handoffs" title="Permalink to this headline">¶</a></h2>
 <p>With quorum based writes we are half there, our values are written to more than
 one vnode but if a node dies and another takes his work or if we add a new node
 and the vnodes must be rebalanced we need to handle <a class="reference external" href="https://github.com/basho/riak_core/wiki/Handoffs">handoff</a>.</p>
@@ -235,10 +236,8 @@ running, you can choose to do one of the followings:</p>
 +-----------+                          +----------+     +--------+
 </pre></div>
 </div>
-</div>
-</div>
 <div class="section" id="id1">
-<h2>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>To test it we will first start a devrel node, put some values and then join
 two other nodes and see on the console the handoff happening.</p>
 <p>To make sure the nodes don&#8217;t know about each other in case you played with
@@ -415,6 +414,7 @@ will just paste some as example.</p>
 </div>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -445,8 +445,7 @@ will just paste some as example.</p>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Tolerating Node Failures</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quorum-based-writes-and-deletes">Quorum Based Writes and Deletes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test-it">Test it</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Test it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#handoffs">Handoffs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
