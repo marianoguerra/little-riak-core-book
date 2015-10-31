@@ -50,10 +50,6 @@ calls, we will need to setup a process that will send the command to a number
 of vnodes and accumulate the responses or timeout if it takes to long, then
 send the result back to the caller. We will also need a supervisor for it and
 to register this supervisor in our main supervisor tree.</p>
-<p>Again I won&#8217;t go into details on the fsm and supervisor implementations, maybe
-I will add an annex later or comment the code heavily in case you want to
-understand how it works, but just for you to know, I tend to copy those fsms
-from other projects and adapt them to my needs, just don&#8217;t tell anybody ;)</p>
 <p>Here is a diagram of how it works:</p>
 <div class="highlight-python"><div class="highlight"><pre>+------+    +---------+    +---------+    +---------+              +------+
 |      |    |         |    |         |    |         |remaining = 0 |      |
@@ -68,8 +64,50 @@ from other projects and adapt them to my needs, just don&#8217;t tell anybody ;)
                                                              +---------+
 </pre></div>
 </div>
-<div class="section" id="implementing-it">
-<h2>Implementing it<a class="headerlink" href="#implementing-it" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="quorum-based-writes-and-deletes">
+<h2>Quorum Based Writes and Deletes<a class="headerlink" href="#quorum-based-writes-and-deletes" title="Permalink to this headline">¶</a></h2>
+<p>To implement quorum based writes and deletes we will introduce two new modules,
+a gen_fsm implementation called <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R1">tanodb_write_fsm</a>
+and its supervisor, <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6e269238efb19bfc83c7ee43415545f3R1">tanodb_write_fsm_sup</a>. The supervisor is a simple supervisor behavior so
+I won&#8217;t go into details here other than observing that we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-8ca11d5e05a10f28aec8ac9694b1c14fR31">add it to the
+supervisor hierarchy</a> as we did with the coverage supervisor, the gen_fsm is the one that is
+interesting.</p>
+<p>On <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R41">tanodb_write_fsm:write/6</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R45">tanodb_write_fsm:delete/4</a> we start a supervisor that calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R37">tanodb_write_fsm:start_link</a> which in turn calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R54">tanodb_write_fsm:init/1</a>, this function initialize the state and moves the state machine to the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R60">prepare state</a>.</p>
+<p>The state from the fsm contains the following fields:</p>
+<dl class="docutils">
+<dt>req_id</dt>
+<dd>Identifier for this request</dd>
+<dt>from</dt>
+<dd>Process Id of the process that did the request</dd>
+<dt>n</dt>
+<dd>Number of vnodes to send the request to</dd>
+<dt>w</dt>
+<dd>Minimum number of responses to consider the request successful</dd>
+<dt>key</dt>
+<dd>The key ({Bucket, Key}) that will be used for the operation</dd>
+<dt>action</dt>
+<dd>An atom identifying the operation type, it can be <cite>write</cite> or <cite>delete</cite></dd>
+<dt>data</dt>
+<dd>If <cite>action</cite> is <cite>write</cite> then <cite>data</cite> is the value to write, if it&#8217;s <cite>delete</cite>
+then it&#8217;s not used</dd>
+<dt>preflist</dt>
+<dd>A riak_core preflist</dd>
+<dt>num_w</dt>
+<dd>Counter for current amount of responses</dd>
+<dt>accum</dt>
+<dd>List of current response values, this field was introduced in the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8e564ba444ab8b4e8205cce1ec21f9b8cf4d1c5a">next commit</a></dd>
+</dl>
+<p>When we move to the <cite>prepare</cite> state we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R61">build the list of nodes we are going to send the request to</a> using
+the value of <cite>n</cite>, we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R63">store the list of nodes on the preflist field</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R64">move to the execute state</a>.</p>
+<p>On the <cite>execute</cite> state we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R70">build the command we want to send</a> depending on the value of the
+<cite>action</cite> field and we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R74">execute it</a>, then we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R76">move to the waiting state</a>.</p>
+<p>On the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R79">waiting state</a> when
+we receive a result we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R80">increment num_w</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8e564ba444ab8b4e8205cce1ec21f9b8cf4d1c5a#diff-57ab62e123b72ea62fa59f06abdc9520R82">add the new response to accum</a>, if <cite>num_w</cite> is equal to <cite>w</cite> we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8e564ba444ab8b4e8205cce1ec21f9b8cf4d1c5a#diff-57ab62e123b72ea62fa59f06abdc9520R85">send the accumulated results to the requester</a> with the req_id so it can distinguis it from others <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR51">doing a selective receive</a>.</p>
+<p>On the <cite>tanodb</cite> module the changes are to call the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR26">delete</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR33">write</a> functions in the write_fsm module and then do the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR49">selective
+receive waiting for the req_id we sent</a> if the response doesn&#8217;t come after <cite>Timeout</cite> milliseconds we
+return an error.</p>
+<p>The changes on the <cite>tanodb_vnode</cite> module are that the <cite>put</cite> and <cite>delete</cite>
+commands now receive an extra argument, <cite>ReqId</cite> that is <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44">returned in the reply</a>.</p>
 </div>
 <div class="section" id="test-it">
 <h2>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h2>
@@ -126,6 +164,255 @@ to 3 vnodes instead of 1 as before.</p>
 <span class="p">[]</span>
 </pre></div>
 </div>
+<div class="section" id="handoffs">
+<h3>Handoffs<a class="headerlink" href="#handoffs" title="Permalink to this headline">¶</a></h3>
+<p>With quorum based writes we are half there, our values are written to more than
+one vnode but if a node dies and another takes his work or if we add a new node
+and the vnodes must be rebalanced we need to handle <a class="reference external" href="https://github.com/basho/riak_core/wiki/Handoffs">handoff</a>.</p>
+<p>The reasons to start a handoff are:</p>
+<ul class="simple">
+<li>A ring update event for a ring that all other nodes have already seen.</li>
+<li>A secondary vnode is idle for a period of time and the primary, original
+owner of the partition is up again.</li>
+</ul>
+<p>When this happen riak_core will inform the vnode that handoff is starting,
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R81">calling handoff_starting</a>, if it returns false it&#8217;s cancelled, if it returns
+true it <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R103">calls is_empty</a>, that must return false to inform that the vnode has
+something to handoff (it&#8217;s not empty) or true to inform that the vnode is
+empty, in our case <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R104">we ask for the first element of the ets table</a> and if it&#8217;s
+the special value &#8216;$end_of_table&#8217; we know it&#8217;s empty, if it returns true the
+handoff is considered finished, if false then a call is done to
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R68">handle_handoff_command</a>
+passing as first parameter an opaque structure that contains two fields we are
+insterested in, foldfun and acc0, they can be unpacked with a macro like this:</p>
+<div class="code erlang highlight-python"><div class="highlight"><pre>handle_handoff_command(?FOLD_REQ{foldfun=Fun, acc0=Acc0}, _Sender, State) -&gt;
+</pre></div>
+</div>
+<p>The <cite>FOLD_REQ</cite> macro is defined in the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R4">riak_core_vnode.hrl header file</a> which we include.</p>
+<p>This function must <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R71">iterate through all the keys it stores</a>
+and for each of them <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R73">call foldfun</a>
+with the key as first argument, the value as second argument and the latest
+acc0 value as third.</p>
+<p>The result of the function call is the new <cite>Acc0</cite> you must pass to the next
+call to foldfun, the last <cite>Acc0</cite> must be <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R75">returned by the handle_handoff_command</a>.</p>
+<p>For each call to Fun(Key, Entry, AccIn0) riak_core will send it to the new
+vnode, to do that it must encode the data before sending, it does this by
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R100">calling encode_handoff_item(Key, Value)</a>, where you must encode the data before sending it.</p>
+<p>When the value is received by the new vnode it must decode it and do something
+with it, this is done by the function <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R93">handle_handoff_data</a>, where we decode the received data and do the appropriate thing with it.</p>
+<p>When we sent all the key/values <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R89">handoff_finished will be called</a> and then <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R108">delete so we cleanup the data on the old vnode</a>.</p>
+<p>You can decide to handle other commands sent to the vnode while the handoff is
+running, you can choose to do one of the followings:</p>
+<ul class="simple">
+<li>Handle it in the current vnode</li>
+<li>Forward it to the vnode we are handing off</li>
+<li>Drop it</li>
+</ul>
+<p>What to do depends on the design of you app, all of them have tradeoffs.</p>
+<p>The signature of all the responses is:</p>
+<div class="code erlang highlight-python"><div class="highlight"><pre>-callback handle_handoff_command(Request::term(), Sender::sender(), ModState::term()) -&gt;
+{reply, Reply::term(), NewModState::term()} |
+{noreply, NewModState::term()} |
+{async, Work::function(), From::sender(), NewModState::term()} |
+{forward, NewModState::term()} |
+{drop, NewModState::term()} |
+{stop, Reason::term(), NewModState::term()}.
+</pre></div>
+</div>
+<p>A diagram of the flow is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>+-----------+      +----------+        +----------+
+|           | true |          | false  |          |
+| Starting  +------&gt; is_empty +--------&gt; fold_req |
+|           |      |          |        |          |
++-----+-----+      +----+-----+        +----+-----+
+      |                 |                   |
+      | false           | true              | ok
+      |                 |                   |
++-----v-----+           |              +----v-----+     +--------+
+|           |           |              |          |     |        |
+| Cancelled |           +--------------&gt; finished +-----&gt; delete |
+|           |                          |          |     |        |
++-----------+                          +----------+     +--------+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>To test it we will first start a devrel node, put some values and then join
+two other nodes and see on the console the handoff happening.</p>
+<p>To make sure the nodes don&#8217;t know about each other in case you played with
+clustering already we will start by removing the devrel builds:</p>
+<div class="highlight-sh"><div class="highlight"><pre>rm -rf _build/dev*
+</pre></div>
+</div>
+<p>And build the nodes again:</p>
+<div class="highlight-sh"><div class="highlight"><pre>make devrel
+</pre></div>
+</div>
+<p>Now we will start the first node and connect to its console:</p>
+<div class="highlight-sh"><div class="highlight"><pre>make dev1-console
+</pre></div>
+</div>
+<p>We generate a list of some numbers:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Nums</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span>
+
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And with it create some bucket names:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nv">Buckets</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span>             <span class="nb">list_to_binary</span><span class="p">(</span><span class="s">&quot;bucket-&quot;</span> <span class="o">++</span> <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">N</span><span class="p">))</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span>           <span class="k">end</span><span class="p">,</span> <span class="nv">Nums</span><span class="p">).</span>
+
+<span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-2&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-3&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+ <span class="o">&lt;&lt;</span><span class="s">&quot;bucket-4&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-5&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-6&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+ <span class="o">&lt;&lt;</span><span class="s">&quot;bucket-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-9&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket-10&quot;</span><span class="o">&gt;&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And some key names:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nv">Keys</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span>          <span class="nb">list_to_binary</span><span class="p">(</span><span class="s">&quot;key-&quot;</span> <span class="o">++</span> <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">N</span><span class="p">))</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span>        <span class="k">end</span><span class="p">,</span> <span class="nv">Nums</span><span class="p">).</span>
+
+<span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-2&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-3&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-4&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+ <span class="o">&lt;&lt;</span><span class="s">&quot;key-5&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-6&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;key-9&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+ <span class="o">&lt;&lt;</span><span class="s">&quot;key-10&quot;</span><span class="o">&gt;&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We create a function to generate a value from a bucket and a key:</p>
+<div class="highlight-erlang"><div class="highlight"><pre>(tanodb1@127.0.0.1)4&gt; GenValue = fun (Bucket, Key) -&gt;
+(tanodb1@127.0.0.1)4&gt;                    [{bucket, Bucket}, {key, Key}]
+(tanodb1@127.0.0.1)4&gt;            end.
+
+#Fun&lt;erl_eval.12.54118792&gt;
+</pre></div>
+</div>
+<p>And then put some values to the buckets and keys we created:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>   <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">Key</span><span class="p">)</span> <span class="o">-&gt;</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>     <span class="nv">Val</span> <span class="o">=</span> <span class="nv">GenValue</span><span class="p">(</span><span class="nv">Bucket</span><span class="p">,</span> <span class="nv">Key</span><span class="p">),</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>       <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="nv">Bucket</span><span class="p">,</span> <span class="nv">Key</span><span class="p">},</span> <span class="nv">Val</span><span class="p">)</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>     <span class="k">end</span><span class="p">,</span> <span class="nv">Keys</span><span class="p">)</span>
+<span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="k">end</span><span class="p">,</span> <span class="nv">Buckets</span><span class="p">).</span>
+
+<span class="n">ok</span>
+</pre></div>
+</div>
+<p>Now that we have some data let&#8217;s start the other two nodes:</p>
+<div class="highlight-sh"><div class="highlight"><pre>make dev2-console
+</pre></div>
+</div>
+<p>In yet another shell:</p>
+<div class="highlight-sh"><div class="highlight"><pre>make dev3-console
+</pre></div>
+</div>
+<p>This part should remind you of the first chapter:</p>
+<div class="highlight-sh"><div class="highlight"><pre>make devrel-join
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>Success: staged join request for &#39;tanodb2@127.0.0.1&#39; to &#39;tanodb1@127.0.0.1&#39;
+Success: staged join request for &#39;tanodb3@127.0.0.1&#39; to &#39;tanodb1@127.0.0.1&#39;
+</pre></div>
+</div>
+<div class="highlight-sh"><div class="highlight"><pre>make devrel-cluster-plan
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes =========================
+Action         Details(s)
+------------------------------------------------------------------------
+join           &#39;tanodb2@127.0.0.1&#39;
+join           &#39;tanodb3@127.0.0.1&#39;
+------------------------------------------------------------------------
+
+
+NOTE: Applying these changes will result in 1 cluster transition
+
+########################################################################
+                         After cluster transition 1/1
+########################################################################
+
+================================= Membership ===========================
+Status     Ring    Pending    Node
+------------------------------------------------------------------------
+valid     100.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
+valid       0.0%     32.8%    &#39;tanodb2@127.0.0.1&#39;
+valid       0.0%     32.8%    &#39;tanodb3@127.0.0.1&#39;
+------------------------------------------------------------------------
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+
+WARNING: Not all replicas will be on distinct nodes
+
+Transfers resulting from cluster changes: 42
+  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb3@127.0.0.1&#39;
+  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb2@127.0.0.1&#39;
+</pre></div>
+</div>
+<div class="highlight-sh"><div class="highlight"><pre>make devrel-cluster-commit
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>Cluster changes committed
+</pre></div>
+</div>
+<p>On the consoles from the nodes you should see some logs like the following, I
+will just paste some as example.</p>
+<p>On the sending side:</p>
+<div class="highlight-python"><div class="highlight"><pre>00:17:24.240 [info] Starting ownership transfer of tanodb_vnode from
+&#39;tanodb1@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216 to
+&#39;tanodb2@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216
+
+00:17:24.240 [info] fold req 1118962191081472546749696200048404186924073353216
+00:17:24.240 [info] fold fun {&lt;&lt;&quot;bucket-1&quot;&gt;&gt;,&lt;&lt;&quot;key-1&quot;&gt;&gt;}:
+    [{bucket,&lt;&lt;&quot;bucket-1&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-1&quot;&gt;&gt;}]
+
+...
+
+00:17:24.241 [info] fold fun {&lt;&lt;&quot;bucket-7&quot;&gt;&gt;,&lt;&lt;&quot;key-8&quot;&gt;&gt;}:
+    [{bucket,&lt;&lt;&quot;bucket-7&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-8&quot;&gt;&gt;}]
+
+00:17:24.281 [info] ownership transfer of tanodb_vnode from
+&#39;tanodb1@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216 to
+&#39;tanodb2@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216
+    completed: sent 575.00 B bytes in 7 of 7 objects in 0.04 seconds
+    (13.67 KB/second)
+
+00:17:24.280 [info] handoff finished
+    1141798154164767904846628775559596109106197299200:
+    {1141798154164767904846628775559596109106197299200,
+        &#39;tanodb3@127.0.0.1&#39;}
+
+00:17:24.285 [info] delete
+    1141798154164767904846628775559596109106197299200
+</pre></div>
+</div>
+<p>On the receiving side:</p>
+<div class="highlight-python"><div class="highlight"><pre>00:13:59.641 [info] handoff starting
+    1050454301831586472458898473514828420377701515264:
+    {hinted,{1050454301831586472458898473514828420377701515264,
+        &#39;tanodb1@127.0.0.1&#39;}}
+
+00:13:59.641 [info] is_empty
+    182687704666362864775460604089535377456991567872: true
+
+00:14:34.259 [info] Receiving handoff data for partition
+    tanodb_vnode:68507889249886074290797726533575766546371837952 from
+    {&quot;127.0.0.1&quot;,47440}
+
+00:14:34.296 [info] handoff data received
+    {{&lt;&lt;&quot;bucket-8&quot;&gt;&gt;,&lt;&lt;&quot;key-1&quot;&gt;&gt;},
+        [{bucket,&lt;&lt;&quot;bucket-8&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-1&quot;&gt;&gt;}]}
+
+...
+
+00:14:34.297 [info] handoff data received
+    {{&lt;&lt;&quot;bucket-3&quot;&gt;&gt;,&lt;&lt;&quot;key-7&quot;&gt;&gt;},
+        [{bucket,&lt;&lt;&quot;bucket-3&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-7&quot;&gt;&gt;}]}
+
+00:14:34.298 [info] Handoff receiver for partition
+    68507889249886074290797726533575766546371837952 exited after
+    processing 5 objects from {&quot;127.0.0.1&quot;,47440}
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -157,8 +444,9 @@ to 3 vnodes instead of 1 as before.</p>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Tolerating Node Failures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#implementing-it">Implementing it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quorum-based-writes-and-deletes">Quorum Based Writes and Deletes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#test-it">Test it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Test it</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
