@@ -196,17 +196,17 @@ OK, let's go by parts, first we declare our module:
 
     -module(tanodb_vnode).
 
-Then we specify that we want to implement the riak_core_vnode behaviour:
+Then we specify that we want to implement the riak_core_vnode behavior:
 
 .. code-block:: erlang
 
     -behaviour(riak_core_vnode).
 
-Behaviours in erlang are like interfaces, a set of functions that a module must
+Behaviors in Erlang are like interfaces, a set of functions that a module must
 implement to satisfy the behaviour specification, you can read more in the
-`erlang documentation <http://www.erlang.org/doc/design_principles/des_princ.html>`_.
+`Erlang documentation <http://www.erlang.org/doc/design_principles/des_princ.html>`_.
 
-In this case riak_core defines a behaviour with a set of functions we must
+In this case riak_core defines a behavior with a set of functions we must
 implement to be a valid riak_core vnode, you can get an idea of the kind of
 functionality we need by looking at the exported functions:
 
@@ -228,11 +228,11 @@ functionality we need by looking at the exported functions:
              handle_exit/3]).
 
 For the moment most of them have a "dummy" implementation where they just to
-the minimal amount of work to satisfy the behaviour and not more, it's our job
+the minimal amount of work to satisfy the behavior and not more, it's our job
 to change the default implementation to fit our needs.
 
 We will have a record called state to keep info between callbacks, this is
-typical erlang way of managing state so I won't cover it here:
+typical Erlang way of managing state so I won't cover it here:
 
 .. code-block:: erlang
 

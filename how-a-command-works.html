@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
-    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="next" title="Adding our First Commands" href="adding-our-first-commands.html" />
     <link rel="prev" title="Users, Groups and Permissions" href="users-groups-and-permissions.html" />
    
   
@@ -202,14 +202,14 @@ vnode instead of the first one.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">tanodb_vnode</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Then we specify that we want to implement the riak_core_vnode behaviour:</p>
+<p>Then we specify that we want to implement the riak_core_vnode behavior:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">-</span><span class="ni">behaviour</span><span class="p">(</span><span class="n">riak_core_vnode</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Behaviours in erlang are like interfaces, a set of functions that a module must
+<p>Behaviors in Erlang are like interfaces, a set of functions that a module must
 implement to satisfy the behaviour specification, you can read more in the
-<a class="reference external" href="http://www.erlang.org/doc/design_principles/des_princ.html">erlang documentation</a>.</p>
-<p>In this case riak_core defines a behaviour with a set of functions we must
+<a class="reference external" href="http://www.erlang.org/doc/design_principles/des_princ.html">Erlang documentation</a>.</p>
+<p>In this case riak_core defines a behavior with a set of functions we must
 implement to be a valid riak_core vnode, you can get an idea of the kind of
 functionality we need by looking at the exported functions:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start_vnode</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span>
@@ -229,10 +229,10 @@ functionality we need by looking at the exported functions:</p>
 </pre></div>
 </div>
 <p>For the moment most of them have a &#8220;dummy&#8221; implementation where they just to
-the minimal amount of work to satisfy the behaviour and not more, it&#8217;s our job
+the minimal amount of work to satisfy the behavior and not more, it&#8217;s our job
 to change the default implementation to fit our needs.</p>
 <p>We will have a record called state to keep info between callbacks, this is
-typical erlang way of managing state so I won&#8217;t cover it here:</p>
+typical Erlang way of managing state so I won&#8217;t cover it here:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">-</span><span class="ni">record</span><span class="p">(</span><span class="nl">state</span><span class="p">,</span> <span class="p">{</span><span class="n">partition</span><span class="p">}).</span>
 </pre></div>
 </div>
@@ -301,6 +301,8 @@ be:</p>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
@@ -310,7 +312,7 @@ be:</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="users-groups-and-permissions.html" title="previous chapter">Users, Groups and Permissions</a></li>
-      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+      <li>Next: <a href="adding-our-first-commands.html" title="next chapter">Adding our First Commands</a></li>
   </ul></li>
 </ul>
 </div>

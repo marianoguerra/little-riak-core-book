@@ -61,13 +61,13 @@ using coverage calls.</p>
 may notice it&#8217;s not similar to the previous ones because of what we talked about
 in the introduction.</p>
 <p>In this case we call <cite>tanodb_coverage_fsm:start({keys, Bucket}, Timeout)</cite>, which
-is a new module, it implements a behaviour called <cite>riak_core_coverage_fsm</cite>, short
+is a new module, it implements a behavior called <cite>riak_core_coverage_fsm</cite>, short
 for riak_core_coverage <a class="reference external" href="https://en.wikipedia.org/wiki/Finite-state_machine">finite state machine</a>, it implements some predefined callbacks that are called on different
 states of a finite state machine.</p>
 <p>The start function calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-7ccdace934891188d9d1055533cb81b8R20">tanodb_coverage_fsm_sup:start_fsm([ReqId, self(), Request, Timeout])</a> which starts a supervisor for this new process.</p>
 <p>We also need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-8ca11d5e05a10f28aec8ac9694b1c14fR27">register the supervisor in the supervisor tree</a>.</p>
 <p>As a side note, tanodb_coverage_fsm uses a module called time_compat to avoid
-problems with deprecated uses of time in erlang, for that we need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-31d7a50c99c265ca2793c20961b60979R10">add the
+problems with deprecated uses of time in Erlang, for that we need to <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-31d7a50c99c265ca2793c20961b60979R10">add the
 module as a dependency</a>.</p>
 <p>When we start the fsm with a command ({keys, Bucket}) and a timeout in milliseconds,
 it starts a supervisor that starts the finite state machine process, it first
@@ -83,7 +83,7 @@ process which <a class="reference external" href="https://github.com/marianoguer
 <p>The <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-942e4ef944df628266f096d2fbcd4348R92">handle_coverage implementation</a> is
 really simple, it uses the <a class="reference external" href="http://www.erlang.org/doc/man/ets.html#match-2">ets:match/2 function</a> to match against all the entries with the given bucket and returns the key
 from the matched results.</p>
-<p>You can read more about ets match specs in the <a class="reference external" href="http://www.erlang.org/doc/apps/erts/match_spec.html">match spec chapter on the erlang documentation</a>.</p>
+<p>You can read more about ets match specs in the <a class="reference external" href="http://www.erlang.org/doc/apps/erts/match_spec.html">match spec chapter on the Erlang documentation</a>.</p>
 <div class="section" id="test-it">
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>Let&#8217;s start by checking keys on an empty bucket.</p>
@@ -106,7 +106,7 @@ from the matched results.</p>
 </div>
 <p>That means 64 3-item tuples (one for each vnode) with the partition id, the
 node where the partition is and the list of keys for that vnode, in this
-case all of them are empty and in the following cases most of them will be emtpy
+case all of them are empty and in the following cases most of them will be empty
 so we will filter them to clean the output.</p>
 <p>Now let&#8217;s put a value:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>

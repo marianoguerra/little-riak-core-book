@@ -96,7 +96,7 @@ to change the configuration, we can do this by editing the file:</p>
 </pre></div>
 </div>
 <p>Search for 8080 and change it for 8081, save and close and stop the server if you are running it.</p>
-<p>Now we will run it again buit manually to avoid rebar3 from overriding our
+<p>Now we will run it again but manually to avoid rebar3 from overriding our
 change:</p>
 <div class="highlight-sh"><div class="highlight"><pre>./_build/default/rel/tanodb/bin/tanodb console
 </pre></div>
@@ -121,7 +121,7 @@ change:</p>
 using <a class="reference external" href="https://github.com/basho/cuttlefish">cuttlefish</a> which takes a
 <a class="reference external" href="https://github.com/marianoguerra/tanodb/blob/220bcade820538aec05993065ac4edf19f3ebcde/config/config.schema">schema we define</a> and uses it to generate
 the default config file and later to validate the config file on startup
-and generate configuration files that the erlang runtime understands.</p>
+and generate configuration files that the Erlang runtime understands.</p>
 <p>If you are curious you can see the generated config files after running the
 server at least once under <cite>_build/default/rel/tanodb/generated.configs/</cite></p>
 </div>
@@ -155,6 +155,10 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>

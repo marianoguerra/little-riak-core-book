@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
-    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
-    <link rel="prev" title="Welcome to Little Riak Core Book’s documentation!" href="index.html" />
+    <link rel="next" title="Ping as a Service (PaaS)" href="ping-as-a-service.html" />
+    <link rel="prev" title="Little Riak Core Book" href="index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -47,7 +47,7 @@ started.</p>
 <h2>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="http://www.rebar3.org/docs/getting-started">rebar3</a>: The build tool, click on the link to see how to install it.</li>
-<li><a class="reference external" href="http://www.erlang.org/">erlang</a>: Our programming language, we assume erlang version to be at least 17.0</li>
+<li><a class="reference external" href="http://www.erlang.org/">erlang</a>: Our programming language, we assume Erlang version to be at least 17.0</li>
 </ul>
 <p>I also assume a unix-like environment with a shell similar to bash or zsh.</p>
 </div>
@@ -122,7 +122,7 @@ called <a class="reference external" href="https://github.com/tsloughter/rebar3_
 <span class="go">(tanodb@127.0.0.1)1&gt;</span>
 </pre></div>
 </div>
-<p>This is the erlang shell, something like a REPL connected to our system,
+<p>This is the Erlang shell, something like a REPL connected to our system,
 we now can test our system by calling <cite>tanodb:ping()</cite> on it.</p>
 <div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb:ping().</span>
 <span class="go">{pong,1347321821914426127719021955160323408745312813056}</span>
@@ -146,7 +146,7 @@ brief overview of the files created here.</p>
 </pre></div>
 </div>
 <p>Those are the meat of this project, the source code we start with, if you
-know a little of erlang you will recognice them many of them, let&#8217;s explain them briefly,
+know a little of Erlang you will recognize them many of them, let&#8217;s explain them briefly,
 if you think you need more information I recommend you this awesome book which
 you can read online: <a class="reference external" href="http://learnyousomeerlang.com/">Learn You Some Erlang for great good!</a></p>
 <dl class="docutils">
@@ -154,24 +154,24 @@ you can read online: <a class="reference external" href="http://learnyousomeerla
 <dd>This file is &#8220;The Application Resource File&#8221;, you can read it, it&#8217;s quite self descriptive.
 You can read more about it in the
 <a class="reference external" href="http://learnyousomeerlang.com/building-otp-applications">Building OTP Applications Section of Learn You Some Erlang</a>
-or in the <a class="reference external" href="http://www.erlang.org/doc/man/app.html">man page for app in the erlang documentation</a>.</dd>
+or in the <a class="reference external" href="http://www.erlang.org/doc/man/app.html">man page for app in the Erlang documentation</a>.</dd>
 <dt>tanodb.erl</dt>
 <dd>This file is the main API of our application, here we expose all the things
 you can ask our application to do, for now it can only handle the <cite>ping()</cite>
 command but we will add some more in the future.</dd>
 <dt>tanodb_app.erl</dt>
-<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/applications.html">application behaviour</a> it&#8217;s a set of callbacks
-that the erlang runtime calls to start and stop our application.</dd>
+<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/applications.html">application behavior</a> it&#8217;s a set of callbacks
+that the Erlang runtime calls to start and stop our application.</dd>
 <dt>tanodb_sup.erl</dt>
-<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/sup_princ.html">supervisor behaviour</a> it&#8217;s a set of callbacks
-that the erlang runtime calls to build the supervisor hierarchy.</dd>
+<dd>This file implements the <a class="reference external" href="http://www.erlang.org/doc/design_principles/sup_princ.html">supervisor behavior</a> it&#8217;s a set of callbacks
+that the Erlang runtime calls to build the supervisor hierarchy.</dd>
 <dt>tanodb_console.erl</dt>
 <dd>This file is specific to riak_core, it&#8217;s a set of callbacks that will be
 called by the <cite>tanodb-admin</cite> command.</dd>
 <dt>tanodb_vnode.erl</dt>
 <dd>This file is specific to riak_core, it implements the riak_code_vnode
-behaviour, which is a set of callbacks that riak_core will call to
-acomplish different tasks, it&#8217;s the main file we will edit to add new
+behavior, which is a set of callbacks that riak_core will call to
+accomplish different tasks, it&#8217;s the main file we will edit to add new
 features.</dd>
 </dl>
 <p>Those were the source code files, but the template also created other files,
@@ -212,8 +212,8 @@ use as the application grows.</dd>
 that don&#8217;t go on our <cite>tanodb.config</cite> file, here we configure riak_core and
 our <a class="reference external" href="https://github.com/basho/lager/">logging library</a></dd>
 <dt>config/sys.config</dt>
-<dd>This is a standard erlang application file, you can read more about it
-in the <a class="reference external" href="http://www.erlang.org/doc/man/config.html">erlang documentation for sys.config</a></dd>
+<dd>This is a standard Erlang application file, you can read more about it
+in the <a class="reference external" href="http://www.erlang.org/doc/man/config.html">Erlang documentation for sys.config</a></dd>
 <dt>config/vars.config</dt>
 <dd>This file contains variables used by relx to build a release, you can
 read more about it in the <a class="reference external" href="http://www.rebar3.org/docs/releases">rebar3 release documentation</a></dd>
@@ -229,10 +229,10 @@ running more than one node on the same machine:</p>
 instance runs one instance of your application and you have many operating
 system instances, but to test the clustering features of riak_core we will
 build 3 releases of our application using offsets for ports and changing the
-application name to avoid collitions.</p>
+application name to avoid collisions.</p>
 <dl class="docutils">
 <dt>config/vm.args</dt>
-<dd>A file used to pass options to the erlang VM when starting our application.</dd>
+<dd>A file used to pass options to the Erlang VM when starting our application.</dd>
 </dl>
 <p>The following files are like vars_dev*.config but for vm.args:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">config</span><span class="o">/</span><span class="n">dev1_vm</span><span class="o">.</span><span class="n">args</span>
@@ -244,7 +244,7 @@ application name to avoid collitions.</p>
 </div>
 <div class="section" id="playing-with-clustering">
 <h2>Playing with Clustering<a class="headerlink" href="#playing-with-clustering" title="Permalink to this headline">¶</a></h2>
-<p>Before starting to add features, let&#8217;s first play with clustering so we undertand
+<p>Before starting to add features, let&#8217;s first play with clustering so we understand
 all those config files above work.</p>
 <p>Build 3 releases that can run on the same machine:</p>
 <div class="highlight-python"><div class="highlight"><pre>make devrel
@@ -264,8 +264,8 @@ make dev2-console
 make dev3-console
 </pre></div>
 </div>
-<p>This will start the 3 nodes but the won&#8217;t know about eachother, for them
-to know about eachother we need to &#8220;join&#8221; them, that is to tell one of them
+<p>This will start the 3 nodes but the won&#8217;t know about each other, for them
+to know about each other we need to &#8220;join&#8221; them, that is to tell one of them
 about the other two, this is achieved using the tanodb-admin command, here is
 how you should run it manually (don&#8217;t run them):</p>
 <div class="highlight-python"><div class="highlight"><pre>_build/dev2/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
@@ -349,7 +349,7 @@ is happening describing the process.</p>
 <div class="highlight-python"><div class="highlight"><pre>make devrel-status
 </pre></div>
 </div>
-<p>You can see the vnodes transfering, this means the content of some virtual
+<p>You can see the vnodes transferring, this means the content of some virtual
 nodes on one tanodb node are being transfered to another tanodb node:</p>
 <div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
 Status     Ring    Pending    Node
@@ -410,7 +410,7 @@ end
 <div class="highlight-python"><div class="highlight"><pre>vagrant up
 </pre></div>
 </div>
-<p>To start the virutal machine.</p>
+<p>To start the virtual machine.</p>
 <p>Now let&#8217;s package our release and copy it to a place where the VM can see it:</p>
 <div class="highlight-python"><div class="highlight"><pre>cd _build/prod/rel
 tar -czf tanodb.tgz tanodb
@@ -483,6 +483,12 @@ production release and run it on a fresh server.</p>
 <li class="toctree-l2"><a class="reference internal" href="#wrapping-up">Wrapping Up</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
@@ -491,8 +497,8 @@ production release and run it on a fresh server.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Little Riak Core Book&#8217;s documentation!</a></li>
-      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Little Riak Core Book</a></li>
+      <li>Next: <a href="ping-as-a-service.html" title="next chapter">Ping as a Service (PaaS)</a></li>
   </ul></li>
 </ul>
 </div>

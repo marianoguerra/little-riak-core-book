@@ -30,7 +30,7 @@ may notice it's not similar to the previous ones because of what we talked about
 in the introduction.
 
 In this case we call `tanodb_coverage_fsm:start({keys, Bucket}, Timeout)`, which
-is a new module, it implements a behaviour called `riak_core_coverage_fsm`, short
+is a new module, it implements a behavior called `riak_core_coverage_fsm`, short
 for riak_core_coverage `finite state machine <https://en.wikipedia.org/wiki/Finite-state_machine>`_, it implements some predefined callbacks that are called on different
 states of a finite state machine.
 
@@ -39,7 +39,7 @@ The start function calls `tanodb_coverage_fsm_sup:start_fsm([ReqId, self(), Requ
 We also need to `register the supervisor in the supervisor tree <https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-8ca11d5e05a10f28aec8ac9694b1c14fR27>`_.
 
 As a side note, tanodb_coverage_fsm uses a module called time_compat to avoid
-problems with deprecated uses of time in erlang, for that we need to `add the
+problems with deprecated uses of time in Erlang, for that we need to `add the
 module as a dependency <https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-31d7a50c99c265ca2793c20961b60979R10>`_.
 
 When we start the fsm with a command ({keys, Bucket}) and a timeout in milliseconds,
@@ -58,7 +58,7 @@ The `handle_coverage implementation <https://github.com/marianoguerra/tanodb/com
 really simple, it uses the `ets:match/2 function <http://www.erlang.org/doc/man/ets.html#match-2>`_ to match against all the entries with the given bucket and returns the key
 from the matched results.
 
-You can read more about ets match specs in the `match spec chapter on the erlang documentation <http://www.erlang.org/doc/apps/erts/match_spec.html>`_.
+You can read more about ets match specs in the `match spec chapter on the Erlang documentation <http://www.erlang.org/doc/apps/erts/match_spec.html>`_.
 
 Test It
 .......
@@ -87,7 +87,7 @@ The output is quite verbose, here is redacted for clarity, but we get back:
 
 That means 64 3-item tuples (one for each vnode) with the partition id, the
 node where the partition is and the list of keys for that vnode, in this
-case all of them are empty and in the following cases most of them will be emtpy
+case all of them are empty and in the following cases most of them will be empty
 so we will filter them to clean the output.
 
 Now let's put a value:

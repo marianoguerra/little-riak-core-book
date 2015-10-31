@@ -109,7 +109,7 @@ some reserved roles:</p>
 </div>
 <div class="section" id="source">
 <h3>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h3>
-<p>The source where the user is authenticating, it can be an ip or something else,
+<p>The source where the user is authenticating, it can be an IP or something else,
 you can allow a user to authenticate from a source but not another.</p>
 </div>
 </div>
@@ -117,7 +117,7 @@ you can allow a user to authenticate from a source but not another.</p>
 <h2>Extra Features<a class="headerlink" href="#extra-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Certificate Authentication</li>
-<li>Plugable Authentication</li>
+<li>Pluggable Authentication</li>
 </ul>
 </div>
 <div class="section" id="api-overview">
@@ -209,7 +209,7 @@ groups the new groups will be set and the old removed.</p>
 </div>
 <div class="section" id="add-grant">
 <h3>add_grant<a class="headerlink" href="#add-grant" title="Permalink to this headline">¶</a></h3>
-<p>Add Grants to RoleList on Bucket, RoleList can be the atom <strong>all</strong> to asign
+<p>Add Grants to RoleList on Bucket, RoleList can be the atom <strong>all</strong> to assign
 Grants to all roles in that Bucket.</p>
 <p>Bucket can be a binary to assign to the whole bucket or {binary(), binary()},
 to assign to a key in the bucket.</p>
@@ -296,7 +296,6 @@ users, only if the source was added explicitly for the <strong>all</strong> atom
 <div class="section" id="playing-in-the-repl">
 <h2>Playing in the REPL<a class="headerlink" href="#playing-in-the-repl" title="Permalink to this headline">¶</a></h2>
 <p>First we will need to uncomment the permissions for our app in config/advanced.config</p>
-<p>TODO: commit hash here</p>
 <p>Then we build again and run it:</p>
 <div class="highlight-shell"><div class="highlight"><pre>rebar3 release
 rebar3 run
@@ -615,6 +614,10 @@ user.</p>
 <li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Riak Core Security</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a></li>

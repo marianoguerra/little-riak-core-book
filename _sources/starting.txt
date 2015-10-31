@@ -9,7 +9,7 @@ Tools
 -----
 
 * `rebar3 <http://www.rebar3.org/docs/getting-started>`_: The build tool, click on the link to see how to install it.
-* `erlang <http://www.erlang.org/>`_: Our programming language, we assume erlang version to be at least 17.0
+* `erlang <http://www.erlang.org/>`_: Our programming language, we assume Erlang version to be at least 17.0
 
 I also assume a unix-like environment with a shell similar to bash or zsh.
 
@@ -102,7 +102,7 @@ When we run `rebar3 run` we get some noisy output that should end with something
     Eshell V7.0  (abort with ^G)
     (tanodb@127.0.0.1)1>
 
-This is the erlang shell, something like a REPL connected to our system,
+This is the Erlang shell, something like a REPL connected to our system,
 we now can test our system by calling `tanodb:ping()` on it.
 
 .. code-block:: erl
@@ -130,7 +130,7 @@ First this files are created::
     apps/tanodb/src/tanodb_vnode.erl
 
 Those are the meat of this project, the source code we start with, if you
-know a little of erlang you will recognice them many of them, let's explain them briefly,
+know a little of Erlang you will recognize them many of them, let's explain them briefly,
 if you think you need more information I recommend you this awesome book which
 you can read online: `Learn You Some Erlang for great good!  <http://learnyousomeerlang.com/>`_
 
@@ -138,7 +138,7 @@ tanodb.app.src
     This file is "The Application Resource File", you can read it, it's quite self descriptive.
     You can read more about it in the 
     `Building OTP Applications Section of Learn You Some Erlang <http://learnyousomeerlang.com/building-otp-applications>`_
-    or in the `man page for app in the erlang documentation <http://www.erlang.org/doc/man/app.html>`_.
+    or in the `man page for app in the Erlang documentation <http://www.erlang.org/doc/man/app.html>`_.
 
 tanodb.erl
     This file is the main API of our application, here we expose all the things
@@ -146,12 +146,12 @@ tanodb.erl
     command but we will add some more in the future.
 
 tanodb_app.erl
-    This file implements the `application behaviour <http://www.erlang.org/doc/design_principles/applications.html>`_ it's a set of callbacks
-    that the erlang runtime calls to start and stop our application.
+    This file implements the `application behavior <http://www.erlang.org/doc/design_principles/applications.html>`_ it's a set of callbacks
+    that the Erlang runtime calls to start and stop our application.
 
 tanodb_sup.erl
-    This file implements the `supervisor behaviour <http://www.erlang.org/doc/design_principles/sup_princ.html>`_ it's a set of callbacks
-    that the erlang runtime calls to build the supervisor hierarchy.
+    This file implements the `supervisor behavior <http://www.erlang.org/doc/design_principles/sup_princ.html>`_ it's a set of callbacks
+    that the Erlang runtime calls to build the supervisor hierarchy.
 
 tanodb_console.erl
     This file is specific to riak_core, it's a set of callbacks that will be
@@ -159,8 +159,8 @@ tanodb_console.erl
 
 tanodb_vnode.erl
     This file is specific to riak_core, it implements the riak_code_vnode
-    behaviour, which is a set of callbacks that riak_core will call to
-    acomplish different tasks, it's the main file we will edit to add new
+    behavior, which is a set of callbacks that riak_core will call to
+    accomplish different tasks, it's the main file we will edit to add new
     features.
 
 Those were the source code files, but the template also created other files,
@@ -211,8 +211,8 @@ config/advanced.config
     our `logging library <https://github.com/basho/lager/>`_
 
 config/sys.config
-    This is a standard erlang application file, you can read more about it
-    in the `erlang documentation for sys.config <http://www.erlang.org/doc/man/config.html>`_
+    This is a standard Erlang application file, you can read more about it
+    in the `Erlang documentation for sys.config <http://www.erlang.org/doc/man/config.html>`_
 
 config/vars.config
     This file contains variables used by relx to build a release, you can
@@ -229,10 +229,10 @@ Normally when you have a cluster for your application one operating system
 instance runs one instance of your application and you have many operating
 system instances, but to test the clustering features of riak_core we will
 build 3 releases of our application using offsets for ports and changing the
-application name to avoid collitions.
+application name to avoid collisions.
 
 config/vm.args
-    A file used to pass options to the erlang VM when starting our application.
+    A file used to pass options to the Erlang VM when starting our application.
 
 The following files are like vars_dev*.config but for vm.args::
 
@@ -245,7 +245,7 @@ Those are all the files, follow the links to know more about them.
 Playing with Clustering
 -----------------------
 
-Before starting to add features, let's first play with clustering so we undertand
+Before starting to add features, let's first play with clustering so we understand
 all those config files above work.
 
 Build 3 releases that can run on the same machine::
@@ -267,8 +267,8 @@ Now open 3 consoles and run the following commands one on each console::
     make dev2-console
     make dev3-console
 
-This will start the 3 nodes but the won't know about eachother, for them
-to know about eachother we need to "join" them, that is to tell one of them
+This will start the 3 nodes but the won't know about each other, for them
+to know about each other we need to "join" them, that is to tell one of them
 about the other two, this is achieved using the tanodb-admin command, here is
 how you should run it manually (don't run them)::
 
@@ -354,7 +354,7 @@ Check the status of the cluster again::
 
     make devrel-status
 
-You can see the vnodes transfering, this means the content of some virtual
+You can see the vnodes transferring, this means the content of some virtual
 nodes on one tanodb node are being transfered to another tanodb node::
 
     ================================= Membership ==================================
@@ -416,7 +416,7 @@ And then run::
 
     vagrant up
 
-To start the virutal machine.
+To start the virtual machine.
 
 Now let's package our release and copy it to a place where the VM can see it::
 

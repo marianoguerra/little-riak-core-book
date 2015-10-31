@@ -227,7 +227,7 @@ is not there:
     {not_found,228359630832953580969325755111919221821239459840,
                {<<"mybucket">>,<<"k1">>}}
 
-Now that we checked it works on the erlang shell, let's try the REST API, we
+Now that we checked it works on the Erlang shell, let's try the REST API, we
 will do the same as before, first get and expect not found:
 
 .. code-block:: sh

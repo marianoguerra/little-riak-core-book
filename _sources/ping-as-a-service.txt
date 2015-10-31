@@ -73,7 +73,7 @@ to change the configuration, we can do this by editing the file::
 
 Search for 8080 and change it for 8081, save and close and stop the server if you are running it.
 
-Now we will run it again buit manually to avoid rebar3 from overriding our
+Now we will run it again but manually to avoid rebar3 from overriding our
 change:
 
 .. code-block:: sh
@@ -104,7 +104,7 @@ Read tanodb.config to see all the available options, this file is generated
 using `cuttlefish <https://github.com/basho/cuttlefish>`_ which takes a
 `schema we define <https://github.com/marianoguerra/tanodb/blob/220bcade820538aec05993065ac4edf19f3ebcde/config/config.schema>`_ and uses it to generate
 the default config file and later to validate the config file on startup
-and generate configuration files that the erlang runtime understands.
+and generate configuration files that the Erlang runtime understands.
 
 If you are curious you can see the generated config files after running the
 server at least once under `_build/default/rel/tanodb/generated.configs/`
