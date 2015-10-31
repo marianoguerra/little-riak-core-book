@@ -11,7 +11,7 @@ This book shows how to build an application using `riak_core
 `tanodb <http://github.com/marianoguerra/tanodb>`_ step by step and linking to
 each change on its the description.
 
-The book can be read online at `marianoguerra.github.io/little-riak-core-book/ <http://marianoguerra.github.io/little-riak-core-book/>`_, it can also be downloaded as pdf: `LittleRiakCoreBook.pdf <marianoguerra.github.io/little-riak-core-book/downloads/LittleRiakCoreBook.pdf>`_ and as epub `LittleRiakCoreBook.epub <marianoguerra.github.io/little-riak-core-book/downloads/LittleRiakCoreBook.epub>`_.
+The book can be read online at `marianoguerra.github.io/little-riak-core-book/ <http://marianoguerra.github.io/little-riak-core-book/>`_, it can also be downloaded as pdf: `LittleRiakCoreBook.pdf <http://marianoguerra.github.io/little-riak-core-book/downloads/LittleRiakCoreBook.pdf>`_ and as epub `LittleRiakCoreBook.epub <http://marianoguerra.github.io/little-riak-core-book/downloads/LittleRiakCoreBook.epub>`_.
 
 The book was written by Mariano Guerra, you can find him at:
 
