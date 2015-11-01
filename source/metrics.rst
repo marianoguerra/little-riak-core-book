@@ -263,6 +263,8 @@ And then make a request for the metrics (result edited since it's quite big):
 
     $ http localhost:8080/metrics
 
+.. code-block:: http
+
     HTTP/1.1 200 OK
     content-length: 8079
     content-type: application/json

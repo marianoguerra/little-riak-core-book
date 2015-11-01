@@ -92,11 +92,9 @@ and an atom, let's try changing the number 1:
     (tanodb@127.0.0.1)3> PrefList2 = riak_core_apl:get_primary_apl(DocIdx, 2, tanodb).
 
     [{{730750818665451459101842416358141509827966271488,
-       'tanodb@127.0.0.1'},
-      primary},
+       'tanodb@127.0.0.1'}, primary},
      {{753586781748746817198774991869333432010090217472,
-       'tanodb@127.0.0.1'},
-      primary}]
+       'tanodb@127.0.0.1'}, primary}]
 
 Now we get two tuples, the first one is the same, so what this does is to return
 the number of vnodes that can handle the request from the hashed key by priority.
