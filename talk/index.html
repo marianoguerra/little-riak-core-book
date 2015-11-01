@@ -1570,9 +1570,9 @@ img.align-right{
 .hide{
  display: none !important;
 }
-</style></head><body class="reveal"><div class="slides"><section id="little-riak-core-talk"><header><h2>Little Riak Core Talk</h2></header><figure><img alt="imgs/tano.png" src="imgs/tano.png" style="width: 30%;"></figure><p>Mariano Guerra</p><p>Ricon 2015 | San Francisco | November 4-6th, 2015</p></section><section id="about-this-talk"><header><h2>About This Talk</h2></header><ul><li><p>Overview of <a class="reference external" href="http://marianoguerra.github.io/little-riak-core-book/">Little Riak Core Book</a> (~60 page html/pdf/epub)</p></li><li><p>Step by Step creation of <a class="reference external" href="https://github.com/marianoguerra/tanodb">tanodb</a></p><ul><li><p>In memory key value store with a REST API</p></li></ul></li><li><p>Will go fast</p></li><li><p>Don't worry, all is written down in the book</p></li><li><p>Provide all the tools and features</p></li><li><p>So you can focus on the distributed part</p></li></ul></section><section id="about-me"><header><h2>About Me</h2></header><ul><li><p>Argentinian</p></li><li><p>Software Engineer</p></li><li><p>Python, Clojure[script], Erlang, Javascript, <a class="reference external" href="http://efene.org/">Efene</a> ;)</p></li><li><p>Co-Founder of <a class="reference external" href="http://event-fabric.com/">Event Fabric</a></p><ul><li><p>Build Custom Real Time Dashboards on the Web without Code</p></li></ul></li></ul></section><section id="tools"><header><h2>Tools</h2></header><ul><li><p><a class="reference external" href="http://erlang.org/">Erlang &gt;= 17</a></p></li><li><p><a class="reference external" href="http://rebar3.org/">rebar3</a>: build tool</p><ul><li><p><a class="reference external" href="https://github.com/erlware/relx">relx</a>: rebar3 release</p></li><li><p><a class="reference external" href="https://github.com/basho/cuttlefish">cuttlefish</a>: config generation and validation</p></li><li><p><a class="reference external" href="https://github.com/tsloughter/rebar3_run">rebar3_run</a>: rebar3 run</p></li></ul></li><li><p><a class="reference external" href="https://github.com/marianoguerra/rebar3_template_riak_core/">rebar3_template_riak_core</a>: project template</p></li></ul></section><section id="initial-setup"><header><h2>Initial Setup</h2></header><ul><li><p><a class="reference external" href="http://www.rebar3.org/docs/getting-started">Install rebar3</a></p></li><li><p>Install Template</p></li></ul><pre class="code lang-sh">mkdir -p ~/.config/rebar3/templates
+</style></head><body class="reveal"><div class="slides"><section id="little-riak-core-talk"><header><h2>Little Riak Core Talk</h2></header><figure><img alt="imgs/tano.png" src="imgs/tano.png" style="width: 30%;"></figure><p>Mariano Guerra</p><p>Ricon 2015 | San Francisco | November 4-6th, 2015</p></section><section id="about-this-talk"><header><h2>About This Talk</h2></header><ul><li><p>Overview of <a class="reference external" href="http://marianoguerra.github.io/little-riak-core-book/">Little Riak Core Book</a> (~60 page html/pdf/epub)</p></li><li><p>Step by Step creation of <a class="reference external" href="https://github.com/marianoguerra/tanodb">tanodb</a></p><ul><li><p>In memory key value store with a REST API</p></li></ul></li><li><p>Will go fast</p></li><li><p>Don't worry, all is written down in the book</p></li><li><p>Provide all the tools and features</p></li><li><p>So you can focus on the distributed part</p></li></ul></section><section id="about-me"><header><h2>About Me</h2></header><ul><li><p>Argentinian</p></li><li><p>Software Engineer</p></li><li><p>Python, Clojure[script], Erlang, Javascript, <a class="reference external" href="http://efene.org/">Efene</a> ;)</p></li><li><p>Co-Founder of <a class="reference external" href="http://event-fabric.com/">Event Fabric</a></p><ul><li><p>Build Custom Real Time Dashboards on the Web without Code</p></li></ul></li></ul></section><section id="tools"><header><h2>Tools</h2></header><ul><li><p><a class="reference external" href="http://erlang.org/">Erlang &gt;= 17</a></p></li><li><p><a class="reference external" href="http://rebar3.org/">rebar3</a>: build tool</p><ul><li><p><a class="reference external" href="https://github.com/erlware/relx">relx</a>: rebar3 release</p></li><li><p><a class="reference external" href="https://github.com/basho/cuttlefish">cuttlefish</a>: config generation and validation</p></li><li><p><a class="reference external" href="https://github.com/tsloughter/rebar3_run">rebar3_run</a>: rebar3 run</p></li></ul></li><li><p><a class="reference external" href="https://github.com/marianoguerra/rebar3_template_riak_core/">rebar3_template_riak_core</a>: project template</p></li></ul></section><section id="initial-setup"><header><h2>Initial Setup</h2></header><ul><li><p><a class="reference external" href="http://www.rebar3.org/docs/getting-started">Install rebar3</a></p></li><li><p>Install Template</p></li></ul><pre class="prettyprint lang-sh">mkdir -p ~/.config/rebar3/templates
 git clone https://github.com/marianoguerra/rebar3_template_riak_core/ \
-    ~/.config/rebar3/templates/rebar3_template_riak_core</pre></section><section id="id1"><header><h2>Initial Setup</h2></header><ul><li><p>Create Project</p></li></ul><pre class="code lang-sh">rebar3 new rebar3_riak_core name=tanodb</pre></section><section id="project-structure"><header><h2>Project Structure</h2></header><pre>===&gt; Writing tanodb/apps/tanodb/src/tanodb.app.src
+    ~/.config/rebar3/templates/rebar3_template_riak_core</pre></section><section id="id1"><header><h2>Initial Setup</h2></header><ul><li><p>Create Project</p></li></ul><pre class="prettyprint lang-sh">rebar3 new rebar3_riak_core name=tanodb</pre></section><section id="project-structure"><header><h2>Project Structure</h2></header><pre class="prettyprint lang-sh">===&gt; Writing tanodb/apps/tanodb/src/tanodb.app.src
 ===&gt; Writing tanodb/apps/tanodb/src/tanodb.erl
 ===&gt; Writing tanodb/apps/tanodb/src/tanodb_app.erl
 ===&gt; Writing tanodb/apps/tanodb/src/tanodb_sup.erl
@@ -1582,7 +1582,7 @@ git clone https://github.com/marianoguerra/rebar3_template_riak_core/ \
 ===&gt; Writing tanodb/.editorconfig
 ===&gt; Writing tanodb/.gitignore
 ===&gt; Writing tanodb/README.rst
-===&gt; Writing tanodb/Makefile</pre></section><section id="id2"><header><h2>Project Structure</h2></header><pre>===&gt; Writing tanodb/config/nodetool
+===&gt; Writing tanodb/Makefile</pre></section><section id="id2"><header><h2>Project Structure</h2></header><pre class="prettyprint lang-sh">===&gt; Writing tanodb/config/nodetool
 ===&gt; Writing tanodb/config/extended_bin
 ===&gt; Writing tanodb/config/admin_bin
 ===&gt; Writing tanodb/config/config.schema
@@ -1595,23 +1595,23 @@ git clone https://github.com/marianoguerra/rebar3_template_riak_core/ \
 ===&gt; Writing tanodb/config/vm.args
 ===&gt; Writing tanodb/config/dev1_vm.args
 ===&gt; Writing tanodb/config/dev2_vm.args
-===&gt; Writing tanodb/config/dev3_vm.args</pre></section><section id="building-and-running"><header><h2>Building and Running</h2></header><pre class="code lang-sh">cd tanodb
+===&gt; Writing tanodb/config/dev3_vm.args</pre></section><section id="building-and-running"><header><h2>Building and Running</h2></header><pre class="prettyprint lang-sh">cd tanodb
 rebar3 release
-rebar3 run</pre><pre>_build/default/</pre></section><section id="try-it"><header><h2>Try It</h2></header><pre class="code lang-erl">(tanodb@127.0.0.1)1&gt; tanodb:ping().
+rebar3 run</pre><pre class="prettyprint lang-sh">_build/default/</pre></section><section id="try-it"><header><h2>Try It</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb:ping().
 {pong,1347321821914426127719021955160323408745312813056}
 
-(tanodb@127.0.0.1)1&gt; q().</pre><p>From now on Partition IDs will look like <strong>13...</strong>, but they are that long</p></section><section id="clustering"><header><h2>Clustering</h2></header><pre class="code lang-sh">make devrel</pre><pre>_build/dev1
+(tanodb@127.0.0.1)1&gt; q().</pre><p>From now on Partition IDs will look like <strong>13...</strong>, but they are that long</p></section><section id="clustering"><header><h2>Clustering</h2></header><pre class="prettyprint lang-sh">make devrel</pre><pre class="prettyprint lang-sh">_build/dev1
 _build/dev2
-_build/dev3</pre><pre class="code lang-sh">make dev1-console
+_build/dev3</pre><pre class="prettyprint lang-sh">make dev1-console
 make dev2-console
-make dev3-console</pre></section><section id="joining-nodes"><header><h2>Joining Nodes</h2></header><pre class="code lang-sh">make devrel-join</pre><pre class="code lang-sh">make devrel-status</pre><pre>================================= Membership ===============
+make dev3-console</pre></section><section id="joining-nodes"><header><h2>Joining Nodes</h2></header><pre class="prettyprint lang-sh">make devrel-join</pre><pre class="prettyprint lang-sh">make devrel-status</pre><pre class="prettyprint lang-sh">================================= Membership ===============
 Status     Ring    Pending    Node
 ------------------------------------------------------------
 joining     0.0%      --      'tanodb2@127.0.0.1'
 joining     0.0%      --      'tanodb3@127.0.0.1'
 valid     100.0%      --      'tanodb1@127.0.0.1'
 ------------------------------------------------------------
-Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0</pre></section><section id="checking-the-plan"><header><h2>Checking the Plan</h2></header><pre class="code lang-sh">make devrel-cluster-plan</pre><pre>=============================== Staged Changes ==============
+Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0</pre></section><section id="checking-the-plan"><header><h2>Checking the Plan</h2></header><pre class="prettyprint lang-sh">make devrel-cluster-plan</pre><pre class="prettyprint lang-sh">=============================== Staged Changes ==============
 Action         Details(s)
 -------------------------------------------------------------
 join           'tanodb2@127.0.0.1'
@@ -1619,7 +1619,7 @@ join           'tanodb3@127.0.0.1'
 -------------------------------------------------------------
 
 
-NOTE: Applying these changes will result in 1 cluster transition</pre></section><section id="id3"><header><h2>Checking the Plan</h2></header><pre>#############################################################
+NOTE: Applying these changes will result in 1 cluster transition</pre></section><section id="id3"><header><h2>Checking the Plan</h2></header><pre class="prettyprint lang-sh">#############################################################
                          After cluster transition 1/1
 #############################################################
 
@@ -1636,27 +1636,27 @@ WARNING: Not all replicas will be on distinct nodes
 
 Transfers resulting from cluster changes: 42
   21 transfers from 'tanodb1@127.0.0.1' to 'tanodb3@127.0.0.1'
-  21 transfers from 'tanodb1@127.0.0.1' to 'tanodb2@127.0.0.1'</pre></section><section id="committing-changes"><header><h2>Committing Changes</h2></header><pre class="code lang-sh">make devrel-cluster-commit</pre><pre>Cluster changes committed</pre></section><section id="checking-handoff"><header><h2>Checking Handoff</h2></header><pre class="code lang-sh">make devrel-status</pre><pre>================================= Membership =============
+  21 transfers from 'tanodb1@127.0.0.1' to 'tanodb2@127.0.0.1'</pre></section><section id="committing-changes"><header><h2>Committing Changes</h2></header><pre class="prettyprint lang-sh">make devrel-cluster-commit</pre><pre>Cluster changes committed</pre></section><section id="checking-handoff"><header><h2>Checking Handoff</h2></header><pre class="prettyprint lang-sh">make devrel-status</pre><pre class="prettyprint lang-sh">================================= Membership =============
 Status     Ring    Pending    Node
 ----------------------------------------------------------
 valid      75.0%     34.4%    'tanodb1@127.0.0.1'
 valid       9.4%     32.8%    'tanodb2@127.0.0.1'
 valid       7.8%     32.8%    'tanodb3@127.0.0.1'
 ----------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0</pre></section><section id="id4"><header><h2>Checking Handoff</h2></header><pre>================================= Membership ==============
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0</pre></section><section id="id4"><header><h2>Checking Handoff</h2></header><pre class="prettyprint lang-sh">================================= Membership ==============
 Status     Ring    Pending    Node
 -----------------------------------------------------------
 valid      34.4%      --      'tanodb1@127.0.0.1'
 valid      32.8%      --      'tanodb2@127.0.0.1'
 valid      32.8%      --      'tanodb3@127.0.0.1'
 -----------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0</pre></section><section id="stopping-all"><header><h2>Stopping All</h2></header><pre class="code lang-sh">make devrel-stop</pre></section><section id="building-a-production-release"><header><h2>Building a Production Release</h2></header><pre class="code lang-sh">rebar3 as prod release</pre></section><section id="trying-it-on-a-clean-server"><header><h2>Trying it on a Clean Server</h2></header><pre class="code lang-sh">mkdir vm-ubuntu-1504
-cd vm-ubuntu-1504</pre><p>Vagrantfile:</p><pre class="code lang-ruby">Vagrant.configure(2) do |config|
+Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0</pre></section><section id="stopping-all"><header><h2>Stopping All</h2></header><pre class="prettyprint lang-sh">make devrel-stop</pre></section><section id="building-a-production-release"><header><h2>Building a Production Release</h2></header><pre class="prettyprint lang-sh">rebar3 as prod release</pre></section><section id="trying-it-on-a-clean-server"><header><h2>Trying it on a Clean Server</h2></header><pre class="prettyprint lang-sh">mkdir vm-ubuntu-1504
+cd vm-ubuntu-1504</pre><p>Vagrantfile:</p><pre class="prettyprint lang-ruby">Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/vivid64"
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
   end
-end</pre><pre class="code lang-sh">vagrant up</pre></section><section id="id5"><header><h2>Trying it on a Clean Server</h2></header><pre class="code lang-sh">cd _build/prod/rel
+end</pre><pre class="prettyprint lang-sh">vagrant up</pre></section><section id="id5"><header><h2>Trying it on a Clean Server</h2></header><pre class="prettyprint lang-sh">cd _build/prod/rel
 tar -czf tanodb.tgz tanodb
 cd -
 mv _build/prod/rel/tanodb.tgz vm-ubuntu-1504
@@ -1664,8 +1664,8 @@ export TERM=xterm
 vagrant ssh
 cp /vagrant/tanodb.tgz .
 tar -xzf tanodb.tgz
-./tanodb/bin/tanodb console</pre></section><section id="ping-as-a-service-paas"><header><h2>Ping as a Service (PaaS)</h2></header><ul><li><p>Add <a class="reference external" href="ninenines.eu/docs/en/cowboy/1.0/">Cowboy</a> and <a class="reference external" href="https://github.com/talentdeficit/jsx">jsx</a> deps to rebar.config</p></li><li><p>Add Route in tanodb_app</p></li><li><p>Create tanodb_http_ping cowboy rest handler</p></li></ul><pre class="code lang-sh">rebar3 release
-rebar3 run</pre></section><section id="id6"><header><h2>Ping as a Service (PaaS)</h2></header><pre class="code lang-sh">http localhost:8080/ping</pre><pre class="code lang-http">HTTP/1.1 200 OK
+./tanodb/bin/tanodb console</pre></section><section id="ping-as-a-service-paas"><header><h2>Ping as a Service (PaaS)</h2></header><ul><li><p>Add <a class="reference external" href="ninenines.eu/docs/en/cowboy/1.0/">Cowboy</a> and <a class="reference external" href="https://github.com/talentdeficit/jsx">jsx</a> deps to rebar.config</p></li><li><p>Add Route in tanodb_app</p></li><li><p>Create tanodb_http_ping cowboy rest handler</p></li></ul><pre class="prettyprint lang-sh">rebar3 release
+rebar3 run</pre></section><section id="id6"><header><h2>Ping as a Service (PaaS)</h2></header><pre class="prettyprint lang-sh">http localhost:8080/ping</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-length: 59
 content-type: application/json
 date: Thu, 29 Oct 2015 19:07:23 GMT
@@ -1673,7 +1673,7 @@ server: Cowboy
 
 {
 "pong": "981946412581700398168100746981252653831329677312"
-}</pre></section><section id="changing-configuration"><header><h2>Changing Configuration</h2></header><pre>_build/default/rel/tanodb/etc/tanodb.conf</pre><pre>## Enable/Disable HTTP API
+}</pre></section><section id="changing-configuration"><header><h2>Changing Configuration</h2></header><pre class="prettyprint lang-sh">_build/default/rel/tanodb/etc/tanodb.conf</pre><pre class="prettyprint lang-python">## Enable/Disable HTTP API
 ## Default: yes
 ## Acceptable values:
 ##   - yes or no
@@ -1689,7 +1689,7 @@ http.port = 8080
 ## Default: 100
 ## Acceptable values:
 ##   - an integer
-http.acceptors = 100</pre></section><section id="id7"><header><h2>Changing Configuration</h2></header><pre>http localhost:8081/ping</pre></section><section id="metrics"><header><h2>Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/Feuerlabs/exometer">exometer</a> (same as riak_core)</p></li><li><p>Our metrics and riak_core metrics</p></li></ul><pre class="code lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
+http.acceptors = 100</pre></section><section id="id7"><header><h2>Changing Configuration</h2></header><pre class="prettyprint lang-sh">http localhost:8081/ping</pre></section><section id="metrics"><header><h2>Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/Feuerlabs/exometer">exometer</a> (same as riak_core)</p></li><li><p>Our metrics and riak_core metrics</p></li></ul><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
 [{tanodb,[
  ...
  {core,[{ping,[{count,0},{one,0}]}]}]
@@ -1700,7 +1700,7 @@ http.acceptors = 100</pre></section><section id="id7"><header><h2>Changing Confi
 (tanodb@127.0.0.1)3&gt; tanodb_metrics:all().
 [{tanodb,[
  ...
- {core,[{ping,[{count,1},{one,1}]}]}]</pre></section><section id="vm-metrics"><header><h2>VM Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/ferd/recon">recon</a></p></li></ul><pre class="code lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
+ {core,[{ping,[{count,1},{one,1}]}]}]</pre></section><section id="vm-metrics"><header><h2>VM Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/ferd/recon">recon</a></p></li></ul><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
 [{tanodb,[...
  {node,[{abs,[{process_count,377},
               {run_queue,0}, {error_logger_queue_len,0},
@@ -1714,7 +1714,7 @@ http.acceptors = 100</pre></section><section id="id7"><header><h2>Changing Confi
                                 {2,0.04754016011809648},
                                 {3,0.04615958261183974},
                                 {4,0.03682005933534583}]}]}]},
- {core,[{ping,[{count,0},{one,0}]}]}]</pre></section><section id="web-server-metrics"><header><h2>Web Server Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/cowboy_exometer">cowboy_exometer</a></p><ul><li><p>Middleware and response hooks</p></li></ul></li></ul><pre class="code lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
+ {core,[{ping,[{count,0},{one,0}]}]}]</pre></section><section id="web-server-metrics"><header><h2>Web Server Metrics</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/cowboy_exometer">cowboy_exometer</a></p><ul><li><p>Middleware and response hooks</p></li></ul></li></ul><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb_metrics:all().
 [{tanodb,[ ...
  {http,[{resp,[{by_code,[{200,[{count,1},{one,1}]},
                          {201,[{count,0},{one,0}]},
@@ -1728,7 +1728,7 @@ http.acceptors = 100</pre></section><section id="id7"><header><h2>Changing Confi
                        {95,44126}, {99,44126}, {999,44126}]}]},
               {active,[{value,0},{ms_since_reset,11546}]},
               {count,[{&lt;&lt;"ping"&gt;&gt;,[{count,1},{one,1}]}]}]}]},
-              ...]</pre></section><section id="metrics-via-http"><header><h2>Metrics Via HTTP</h2></header><pre class="code lang-sh">$ http localhost:8080/metrics</pre><pre class="code lang-http">HTTP/1.1 200 OK
+              ...]</pre></section><section id="metrics-via-http"><header><h2>Metrics Via HTTP</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/metrics</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-type: application/json
 
 {
@@ -1739,7 +1739,7 @@ content-type: application/json
             "count": {
                 "metrics": { "count": 1, "one": 0 },
                 "ping": { "count": 2, "one": 1 }
-            },</pre></section><section id="id8"><header><h2>Metrics Via HTTP</h2></header><pre class="code lang-http">    "time": {
+            },</pre></section><section id="id8"><header><h2>Metrics Via HTTP</h2></header><pre class="prettyprint lang-http">    "time": {
         "metrics": {
             "50": 0, "75": 0, "90": 0, "95": 0, "99": 0, "999": 0,
             "max": 0, "mean": 0, "median": 0, "min": 0, "n": 0
@@ -1750,7 +1750,7 @@ content-type: application/json
             "min": 349, "n": 3
         }
     }
-},</pre></section><section id="id9"><header><h2>Metrics Via HTTP</h2></header><pre class="code lang-http">        "resp": {
+},</pre></section><section id="id9"><header><h2>Metrics Via HTTP</h2></header><pre class="prettyprint lang-http">        "resp": {
             "by_code": {
                 "200": { "count": 3, "one": 1 },
                 "201": { "count": 0, "one": 0 }, ...
@@ -1763,7 +1763,7 @@ content-type: application/json
     },
     "node": { ...  },
     "tanodb": { ...  }
-}</pre></section><section id="metrics-extra"><header><h2>Metrics Extra</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/lager_exometer_backend">lager exometer backend</a></p><ul><li><p>lager backend</p></li><li><p>sends log metrics by level to exometer</p></li></ul></li></ul></section><section id="users-groups-and-permissions"><header><h2>Users, Groups and Permissions</h2></header><ul><li><p>riak_core provides riak_core_security module</p><ul><li><p>Roles: Users and Groups</p></li><li><p>Permissions</p></li><li><p>Grants</p></li><li><p>Resources</p></li></ul></li></ul></section><section id="exposing-riak-core-security"><header><h2>Exposing riak_core_security</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/rcs_cowboy">rcs_cowboy</a></p><ul><li><p>Cowboy rest handler</p></li><li><p>Utility library</p></li><li><p>REST API for riak_core_security</p></li><li><p>As a library</p></li></ul></li></ul></section><section id="riak-core-security-ui"><header><h2>riak_core_security UI</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/iorioui">iorioui</a></p><ul><li><p>clojurescript + om.next + bootstrap</p></li><li><p>Web Admin for riak_core_security</p></li><li><p>Uses rcs_cowboy</p></li></ul></li></ul></section><section id="rcs-cowboy-and-iorioui"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-1.png" src="imgs/rcs-1.png" style="width: 60%;"></figure></section><section id="id10"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-2.png" src="imgs/rcs-2.png" style="width: 60%;"></figure></section><section id="id11"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-3.png" src="imgs/rcs-3.png" style="width: 60%;"></figure></section><section id="id12"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-4.png" src="imgs/rcs-4.png" style="width: 60%;"></figure></section><section id="id13"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-5.png" src="imgs/rcs-5.png" style="width: 60%;"></figure></section><section id="id14"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-6.png" src="imgs/rcs-6.png" style="width: 60%;"></figure></section><section id="id15"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-7.png" src="imgs/rcs-7.png" style="width: 60%;"></figure></section><section id="id16"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-8.png" src="imgs/rcs-8.png" style="width: 60%;"></figure></section><section id="id17"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-9.png" src="imgs/rcs-9.png" style="width: 60%;"></figure></section><section id="id18"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-10.png" src="imgs/rcs-10.png" style="width: 60%;"></figure></section><section id="id19"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-11.png" src="imgs/rcs-11.png" style="width: 60%;"></figure></section><section id="id20"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-12.png" src="imgs/rcs-12.png" style="width: 60%;"></figure></section><section id="ping-implementation"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">ping() -&gt;
+}</pre></section><section id="metrics-extra"><header><h2>Metrics Extra</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/lager_exometer_backend">lager exometer backend</a></p><ul><li><p>lager backend</p></li><li><p>sends log metrics by level to exometer</p></li></ul></li></ul></section><section id="users-groups-and-permissions"><header><h2>Users, Groups and Permissions</h2></header><ul><li><p>riak_core provides riak_core_security module</p><ul><li><p>Roles: Users and Groups</p></li><li><p>Permissions</p></li><li><p>Grants</p></li><li><p>Resources</p></li></ul></li></ul></section><section id="exposing-riak-core-security"><header><h2>Exposing riak_core_security</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/rcs_cowboy">rcs_cowboy</a></p><ul><li><p>Cowboy rest handler</p></li><li><p>Utility library</p></li><li><p>REST API for riak_core_security</p></li><li><p>As a library</p></li></ul></li></ul></section><section id="riak-core-security-ui"><header><h2>riak_core_security UI</h2></header><ul><li><p><a class="reference external" href="https://github.com/marianoguerra/iorioui">iorioui</a></p><ul><li><p>clojurescript + om.next + bootstrap</p></li><li><p>Web Admin for riak_core_security</p></li><li><p>Uses rcs_cowboy</p></li></ul></li></ul></section><section id="rcs-cowboy-and-iorioui"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-1.png" src="imgs/rcs-1.png" style="width: 60%;"></figure></section><section id="id10"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-2.png" src="imgs/rcs-2.png" style="width: 60%;"></figure></section><section id="id11"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-3.png" src="imgs/rcs-3.png" style="width: 60%;"></figure></section><section id="id12"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-4.png" src="imgs/rcs-4.png" style="width: 60%;"></figure></section><section id="id13"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-5.png" src="imgs/rcs-5.png" style="width: 60%;"></figure></section><section id="id14"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-6.png" src="imgs/rcs-6.png" style="width: 60%;"></figure></section><section id="id15"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-7.png" src="imgs/rcs-7.png" style="width: 60%;"></figure></section><section id="id16"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-8.png" src="imgs/rcs-8.png" style="width: 60%;"></figure></section><section id="id17"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-9.png" src="imgs/rcs-9.png" style="width: 60%;"></figure></section><section id="id18"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-10.png" src="imgs/rcs-10.png" style="width: 60%;"></figure></section><section id="id19"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-11.png" src="imgs/rcs-11.png" style="width: 60%;"></figure></section><section id="id20"><header><h2>rcs_cowboy and iorioui</h2></header><figure><img alt="imgs/rcs-12.png" src="imgs/rcs-12.png" style="width: 60%;"></figure></section><section id="ping-implementation"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">ping() -&gt;
     tanodb_metrics:core_ping(),
 
     DocIdx = riak_core_util:chash_key({&lt;&lt;"ping"&gt;&gt;,
@@ -1774,23 +1774,23 @@ content-type: application/json
     [{IndexNode, _Type}] = PrefList,
 
     riak_core_vnode_master:sync_spawn_command(IndexNode, ping,
-                                            tanodb_vnode_master).</pre></section><section id="id21"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)1&gt; DocIdx = riak_core_util:chash_key({&lt;&lt;"ping"&gt;&gt;, term_to_binary(os:timestamp())}).
+                                            tanodb_vnode_master).</pre></section><section id="id21"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; DocIdx = riak_core_util:chash_key({&lt;&lt;"ping"&gt;&gt;, term_to_binary(os:timestamp())}).
 
-&lt;&lt;126,9,218,77,97,108,38,92,0,155,160,26,161,3,200,87,134,213,167,168&gt;&gt;</pre><pre class="code lang-erlang">(tanodb@127.0.0.1)2&gt; PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb).
+&lt;&lt;126,9,218,77,97,108,38,92,0,155,160,26,161,3,200,87,134,213,167,168&gt;&gt;</pre><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)2&gt; PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb).
 
-[{{73..., 'tanodb@127.0.0.1'}, primary}]</pre></section><section id="id22"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)3&gt; PrefList2 = riak_core_apl:get_primary_apl(DocIdx, 2, tanodb).
-
-[{{73..., 'tanodb@127.0.0.1'}, primary},
- {{75..., 'tanodb@127.0.0.1'}, primary}]</pre></section><section id="id23"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)5&gt; [{IndexNode, _Type}] = PrefList.
-
-[{{73..., 'tanodb@127.0.0.1'}, primary}]</pre><pre class="code lang-erlang">(tanodb@127.0.0.1)6&gt; riak_core_vnode_master:sync_spawn_command(IndexNode, ping, tanodb_vnode_master).
-
-{pong,73...}</pre></section><section id="id24"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)7&gt; [{IndexNode1, _Type1}, {IndexNode2, _Type2}] = PrefList2.
+[{{73..., 'tanodb@127.0.0.1'}, primary}]</pre></section><section id="id22"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)3&gt; PrefList2 = riak_core_apl:get_primary_apl(DocIdx, 2, tanodb).
 
 [{{73..., 'tanodb@127.0.0.1'}, primary},
- {{75..., 'tanodb@127.0.0.1'}, primary}]</pre><pre class="code lang-erlang">(tanodb@127.0.0.1)9&gt; riak_core_vnode_master:sync_spawn_command(IndexNode2, ping, tanodb_vnode_master).
+ {{75..., 'tanodb@127.0.0.1'}, primary}]</pre></section><section id="id23"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)5&gt; [{IndexNode, _Type}] = PrefList.
 
-{pong,75...}</pre></section><section id="id25"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">-module(tanodb_vnode).
+[{{73..., 'tanodb@127.0.0.1'}, primary}]</pre><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)6&gt; riak_core_vnode_master:sync_spawn_command(IndexNode, ping, tanodb_vnode_master).
+
+{pong,73...}</pre></section><section id="id24"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)7&gt; [{IndexNode1, _Type1}, {IndexNode2, _Type2}] = PrefList2.
+
+[{{73..., 'tanodb@127.0.0.1'}, primary},
+ {{75..., 'tanodb@127.0.0.1'}, primary}]</pre><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)9&gt; riak_core_vnode_master:sync_spawn_command(IndexNode2, ping, tanodb_vnode_master).
+
+{pong,75...}</pre></section><section id="id25"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">-module(tanodb_vnode).
 -behaviour(riak_core_vnode).
 
 -export([start_vnode/1,
@@ -1806,13 +1806,13 @@ content-type: application/json
          handle_handoff_data/2,
          encode_handoff_item/2,
          handle_coverage/4,
-         handle_exit/3]).</pre></section><section id="id26"><header><h2>Ping Implementation</h2></header><pre class="code lang-erlang">-record(state, {partition}).
+         handle_exit/3]).</pre></section><section id="id26"><header><h2>Ping Implementation</h2></header><pre class="prettyprint lang-erlang">-record(state, {partition}).
 
 init([Partition]) -&gt;
     {ok, #state { partition=Partition }}.
 
 handle_command(ping, _Sender, State) -&gt;
-    {reply, {pong, State#state.partition}, State};</pre></section><section id="how-to-add-a-new-command"><header><h2>How to Add a New Command?</h2></header><ul><li><p>Add a function on tanodb.erl</p></li><li><p>Add a new clause to handle_command</p></li><li><p>Add metrics of course :)</p></li></ul></section><section id="adding-our-first-command"><header><h2>Adding our First Command</h2></header><ul><li><p>get</p></li><li><p>put</p></li><li><p>delete</p></li></ul></section><section id="api"><header><h2>API</h2></header><pre class="code lang-erlang">get(Key) -&gt;
+    {reply, {pong, State#state.partition}, State};</pre></section><section id="how-to-add-a-new-command"><header><h2>How to Add a New Command?</h2></header><ul><li><p>Add a function on tanodb.erl</p></li><li><p>Add a new clause to handle_command</p></li><li><p>Add metrics of course :)</p></li></ul></section><section id="adding-our-first-command"><header><h2>Adding our First Command</h2></header><ul><li><p>get</p></li><li><p>put</p></li><li><p>delete</p></li></ul></section><section id="api"><header><h2>API</h2></header><pre class="prettyprint lang-erlang">get(Key) -&gt;
     tanodb_metrics:core_get(),
     send_to_one(Key, {get, Key}).
 
@@ -1822,24 +1822,24 @@ delete(Key) -&gt;
 
 put(Key, Value) -&gt;
     tanodb_metrics:core_put(),
-    send_to_one(Key, {put, Key, Value}).</pre></section><section id="id27"><header><h2>API</h2></header><pre class="code lang-erlang">% private functions
+    send_to_one(Key, {put, Key, Value}).</pre></section><section id="id27"><header><h2>API</h2></header><pre class="prettyprint lang-erlang">% private functions
 
 send_to_one(Key, Cmd) -&gt;
     DocIdx = riak_core_util:chash_key(Key),
     PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
     [{IndexNode, _Type}] = PrefList,
     riak_core_vnode_master:sync_spawn_command(IndexNode, Cmd,
-         tanodb_vnode_master).</pre></section><section id="vnode-put"><header><h2>VNode Put</h2></header><pre class="code lang-erlang">handle_command({put, Key, Value}, _Sender,
+         tanodb_vnode_master).</pre></section><section id="vnode-put"><header><h2>VNode Put</h2></header><pre class="prettyprint lang-erlang">handle_command({put, Key, Value}, _Sender,
                State=#state{table_name=TableName, partition=Partition}) -&gt;
     ets:insert(TableName, {Key, Value}),
-    {reply, {ok, Partition}, State};</pre></section><section id="vnode-get"><header><h2>VNode Get</h2></header><pre class="code lang-erlang">handle_command({get, Key}, _Sender,
+    {reply, {ok, Partition}, State};</pre></section><section id="vnode-get"><header><h2>VNode Get</h2></header><pre class="prettyprint lang-erlang">handle_command({get, Key}, _Sender,
                State=#state{table_name=TableName, partition=Partition}) -&gt;
     case ets:lookup(TableName, Key) of
         [] -&gt;
             {reply, {not_found, Partition, Key}, State};
         [Value] -&gt;
             {reply, {found, Partition, {Key, Value}}, State}
-    end;</pre></section><section id="vnode-delete"><header><h2>VNode Delete</h2></header><pre class="code lang-erlang">handle_command({delete, Key}, _Sender,
+    end;</pre></section><section id="vnode-delete"><header><h2>VNode Delete</h2></header><pre class="prettyprint lang-erlang">handle_command({delete, Key}, _Sender,
                State=#state{table_name=TableName, partition=Partition}) -&gt;
     case ets:lookup(TableName, Key) of
         [] -&gt;
@@ -1847,43 +1847,43 @@ send_to_one(Key, Cmd) -&gt;
         [Value] -&gt;
             true = ets:delete(TableName, Key),
             {reply, {found, Partition, {Key, Value}}, State}
-    end;</pre></section><section id="testing-our-new-commands"><header><h2>Testing our New Commands</h2></header><p>Get Not Found</p><pre class="code lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
+    end;</pre></section><section id="testing-our-new-commands"><header><h2>Testing our New Commands</h2></header><p>Get Not Found</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
 
-{not_found,22..., {&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}}</pre><p>Put</p><pre class="code lang-erlang">(tanodb@127.0.0.1)3&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
+{not_found,22..., {&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}}</pre><p>Put</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)3&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
 
-{ok,22...}</pre><p>Get Found</p><pre class="code lang-erlang">(tanodb@127.0.0.1)3&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
-
-{found,22...,
-       {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}</pre></section><section id="id28"><header><h2>Testing our New Commands</h2></header><p>Delete</p><pre class="code lang-erlang">(tanodb@127.0.0.1)4&gt; tanodb:delete({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
+{ok,22...}</pre><p>Get Found</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)3&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
 
 {found,22...,
-       {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}</pre><p>Get Not Found</p><pre class="code lang-erlang">(tanodb@127.0.0.1)5&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
+       {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}</pre></section><section id="id28"><header><h2>Testing our New Commands</h2></header><p>Delete</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)4&gt; tanodb:delete({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
 
-{not_found,22..., {&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}}</pre></section><section id="testing-our-new-api"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="code lang-http">HTTP/1.1 404 Not Found
+{found,22...,
+       {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}</pre><p>Get Not Found</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)5&gt; tanodb:get({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
+
+{not_found,22..., {&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}}</pre></section><section id="testing-our-new-api"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="prettyprint lang-http">HTTP/1.1 404 Not Found
 content-length: 0
-content-type: application/json</pre></section><section id="id29"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http post localhost:8080/store/mybucket/bob name=bob color=yellow</pre><pre class="code lang-http">HTTP/1.1 204 No Content
+content-type: application/json</pre></section><section id="id29"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http post localhost:8080/store/mybucket/bob name=bob color=yellow</pre><pre class="prettyprint lang-http">HTTP/1.1 204 No Content
 content-length: 0
-content-type: application/json</pre></section><section id="id30"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="code lang-http">HTTP/1.1 200 OK
+content-type: application/json</pre></section><section id="id30"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-length: 31
 content-type: application/json
 
 {
     "color": "yellow",
     "name": "bob"
-}</pre></section><section id="id31"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http delete localhost:8080/store/mybucket/bob</pre><pre class="code lang-http">HTTP/1.1 204 No Content
+}</pre></section><section id="id31"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http delete localhost:8080/store/mybucket/bob</pre><pre class="prettyprint lang-http">HTTP/1.1 204 No Content
 content-length: 0
-content-type: application/json</pre></section><section id="id32"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="code lang-http">HTTP/1.1 404 Not Found
+content-type: application/json</pre></section><section id="id32"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket/bob</pre><pre class="prettyprint lang-http">HTTP/1.1 404 Not Found
 content-length: 0
-content-type: application/json</pre></section><section id="id33"><header><h2>Testing our New API</h2></header><pre class="code lang-sh">$ http delete localhost:8080/store/mybucket/bob</pre><pre class="code lang-http">HTTP/1.1 404 Not Found
+content-type: application/json</pre></section><section id="id33"><header><h2>Testing our New API</h2></header><pre class="prettyprint lang-sh">$ http delete localhost:8080/store/mybucket/bob</pre><pre class="prettyprint lang-http">HTTP/1.1 404 Not Found
 content-length: 0
-content-type: application/json</pre></section><section id="coverage-calls"><header><h2>Coverage Calls</h2></header><ul><li><p>Problem: List Keys from a Bucket</p></li><li><p>Init -&gt; Process Results (until #vnodes) -&gt; Finish (ok/error/timeout)</p></li><li><p>coverate_fsm and coverage_fsm_sup</p><ul><li><p>Need to register coverage_fsm_sup on supervisor tree</p></li></ul></li></ul></section><section id="id34"><header><h2>Coverage Calls</h2></header><pre class="code lang-erlang">keys(Bucket) -&gt;
+content-type: application/json</pre></section><section id="coverage-calls"><header><h2>Coverage Calls</h2></header><ul><li><p>Problem: List Keys from a Bucket</p></li><li><p>Init -&gt; Process Results (until #vnodes) -&gt; Finish (ok/error/timeout)</p></li><li><p>coverate_fsm and coverage_fsm_sup</p><ul><li><p>Need to register coverage_fsm_sup on supervisor tree</p></li></ul></li></ul></section><section id="id34"><header><h2>Coverage Calls</h2></header><pre class="prettyprint lang-erlang">keys(Bucket) -&gt;
     tanodb_metrics:core_keys(),
     Timeout = 5000,
-    tanodb_coverage_fsm:start({keys, Bucket}, Timeout).</pre></section><section id="id35"><header><h2>Coverage Calls</h2></header><pre class="code lang-erlang">handle_coverage({keys, Bucket}, _KeySpaces, {_, RefId, _},
+    tanodb_coverage_fsm:start({keys, Bucket}, Timeout).</pre></section><section id="id35"><header><h2>Coverage Calls</h2></header><pre class="prettyprint lang-erlang">handle_coverage({keys, Bucket}, _KeySpaces, {_, RefId, _},
                 State=#state{table_name=TableName}) -&gt;
     Keys0 = ets:match(TableName, {{Bucket, '$1'}, '_'}),
     Keys = lists:map(fun first/1, Keys0),
-    {reply, {RefId, Keys}, State};</pre></section><section id="testing-coverage-call"><header><h2>Testing Coverage Call</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb:keys(&lt;&lt;"mybucket"&gt;&gt;).
+    {reply, {RefId, Keys}, State};</pre></section><section id="testing-coverage-call"><header><h2>Testing Coverage Call</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)1&gt; tanodb:keys(&lt;&lt;"mybucket"&gt;&gt;).
 
 {ok,[{13...,
       'tanodb@127.0.0.1',[]},
@@ -1891,35 +1891,35 @@ content-type: application/json</pre></section><section id="coverage-calls"><head
      {95...,
       'tanodb@127.0.0.1',...},
      {41...,...},
-     {...}|...]}</pre><p>Shape</p><pre class="code lang-erlang">{ok, [{Partition, Node, ListOfKeys}*64]}</pre></section><section id="id36"><header><h2>Testing Coverage Call</h2></header><p>Put one value</p><pre class="code lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
+     {...}|...]}</pre><p>Shape</p><pre class="prettyprint lang-erlang">{ok, [{Partition, Node, ListOfKeys}*64]}</pre></section><section id="id36"><header><h2>Testing Coverage Call</h2></header><p>Put one value</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
 
-{ok,22...}</pre><p>Get and Filter</p><pre class="code lang-erlang">(tanodb@127.0.0.1)3&gt; lists:filter(fun ({_, _, []}) -&gt; false;
+{ok,22...}</pre><p>Get and Filter</p><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)3&gt; lists:filter(fun ({_, _, []}) -&gt; false;
                                       (_) -&gt; true
                                   end,
                                   element(2, tanodb:keys(&lt;&lt;"mybucket"&gt;&gt;))).
 
-[{22..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]}]</pre></section><section id="coverage-rest-api"><header><h2>Coverage REST API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="code lang-http">HTTP/1.1 200 OK
+[{22..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]}]</pre></section><section id="coverage-rest-api"><header><h2>Coverage REST API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-length: 2
 content-type: application/json
 
-[]</pre></section><section id="id37"><header><h2>Coverage REST API</h2></header><pre class="code lang-sh">$ http post localhost:8080/store/mybucket/bob name=bob color=yellow</pre><pre class="code lang-http">HTTP/1.1 204 No Content
+[]</pre></section><section id="id37"><header><h2>Coverage REST API</h2></header><pre class="prettyprint lang-sh">$ http post localhost:8080/store/mybucket/bob name=bob color=yellow</pre><pre class="prettyprint lang-http">HTTP/1.1 204 No Content
 content-length: 0
-content-type: application/json</pre></section><section id="id38"><header><h2>Coverage REST API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="code lang-http">HTTP/1.1 200 OK
+content-type: application/json</pre></section><section id="id38"><header><h2>Coverage REST API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-length: 7
 content-type: application/json
 
 [
     "bob"
-]</pre></section><section id="id39"><header><h2>Coverage REST API</h2></header><pre class="code lang-sh">$ http post localhost:8080/store/mybucket/patrick name=patrick color=pink</pre><pre class="code lang-http">HTTP/1.1 204 No Content
+]</pre></section><section id="id39"><header><h2>Coverage REST API</h2></header><pre class="prettyprint lang-sh">$ http post localhost:8080/store/mybucket/patrick name=patrick color=pink</pre><pre class="prettyprint lang-http">HTTP/1.1 204 No Content
 content-length: 0
-content-type: application/json</pre></section><section id="id40"><header><h2>Coverage REST API</h2></header><pre class="code lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="code lang-http">HTTP/1.1 200 OK
+content-type: application/json</pre></section><section id="id40"><header><h2>Coverage REST API</h2></header><pre class="prettyprint lang-sh">$ http localhost:8080/store/mybucket</pre><pre class="prettyprint lang-http">HTTP/1.1 200 OK
 content-length: 17
 content-type: application/json
 
 [
     "bob",
     "patrick"
-]</pre></section><section id="quorum-based-writes"><header><h2>Quorum based Writes</h2></header><dl><dt>Problem</dt><dd><p>If a node goes down all the values on the vnodes it has are lost</p></dd><dt>Solution</dt><dd><p>Write each value on N vnodes</p><p>Consider a successful operation when more than W vnodes reply ok</p></dd></dl></section><section id="id41"><header><h2>Quorum based Writes</h2></header><dl><dt>Implementation</dt><dd><p>FSM and supervisor</p><p>Receives Operation, N and W</p><p>Does Request to N, waits for W replies and accumulates results</p><p>OK on success, failure on error or timeout</p></dd></dl></section><section id="id42"><header><h2>Quorum based Writes</h2></header><pre>+------+    +---------+    +---------+    +---------+              +------+
+]</pre></section><section id="quorum-based-writes"><header><h2>Quorum based Writes</h2></header><dl><dt>Problem</dt><dd><p>If a node goes down all the values on the vnodes it has are lost</p></dd><dt>Solution</dt><dd><p>Write each value on N vnodes</p><p>Consider a successful operation when more than W vnodes reply ok</p></dd></dl></section><section id="id41"><header><h2>Quorum based Writes</h2></header><dl><dt>Implementation</dt><dd><p>FSM and supervisor</p><p>Receives Operation, N and W</p><p>Does Request to N, waits for W replies and accumulates results</p><p>OK on success, failure on error or timeout</p></dd></dl></section><section id="id42"><header><h2>Quorum based Writes</h2></header><pre class="prettyprint lang-sh">+------+    +---------+    +---------+    +---------+              +------+
 |      |    |         |    |         |    |         |remaining = 0 |      |
 | Init +---&gt;| Prepare +---&gt;| Execute +---&gt;| Waiting +-------------&gt;| Stop |
 |      |    |         |    |         |    |         |              |      |
@@ -1929,41 +1929,41 @@ content-type: application/json
                                               +---+ +-------&gt;|         |
                                                              | Timeout |
                                       remaining &gt; 0  timeout |         |
-                                                             +---------+</pre></section><section id="id43"><header><h2>Quorum based Writes</h2></header><pre class="code lang-erlang">delete(Key) -&gt;
+                                                             +---------+</pre></section><section id="id43"><header><h2>Quorum based Writes</h2></header><pre class="prettyprint lang-erlang">delete(Key) -&gt;
     tanodb_metrics:core_delete(),
     ReqID = make_ref(),
     Timeout = 5000,
     tanodb_write_fsm:delete(?N, Key, self(), ReqID),
-    wait_for_reqid(ReqID, Timeout).</pre><pre class="code lang-erlang">put(Key, Value) -&gt;
+    wait_for_reqid(ReqID, Timeout).</pre><pre class="prettyprint lang-erlang">put(Key, Value) -&gt;
     tanodb_metrics:core_put(),
     ReqID = make_ref(),
     Timeout = 5000,
     tanodb_write_fsm:write(?N, ?W, Key, Value, self(), ReqID),
-    wait_for_reqid(ReqID, Timeout).</pre><p>Only Change to VNode code is to return the provided ReqID</p></section><section id="id44"><header><h2>Quorum based Writes</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
+    wait_for_reqid(ReqID, Timeout).</pre><p>Only Change to VNode code is to return the provided ReqID</p></section><section id="id44"><header><h2>Quorum based Writes</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)2&gt; tanodb:put({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}, 42).
 
 {ok,[{ok,27...},
      {ok,25...},
-     {ok,22...}]}</pre><pre class="code lang-erlang">(tanodb@127.0.0.1)3&gt; lists:filter(fun ({_, _, []}) -&gt; false;
+     {ok,22...}]}</pre><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)3&gt; lists:filter(fun ({_, _, []}) -&gt; false;
                                       (_) -&gt; true
                                   end,
                                   element(2, tanodb:keys(&lt;&lt;"mybucket"&gt;&gt;))).
 
 [{25..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]},
  {27..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]},
- {22..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]}]</pre></section><section id="id45"><header><h2>Quorum based Writes</h2></header><pre class="code lang-erlang">(tanodb@127.0.0.1)4&gt; tanodb:delete({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
+ {22..., 'tanodb@127.0.0.1', [&lt;&lt;"k1"&gt;&gt;]}]</pre></section><section id="id45"><header><h2>Quorum based Writes</h2></header><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)4&gt; tanodb:delete({&lt;&lt;"mybucket"&gt;&gt;, &lt;&lt;"k1"&gt;&gt;}).
 
 {ok,[{found,27...,
             {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}},
      {found,22...,
             {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},{{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}},
      {found,25...,
-            {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}, {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}]}</pre><pre class="code lang-erlang">(tanodb@127.0.0.1)5&gt; lists:filter(fun ({_, _, []}) -&gt; false;
+            {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;}, {{&lt;&lt;"mybucket"&gt;&gt;,&lt;&lt;"k1"&gt;&gt;},42}}}]}</pre><pre class="prettyprint lang-erlang">(tanodb@127.0.0.1)5&gt; lists:filter(fun ({_, _, []}) -&gt; false;
                                       (_) -&gt; true
                                   end,
                                   element(2, tanodb:keys(&lt;&lt;"mybucket"&gt;&gt;))).
 
 []</pre></section><section id="handoff"><header><h2>Handoff</h2></header><ul><li><p>A ring update event for a ring that all other nodes have already seen.</p></li><li><p>A secondary vnode is idle for a period of time and the primary, original
-owner of the partition is up again.</p></li></ul></section><section id="id46"><header><h2>Handoff</h2></header><p>Handling commands during handoff:</p><ul><li><p>Handle it in the current vnode</p></li><li><p>Forward it to the vnode we are handing off</p></li><li><p>Drop it</p></li></ul></section><section id="id47"><header><h2>Handoff</h2></header><pre>+-----------+      +----------+        +----------+
+owner of the partition is up again.</p></li></ul></section><section id="id46"><header><h2>Handoff</h2></header><p>Handling commands during handoff:</p><ul><li><p>Handle it in the current vnode</p></li><li><p>Forward it to the vnode we are handing off</p></li><li><p>Drop it</p></li></ul></section><section id="id47"><header><h2>Handoff</h2></header><pre class="prettyprint lang-sh">+-----------+      +----------+        +----------+
 |           | true |          | false  |          |
 | Starting  +------&gt; is_empty +--------&gt; fold_req |
 |           |      |          |        |          |
@@ -1975,23 +1975,23 @@ owner of the partition is up again.</p></li></ul></section><section id="id46"><h
 |           |           |              |          |     |        |
 | Cancelled |           +--------------&gt; finished +-----&gt; delete |
 |           |                          |          |     |        |
-+-----------+                          +----------+     +--------+</pre></section><section id="id48"><header><h2>Handoff</h2></header><pre class="code lang-erlang">handle_handoff_command(?FOLD_REQ{foldfun=FoldFun, acc0=Acc0}, _Sender,
++-----------+                          +----------+     +--------+</pre></section><section id="id48"><header><h2>Handoff</h2></header><pre class="prettyprint lang-erlang">handle_handoff_command(?FOLD_REQ{foldfun=FoldFun, acc0=Acc0}, _Sender,
                        State=#state{partition=Partition, table_name=TableName}) -&gt;
     lager:info("fold req ~p", [Partition]),
     AccFinal = ets:foldl(fun ({Key, Val}, AccIn) -&gt;
                                  lager:info("fold fun ~p: ~p", [Key, Val]),
                                  FoldFun(Key, Val, AccIn)
                          end, Acc0, TableName),
-    {reply, AccFinal, State};</pre></section><section id="id49"><header><h2>Handoff</h2></header><pre class="code lang-erlang">is_empty(State=#state{table_name=TableName, partition=Partition}) -&gt;
+    {reply, AccFinal, State};</pre></section><section id="id49"><header><h2>Handoff</h2></header><pre class="prettyprint lang-erlang">is_empty(State=#state{table_name=TableName, partition=Partition}) -&gt;
     IsEmpty = (ets:first(TableName) =:= '$end_of_table'),
     lager:info("is_empty ~p: ~p", [Partition, IsEmpty]),
-    {IsEmpty, State}.</pre></section><section id="id50"><header><h2>Handoff</h2></header><pre class="code lang-erlang">encode_handoff_item(Key, Value) -&gt;
-    term_to_binary({Key, Value}).</pre></section><section id="id51"><header><h2>Handoff</h2></header><pre class="code lang-erlang">handle_handoff_data(BinData, State=#state{table_name=TableName}) -&gt;
+    {IsEmpty, State}.</pre></section><section id="id50"><header><h2>Handoff</h2></header><pre class="prettyprint lang-erlang">encode_handoff_item(Key, Value) -&gt;
+    term_to_binary({Key, Value}).</pre></section><section id="id51"><header><h2>Handoff</h2></header><pre class="prettyprint lang-erlang">handle_handoff_data(BinData, State=#state{table_name=TableName}) -&gt;
     TermData = binary_to_term(BinData),
     lager:info("handoff data received ~p", [TermData]),
     {Key, Value} = TermData,
     ets:insert(TableName, {Key, Value}),
-    {reply, ok, State}.</pre></section><section id="id52"><header><h2>Handoff</h2></header><pre class="code lang-erlang">delete(State=#state{table_name=TableName, partition=Partition}) -&gt;
+    {reply, ok, State}.</pre></section><section id="id52"><header><h2>Handoff</h2></header><pre class="prettyprint lang-erlang">delete(State=#state{table_name=TableName, partition=Partition}) -&gt;
     lager:info("delete ~p", [Partition]),
     ets:delete(TableName),
     {ok, State}.</pre></section><section id="missing"><header><h2>Missing</h2></header><ul><li><p>Authentication/Authorization</p><ul><li><p><a class="reference external" href="http://jwt.io/">JWT</a></p></li></ul></li><li><p>Pub/Sub</p></li><li><p>Rate Limit per User</p></li></ul></section><section id="thanks"><header><h2>Thanks</h2></header></section><section id="resources"><header><h2>Resources</h2></header><ul><li><p><a class="reference external" href="https://vimeo.com/18758206">Rusty Klophaus - Masterless Distributed Computing with Riak Core</a></p></li><li><p><a class="reference external" href="https://vimeo.com/21772889">Andy Gross - Riak Core - An Erlang Distributed Systems Toolkit</a></p></li><li><p><a class="reference external" href="https://github.com/rzezeski/try-try-try">Ryan Zezeski's "working" blog</a></p></li><li><p><a class="reference external" href="https://github.com/basho/riak_core/wiki">Riak Core Wiki</a></p></li><li><p><a class="reference external" href="http://basho.com/posts/technical/where-to-start-with-riak-core/">Where To Start With Riak Core</a></p></li></ul></section><section id="attribution"><header><h2>Attribution</h2></header><ul><li><p><a class="reference external" href="http://diariovox.com.ar/tano-marciello-y-tony-levin-traen-sus-shows-a-mendoza/">tano</a></p></li></ul></section><script>/*! jQuery v1.8.2 jquery.com | jquery.org/license */

@@ -50,7 +50,9 @@ Initial Setup
 * `Install rebar3 <http://www.rebar3.org/docs/getting-started>`_
 * Install Template
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     mkdir -p ~/.config/rebar3/templates
     git clone https://github.com/marianoguerra/rebar3_template_riak_core/ \
@@ -61,12 +63,16 @@ Initial Setup
 
 * Create Project
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     rebar3 new rebar3_riak_core name=tanodb
 
 Project Structure
 =================
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -84,6 +90,8 @@ Project Structure
 
 Project Structure
 =================
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -105,11 +113,15 @@ Project Structure
 Building and Running
 ====================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     cd tanodb
     rebar3 release
     rebar3 run
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -118,7 +130,9 @@ Building and Running
 Try It
 ======
 
-.. code-block:: erl
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> tanodb:ping().
     {pong,1347321821914426127719021955160323408745312813056}
@@ -130,9 +144,13 @@ From now on Partition IDs will look like **13...**, but they are that long
 Clustering
 ==========
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -140,7 +158,9 @@ Clustering
     _build/dev2
     _build/dev3
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make dev1-console
     make dev2-console
@@ -149,13 +169,19 @@ Clustering
 Joining Nodes
 =============
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-join
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-status
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -171,9 +197,13 @@ Joining Nodes
 Checking the Plan
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-cluster-plan
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -189,6 +219,8 @@ Checking the Plan
 
 Checking the Plan
 =================
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -214,7 +246,9 @@ Checking the Plan
 Committing Changes
 ==================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-cluster-commit
 
@@ -225,9 +259,13 @@ Committing Changes
 Checking Handoff
 ================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-status
+
+.. class:: prettyprint lang-sh
 
 ::
 
@@ -243,6 +281,8 @@ Checking Handoff
 Checking Handoff
 ================
 
+.. class:: prettyprint lang-sh
+
 ::
 
     ================================= Membership ==============
@@ -257,28 +297,36 @@ Checking Handoff
 Stopping All
 ============
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     make devrel-stop
 
 Building a Production Release
 =============================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     rebar3 as prod release
 
 Trying it on a Clean Server
 ===========================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     mkdir vm-ubuntu-1504
     cd vm-ubuntu-1504
 
 Vagrantfile:
 
-.. code-block:: ruby
+.. class:: prettyprint lang-ruby
+
+::
 
     Vagrant.configure(2) do |config|
       config.vm.box = "ubuntu/vivid64"
@@ -287,14 +335,18 @@ Vagrantfile:
       end
     end
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     vagrant up
 
 Trying it on a Clean Server
 ===========================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     cd _build/prod/rel
     tar -czf tanodb.tgz tanodb
@@ -313,7 +365,9 @@ Ping as a Service (PaaS)
 * Add Route in tanodb_app
 * Create tanodb_http_ping cowboy rest handler
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     rebar3 release
     rebar3 run
@@ -321,11 +375,15 @@ Ping as a Service (PaaS)
 Ping as a Service (PaaS)
 ========================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     http localhost:8080/ping
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-length: 59
@@ -340,9 +398,13 @@ Ping as a Service (PaaS)
 Changing Configuration
 ======================
 
+.. class:: prettyprint lang-sh
+
 ::
 
     _build/default/rel/tanodb/etc/tanodb.conf
+
+.. class:: prettyprint lang-python
 
 ::
 
@@ -367,6 +429,8 @@ Changing Configuration
 Changing Configuration
 ======================
 
+.. class:: prettyprint lang-sh
+
 ::
 
     http localhost:8081/ping
@@ -377,7 +441,9 @@ Metrics
 * `exometer <https://github.com/Feuerlabs/exometer>`_ (same as riak_core)
 * Our metrics and riak_core metrics
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[
@@ -397,7 +463,9 @@ VM Metrics
 
 * `recon <https://github.com/ferd/recon>`_
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[...
@@ -422,7 +490,9 @@ Web Server Metrics
 
   + Middleware and response hooks
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> tanodb_metrics:all().
     [{tanodb,[ ...
@@ -443,11 +513,15 @@ Web Server Metrics
 Metrics Via HTTP
 ================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/metrics
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-type: application/json
@@ -465,7 +539,9 @@ Metrics Via HTTP
 Metrics Via HTTP
 ================
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
                 "time": {
                     "metrics": {
@@ -483,7 +559,9 @@ Metrics Via HTTP
 Metrics Via HTTP
 ================
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
             "resp": {
                 "by_code": {
@@ -624,7 +702,9 @@ rcs_cowboy and iorioui
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     ping() ->
         tanodb_metrics:core_ping(),
@@ -642,13 +722,17 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> DocIdx = riak_core_util:chash_key({<<"ping">>, term_to_binary(os:timestamp())}).
 
     <<126,9,218,77,97,108,38,92,0,155,160,26,161,3,200,87,134,213,167,168>>
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)2> PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb).
 
@@ -657,7 +741,9 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)3> PrefList2 = riak_core_apl:get_primary_apl(DocIdx, 2, tanodb).
 
@@ -667,13 +753,17 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)5> [{IndexNode, _Type}] = PrefList.
 
     [{{73..., 'tanodb@127.0.0.1'}, primary}]
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)6> riak_core_vnode_master:sync_spawn_command(IndexNode, ping, tanodb_vnode_master).
 
@@ -682,14 +772,18 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)7> [{IndexNode1, _Type1}, {IndexNode2, _Type2}] = PrefList2.
 
     [{{73..., 'tanodb@127.0.0.1'}, primary},
      {{75..., 'tanodb@127.0.0.1'}, primary}]
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)9> riak_core_vnode_master:sync_spawn_command(IndexNode2, ping, tanodb_vnode_master).
 
@@ -698,7 +792,9 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     -module(tanodb_vnode).
     -behaviour(riak_core_vnode).
@@ -721,7 +817,9 @@ Ping Implementation
 Ping Implementation
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     -record(state, {partition}).
 
@@ -748,7 +846,9 @@ Adding our First Command
 API
 ===
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     get(Key) ->
         tanodb_metrics:core_get(),
@@ -765,7 +865,9 @@ API
 API
 ===
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     % private functions
 
@@ -779,7 +881,9 @@ API
 VNode Put
 =========
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_command({put, Key, Value}, _Sender,
                    State=#state{table_name=TableName, partition=Partition}) ->
@@ -789,7 +893,9 @@ VNode Put
 VNode Get
 =========
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_command({get, Key}, _Sender,
                    State=#state{table_name=TableName, partition=Partition}) ->
@@ -803,7 +909,9 @@ VNode Get
 VNode Delete
 ============
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_command({delete, Key}, _Sender,
                    State=#state{table_name=TableName, partition=Partition}) ->
@@ -820,7 +928,9 @@ Testing our New Commands
 
 Get Not Found
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)2> tanodb:get({<<"mybucket">>, <<"k1">>}).
 
@@ -828,7 +938,9 @@ Get Not Found
 
 Put
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)3> tanodb:put({<<"mybucket">>, <<"k1">>}, 42).
 
@@ -836,7 +948,9 @@ Put
 
 Get Found
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)3> tanodb:get({<<"mybucket">>, <<"k1">>}).
 
@@ -848,7 +962,9 @@ Testing our New Commands
 
 Delete
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)4> tanodb:delete({<<"mybucket">>, <<"k1">>}).
 
@@ -857,7 +973,9 @@ Delete
 
 Get Not Found
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)5> tanodb:get({<<"mybucket">>, <<"k1">>}).
 
@@ -866,11 +984,15 @@ Get Not Found
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket/bob
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 404 Not Found
     content-length: 0
@@ -879,11 +1001,15 @@ Testing our New API
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http post localhost:8080/store/mybucket/bob name=bob color=yellow
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 204 No Content
     content-length: 0
@@ -892,11 +1018,15 @@ Testing our New API
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket/bob
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-length: 31
@@ -910,11 +1040,15 @@ Testing our New API
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http delete localhost:8080/store/mybucket/bob
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 204 No Content
     content-length: 0
@@ -923,11 +1057,15 @@ Testing our New API
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket/bob
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 404 Not Found
     content-length: 0
@@ -936,11 +1074,15 @@ Testing our New API
 Testing our New API
 ===================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http delete localhost:8080/store/mybucket/bob
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 404 Not Found
     content-length: 0
@@ -958,7 +1100,9 @@ Coverage Calls
 Coverage Calls
 ==============
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     keys(Bucket) ->
         tanodb_metrics:core_keys(),
@@ -968,7 +1112,9 @@ Coverage Calls
 Coverage Calls
 ==============
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_coverage({keys, Bucket}, _KeySpaces, {_, RefId, _},
                     State=#state{table_name=TableName}) ->
@@ -979,7 +1125,9 @@ Coverage Calls
 Testing Coverage Call
 =====================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)1> tanodb:keys(<<"mybucket">>).
 
@@ -993,7 +1141,9 @@ Testing Coverage Call
 
 Shape
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     {ok, [{Partition, Node, ListOfKeys}*64]}
 
@@ -1002,7 +1152,9 @@ Testing Coverage Call
 
 Put one value
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)2> tanodb:put({<<"mybucket">>, <<"k1">>}, 42).
 
@@ -1010,7 +1162,9 @@ Put one value
 
 Get and Filter
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)3> lists:filter(fun ({_, _, []}) -> false;
                                           (_) -> true
@@ -1022,11 +1176,15 @@ Get and Filter
 Coverage REST API
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-length: 2
@@ -1037,11 +1195,15 @@ Coverage REST API
 Coverage REST API
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http post localhost:8080/store/mybucket/bob name=bob color=yellow
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 204 No Content
     content-length: 0
@@ -1050,11 +1212,15 @@ Coverage REST API
 Coverage REST API
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-length: 7
@@ -1067,11 +1233,15 @@ Coverage REST API
 Coverage REST API
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http post localhost:8080/store/mybucket/patrick name=patrick color=pink
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 204 No Content
     content-length: 0
@@ -1080,11 +1250,15 @@ Coverage REST API
 Coverage REST API
 =================
 
-.. code-block:: sh
+.. class:: prettyprint lang-sh
+
+::
 
     $ http localhost:8080/store/mybucket
 
-.. code-block:: http
+.. class:: prettyprint lang-http
+
+::
 
     HTTP/1.1 200 OK
     content-length: 17
@@ -1121,6 +1295,8 @@ Implementation
 Quorum based Writes
 ===================
 
+.. class:: prettyprint lang-sh
+
 ::
 
     +------+    +---------+    +---------+    +---------+              +------+
@@ -1138,7 +1314,9 @@ Quorum based Writes
 Quorum based Writes
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     delete(Key) ->
         tanodb_metrics:core_delete(),
@@ -1147,7 +1325,9 @@ Quorum based Writes
         tanodb_write_fsm:delete(?N, Key, self(), ReqID),
         wait_for_reqid(ReqID, Timeout).
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     put(Key, Value) ->
         tanodb_metrics:core_put(),
@@ -1161,7 +1341,9 @@ Only Change to VNode code is to return the provided ReqID
 Quorum based Writes
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)2> tanodb:put({<<"mybucket">>, <<"k1">>}, 42).
 
@@ -1169,7 +1351,9 @@ Quorum based Writes
          {ok,25...},
          {ok,22...}]}
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)3> lists:filter(fun ({_, _, []}) -> false;
                                           (_) -> true
@@ -1183,7 +1367,9 @@ Quorum based Writes
 Quorum based Writes
 ===================
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)4> tanodb:delete({<<"mybucket">>, <<"k1">>}).
 
@@ -1194,7 +1380,9 @@ Quorum based Writes
          {found,25...,
                 {{<<"mybucket">>,<<"k1">>}, {{<<"mybucket">>,<<"k1">>},42}}}]}
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     (tanodb@127.0.0.1)5> lists:filter(fun ({_, _, []}) -> false;
                                           (_) -> true
@@ -1222,6 +1410,8 @@ Handling commands during handoff:
 Handoff
 =======
 
+.. class:: prettyprint lang-sh
+
 ::
 
      +-----------+      +----------+        +----------+                
@@ -1241,7 +1431,9 @@ Handoff
 Handoff
 =======
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_handoff_command(?FOLD_REQ{foldfun=FoldFun, acc0=Acc0}, _Sender,
                            State=#state{partition=Partition, table_name=TableName}) ->
@@ -1255,7 +1447,9 @@ Handoff
 Handoff
 =======
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     is_empty(State=#state{table_name=TableName, partition=Partition}) ->
         IsEmpty = (ets:first(TableName) =:= '$end_of_table'),
@@ -1265,7 +1459,9 @@ Handoff
 Handoff
 =======
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     encode_handoff_item(Key, Value) ->
         term_to_binary({Key, Value}).
@@ -1273,7 +1469,9 @@ Handoff
 Handoff
 =======
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     handle_handoff_data(BinData, State=#state{table_name=TableName}) ->
         TermData = binary_to_term(BinData),
@@ -1285,7 +1483,9 @@ Handoff
 Handoff
 =======
 
-.. code-block:: erlang
+.. class:: prettyprint lang-erlang
+
+::
 
     delete(State=#state{table_name=TableName, partition=Partition}) ->
         lager:info("delete ~p", [Partition]),
