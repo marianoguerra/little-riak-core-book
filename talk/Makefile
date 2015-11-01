@@ -1,0 +1,9 @@
+
+build:
+	rst2html5 --pretty-print-code --traceback --title "Little Riak Core Talk" --jquery --reveal-js --reveal-js-opts theme=serif talk.rst > index.html
+
+serve:
+	python -m SimpleHTTPServer
+
+open:
+	firefox http://localhost:8000/
