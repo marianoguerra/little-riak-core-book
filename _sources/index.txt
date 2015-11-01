@@ -21,9 +21,6 @@ The book was written by Mariano Guerra, you can find him at:
 
 If you think something could be improved, report it on the `issue tracker <https://github.com/marianoguerra/little-riak-core-book/issues>`_.
 
-Content
--------
-
 .. toctree::
    :maxdepth: 2
 
@@ -35,12 +32,5 @@ Content
    adding-our-first-commands
    listing-keys-from-a-bucket
    tolerating-node-failures
-
-Annex
------
-
-.. toctree::
-   :maxdepth: 2
-
    riak_core_metadata
    riak_core_security

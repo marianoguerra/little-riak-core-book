@@ -60,6 +60,25 @@ from the matched results.
 
 You can read more about ets match specs in the `match spec chapter on the Erlang documentation <http://www.erlang.org/doc/apps/erts/match_spec.html>`_.
 
+Relevant code from tanodb.erl:
+
+.. code-block:: erlang
+
+    keys(Bucket) ->
+        tanodb_metrics:core_keys(),
+        Timeout = 5000,
+        tanodb_coverage_fsm:start({keys, Bucket}, Timeout).
+
+Relevant code from tanodb_vnode.erl:
+
+.. code-block:: erlang
+
+    handle_coverage({keys, Bucket}, _KeySpaces, {_, RefId, _},
+                    State=#state{table_name=TableName}) ->
+        Keys0 = ets:match(TableName, {{Bucket, '$1'}, '_'}),
+        Keys = lists:map(fun first/1, Keys0),
+        {reply, {RefId, Keys}, State};
+
 Test It
 .......
 

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
-    <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
+    <link rel="next" title="Tolerating Node Failures" href="tolerating-node-failures.html" />
     <link rel="prev" title="Adding our First Commands" href="adding-our-first-commands.html" />
    
   
@@ -84,6 +84,21 @@ process which <a class="reference external" href="https://github.com/marianoguer
 really simple, it uses the <a class="reference external" href="http://www.erlang.org/doc/man/ets.html#match-2">ets:match/2 function</a> to match against all the entries with the given bucket and returns the key
 from the matched results.</p>
 <p>You can read more about ets match specs in the <a class="reference external" href="http://www.erlang.org/doc/apps/erts/match_spec.html">match spec chapter on the Erlang documentation</a>.</p>
+<p>Relevant code from tanodb.erl:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">keys</span><span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">core_keys</span><span class="p">(),</span>
+    <span class="nv">Timeout</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="nn">tanodb_coverage_fsm</span><span class="p">:</span><span class="nf">start</span><span class="p">({</span><span class="n">keys</span><span class="p">,</span> <span class="nv">Bucket</span><span class="p">},</span> <span class="nv">Timeout</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Relevant code from tanodb_vnode.erl:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">handle_coverage</span><span class="p">({</span><span class="n">keys</span><span class="p">,</span> <span class="nv">Bucket</span><span class="p">},</span> <span class="p">_</span><span class="nv">KeySpaces</span><span class="p">,</span> <span class="p">{_,</span> <span class="nv">RefId</span><span class="p">,</span> <span class="p">_},</span>
+                <span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">})</span> <span class="o">-&gt;</span>
+    <span class="nv">Keys0</span> <span class="o">=</span> <span class="nn">ets</span><span class="p">:</span><span class="nf">match</span><span class="p">(</span><span class="nv">TableName</span><span class="p">,</span> <span class="p">{{</span><span class="nv">Bucket</span><span class="p">,</span> <span class="n">&#39;$1&#39;</span><span class="p">},</span> <span class="n">&#39;_&#39;</span><span class="p">}),</span>
+    <span class="nv">Keys</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="n">first</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Keys0</span><span class="p">),</span>
+    <span class="p">{</span><span class="n">reply</span><span class="p">,</span> <span class="p">{</span><span class="nv">RefId</span><span class="p">,</span> <span class="nv">Keys</span><span class="p">},</span> <span class="nv">State</span><span class="p">};</span>
+</pre></div>
+</div>
 <div class="section" id="test-it">
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>Let&#8217;s start by checking keys on an empty bucket.</p>
@@ -278,6 +293,9 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <li class="toctree-l2"><a class="reference internal" href="#implementing-the-rest-api">Implementing the REST API</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
@@ -287,7 +305,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="adding-our-first-commands.html" title="previous chapter">Adding our First Commands</a></li>
-      <li>Next: <a href="riak_core_metadata.html" title="next chapter">Riak Core Metadata</a></li>
+      <li>Next: <a href="tolerating-node-failures.html" title="next chapter">Tolerating Node Failures</a></li>
   </ul></li>
 </ul>
 </div>

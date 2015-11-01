@@ -24,6 +24,59 @@ our ETS table <https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529a
 
 Then we `add two new function clauses to handle_command <https://github.com/marianoguerra/tanodb/commit/398e3ae0a6ede7529aa1fee3930640c9598a45df#diff-942e4ef944df628266f096d2fbcd4348R41>`_, one for put and one for get. The logic is quite simple.
 
+The code from tanodb.erl:
+
+.. code-block:: erlang
+
+    get(Key) ->
+        tanodb_metrics:core_get(),
+        send_to_one(Key, {get, Key}).
+
+    delete(Key) ->
+        tanodb_metrics:core_delete(),
+        send_to_one(Key, {delete, Key}).
+
+    put(Key, Value) ->
+        tanodb_metrics:core_put(),
+        send_to_one(Key, {put, Key, Value}).
+
+    % private functions
+
+    send_to_one(Key, Cmd) ->
+        DocIdx = riak_core_util:chash_key(Key),
+        PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
+        [{IndexNode, _Type}] = PrefList,
+        riak_core_vnode_master:sync_spawn_command(IndexNode, Cmd,
+             tanodb_vnode_master).
+
+The relevant code from tanodb_vnode.erl:
+
+.. code-block:: erlang
+
+    handle_command({put, Key, Value}, _Sender,
+                   State=#state{table_name=TableName, partition=Partition}) ->
+        ets:insert(TableName, {Key, Value}),
+        {reply, {ok, Partition}, State};
+
+    handle_command({get, Key}, _Sender,
+                   State=#state{table_name=TableName, partition=Partition}) ->
+        case ets:lookup(TableName, Key) of
+            [] ->
+                {reply, {not_found, Partition, Key}, State};
+            [Value] ->
+                {reply, {found, Partition, {Key, Value}}, State}
+        end;
+
+    handle_command({delete, Key}, _Sender,
+                   State=#state{table_name=TableName, partition=Partition}) ->
+        case ets:lookup(TableName, Key) of
+            [] ->
+                {reply, {not_found, Partition, Key}, State};
+            [Value] ->
+                true = ets:delete(TableName, Key),
+                {reply, {found, Partition, {Key, Value}}, State}
+        end;
+
 Test it
 .......
 

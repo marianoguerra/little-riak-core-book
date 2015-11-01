@@ -108,6 +108,22 @@ receive waiting for the req_id we sent</a> if the response doesn&#8217;t come af
 return an error.</p>
 <p>The changes on the <cite>tanodb_vnode</cite> module are that the <cite>put</cite> and <cite>delete</cite>
 commands now receive an extra argument, <cite>ReqId</cite> that is <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44">returned in the reply</a>.</p>
+<p>Relevant code from tanodb.erl:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">delete</span><span class="p">(</span><span class="nv">Key</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">core_delete</span><span class="p">(),</span>
+    <span class="nv">ReqID</span> <span class="o">=</span> <span class="n">make_ref</span><span class="p">(),</span>
+    <span class="nv">Timeout</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="nn">tanodb_write_fsm</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="o">?</span><span class="nv">N</span><span class="p">,</span> <span class="nv">Key</span><span class="p">,</span> <span class="n">self</span><span class="p">(),</span> <span class="nv">ReqID</span><span class="p">),</span>
+    <span class="n">wait_for_reqid</span><span class="p">(</span><span class="nv">ReqID</span><span class="p">,</span> <span class="nv">Timeout</span><span class="p">).</span>
+
+<span class="nb">put</span><span class="p">(</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">core_put</span><span class="p">(),</span>
+    <span class="nv">ReqID</span> <span class="o">=</span> <span class="n">make_ref</span><span class="p">(),</span>
+    <span class="nv">Timeout</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="nn">tanodb_write_fsm</span><span class="p">:</span><span class="nf">write</span><span class="p">(</span><span class="o">?</span><span class="nv">N</span><span class="p">,</span> <span class="o">?</span><span class="nv">W</span><span class="p">,</span> <span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">,</span> <span class="n">self</span><span class="p">(),</span> <span class="nv">ReqID</span><span class="p">),</span>
+    <span class="n">wait_for_reqid</span><span class="p">(</span><span class="nv">ReqID</span><span class="p">,</span> <span class="nv">Timeout</span><span class="p">).</span>
+</pre></div>
+</div>
 <div class="section" id="test-it">
 <h3>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>We start by listing the bucket&#8217;s keys to make sure it&#8217;s empty:</p>
@@ -234,6 +250,37 @@ running, you can choose to do one of the followings:</p>
 | Cancelled |           +--------------&gt; finished +-----&gt; delete |
 |           |                          |          |     |        |
 +-----------+                          +----------+     +--------+
+</pre></div>
+</div>
+<p>Relevant code from tanodb_vnode.erl:</p>
+<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">handle_handoff_command</span><span class="p">(</span><span class="o">?</span><span class="nv">FOLD_REQ</span><span class="p">{</span><span class="n">foldfun</span><span class="o">=</span><span class="nv">FoldFun</span><span class="p">,</span> <span class="n">acc0</span><span class="o">=</span><span class="nv">Acc0</span><span class="p">},</span> <span class="p">_</span><span class="nv">Sender</span><span class="p">,</span>
+                       <span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">partition</span><span class="o">=</span><span class="nv">Partition</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">})</span> <span class="o">-&gt;</span>
+    <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;fold req </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Partition</span><span class="p">]),</span>
+    <span class="nv">AccFinal</span> <span class="o">=</span> <span class="nn">ets</span><span class="p">:</span><span class="nf">foldl</span><span class="p">(</span><span class="k">fun</span> <span class="p">({</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Val</span><span class="p">},</span> <span class="nv">AccIn</span><span class="p">)</span> <span class="o">-&gt;</span>
+                                 <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;fold fun </span><span class="si">~p</span><span class="s">: </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Val</span><span class="p">]),</span>
+                                 <span class="nv">FoldFun</span><span class="p">(</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Val</span><span class="p">,</span> <span class="nv">AccIn</span><span class="p">)</span>
+                         <span class="k">end</span><span class="p">,</span> <span class="nv">Acc0</span><span class="p">,</span> <span class="nv">TableName</span><span class="p">),</span>
+    <span class="p">{</span><span class="n">reply</span><span class="p">,</span> <span class="nv">AccFinal</span><span class="p">,</span> <span class="nv">State</span><span class="p">};</span>
+
+<span class="nf">is_empty</span><span class="p">(</span><span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">,</span> <span class="n">partition</span><span class="o">=</span><span class="nv">Partition</span><span class="p">})</span> <span class="o">-&gt;</span>
+    <span class="nv">IsEmpty</span> <span class="o">=</span> <span class="p">(</span><span class="nn">ets</span><span class="p">:</span><span class="nf">first</span><span class="p">(</span><span class="nv">TableName</span><span class="p">)</span> <span class="o">=:=</span> <span class="n">&#39;$end_of_table&#39;</span><span class="p">),</span>
+    <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;is_empty </span><span class="si">~p</span><span class="s">: </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Partition</span><span class="p">,</span> <span class="nv">IsEmpty</span><span class="p">]),</span>
+    <span class="p">{</span><span class="nv">IsEmpty</span><span class="p">,</span> <span class="nv">State</span><span class="p">}.</span>
+
+<span class="nf">encode_handoff_item</span><span class="p">(</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nb">term_to_binary</span><span class="p">({</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">}).</span>
+
+<span class="nf">handle_handoff_data</span><span class="p">(</span><span class="nv">BinData</span><span class="p">,</span> <span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">})</span> <span class="o">-&gt;</span>
+    <span class="nv">TermData</span> <span class="o">=</span> <span class="nb">binary_to_term</span><span class="p">(</span><span class="nv">BinData</span><span class="p">),</span>
+    <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;handoff data received </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">TermData</span><span class="p">]),</span>
+    <span class="p">{</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">}</span> <span class="o">=</span> <span class="nv">TermData</span><span class="p">,</span>
+    <span class="nn">ets</span><span class="p">:</span><span class="nf">insert</span><span class="p">(</span><span class="nv">TableName</span><span class="p">,</span> <span class="p">{</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Value</span><span class="p">}),</span>
+    <span class="p">{</span><span class="n">reply</span><span class="p">,</span> <span class="n">ok</span><span class="p">,</span> <span class="nv">State</span><span class="p">}.</span>
+
+<span class="nf">delete</span><span class="p">(</span><span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">,</span> <span class="n">partition</span><span class="o">=</span><span class="nv">Partition</span><span class="p">})</span> <span class="o">-&gt;</span>
+    <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;delete </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Partition</span><span class="p">]),</span>
+    <span class="nn">ets</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="nv">TableName</span><span class="p">),</span>
+    <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">State</span><span class="p">}.</span>
 </pre></div>
 </div>
 <div class="section" id="id1">
@@ -448,6 +495,8 @@ will just paste some as example.</p>
 <li class="toctree-l2"><a class="reference internal" href="#handoffs">Handoffs</a></li>
 </ul>
 </li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>

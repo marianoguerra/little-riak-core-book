@@ -83,6 +83,24 @@ return an error.
 The changes on the `tanodb_vnode` module are that the `put` and `delete`
 commands now receive an extra argument, `ReqId` that is `returned in the reply <https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44>`_.
 
+Relevant code from tanodb.erl:
+
+.. code-block:: erlang
+
+    delete(Key) ->
+        tanodb_metrics:core_delete(),
+        ReqID = make_ref(),
+        Timeout = 5000,
+        tanodb_write_fsm:delete(?N, Key, self(), ReqID),
+        wait_for_reqid(ReqID, Timeout).
+
+    put(Key, Value) ->
+        tanodb_metrics:core_put(),
+        ReqID = make_ref(),
+        Timeout = 5000,
+        tanodb_write_fsm:write(?N, ?W, Key, Value, self(), ReqID),
+        wait_for_reqid(ReqID, Timeout).
+
 Test it
 .......
 
@@ -243,6 +261,39 @@ A diagram of the flow is as follows::
      | Cancelled |           +--------------> finished +-----> delete | 
      |           |                          |          |     |        | 
      +-----------+                          +----------+     +--------+ 
+
+Relevant code from tanodb_vnode.erl:
+
+.. code-block:: erlang
+
+    handle_handoff_command(?FOLD_REQ{foldfun=FoldFun, acc0=Acc0}, _Sender,
+                           State=#state{partition=Partition, table_name=TableName}) ->
+        lager:info("fold req ~p", [Partition]),
+        AccFinal = ets:foldl(fun ({Key, Val}, AccIn) ->
+                                     lager:info("fold fun ~p: ~p", [Key, Val]),
+                                     FoldFun(Key, Val, AccIn)
+                             end, Acc0, TableName),
+        {reply, AccFinal, State};
+
+    is_empty(State=#state{table_name=TableName, partition=Partition}) ->
+        IsEmpty = (ets:first(TableName) =:= '$end_of_table'),
+        lager:info("is_empty ~p: ~p", [Partition, IsEmpty]),
+        {IsEmpty, State}.
+
+    encode_handoff_item(Key, Value) ->
+        term_to_binary({Key, Value}).
+
+    handle_handoff_data(BinData, State=#state{table_name=TableName}) ->
+        TermData = binary_to_term(BinData),
+        lager:info("handoff data received ~p", [TermData]),
+        {Key, Value} = TermData,
+        ets:insert(TableName, {Key, Value}),
+        {reply, ok, State}.
+
+    delete(State=#state{table_name=TableName, partition=Partition}) ->
+        lager:info("delete ~p", [Partition]),
+        ets:delete(TableName),
+        {ok, State}.
 
 Test it
 .......
