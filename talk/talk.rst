@@ -19,7 +19,7 @@ About This Talk
 
 * Will go fast
 * Don't worry, all is written down in the book
-* Provide all the tools and features
+* Provide all the tools, features and concepts
 * So you can focus on the distributed part
 
 About Me
