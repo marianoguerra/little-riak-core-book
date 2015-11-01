@@ -287,13 +287,13 @@ devrel-status does the following:</p>
 </pre></div>
 </div>
 <p>You should see something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership ===============
 Status     Ring    Pending    Node
--------------------------------------------------------------------------------
+------------------------------------------------------------
 joining     0.0%      --      &#39;tanodb2@127.0.0.1&#39;
 joining     0.0%      --      &#39;tanodb3@127.0.0.1&#39;
 valid     100.0%      --      &#39;tanodb1@127.0.0.1&#39;
--------------------------------------------------------------------------------
+------------------------------------------------------------
 Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0
 </pre></div>
 </div>
@@ -302,27 +302,27 @@ Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0
 </pre></div>
 </div>
 <p>The output should be something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes ================================
+<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes ==============
 Action         Details(s)
--------------------------------------------------------------------------------
+-------------------------------------------------------------
 join           &#39;tanodb2@127.0.0.1&#39;
 join           &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------------------------
+-------------------------------------------------------------
 
 
 NOTE: Applying these changes will result in 1 cluster transition
 
-###############################################################################
+#############################################################
                          After cluster transition 1/1
-###############################################################################
+#############################################################
 
-================================= Membership ==================================
+================================= Membership ================
 Status     Ring    Pending    Node
--------------------------------------------------------------------------------
+-------------------------------------------------------------
 valid     100.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
 valid       0.0%     32.8%    &#39;tanodb2@127.0.0.1&#39;
 valid       0.0%     32.8%    &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------------------------
+-------------------------------------------------------------
 Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
 
 WARNING: Not all replicas will be on distinct nodes
@@ -351,25 +351,25 @@ is happening describing the process.</p>
 </div>
 <p>You can see the vnodes transferring, this means the content of some virtual
 nodes on one tanodb node are being transfered to another tanodb node:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership =============
 Status     Ring    Pending    Node
--------------------------------------------------------------------------------
+----------------------------------------------------------
 valid      75.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
 valid       9.4%     32.8%    &#39;tanodb2@127.0.0.1&#39;
 valid       7.8%     32.8%    &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------------------------
+----------------------------------------------------------
 Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
 </pre></div>
 </div>
 <p>At some point you should see something like this, which means that the nodes
 are joined and balanced:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==================================
+<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==============
 Status     Ring    Pending    Node
--------------------------------------------------------------------------------
+-----------------------------------------------------------
 valid      34.4%      --      &#39;tanodb1@127.0.0.1&#39;
 valid      32.8%      --      &#39;tanodb2@127.0.0.1&#39;
 valid      32.8%      --      &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------------------------
+-----------------------------------------------------------
 Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
 </pre></div>
 </div>
@@ -490,6 +490,8 @@ production release and run it on a fresh server.</p>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>

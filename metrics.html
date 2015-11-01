@@ -254,97 +254,98 @@ to register metrics on all requests, for that we need to <a class="reference ext
 </div>
 <p>And then make a request for the metrics (result edited since it&#8217;s quite big):</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/metrics
-
-HTTP/1.1 <span class="m">200</span> OK
+</pre></div>
+</div>
+<div class="highlight-http"><div class="highlight"><pre>HTTP/1.1 200 OK
 content-length: 8079
 content-type: application/json
-date: Fri, <span class="m">30</span> Oct <span class="m">2015</span> 10:39:27 GMT
+date: Fri, 30 Oct 2015 10:39:27 GMT
 server: Cowboy
 
-<span class="o">{</span>
-    <span class="s2">&quot;core&quot;</span>: <span class="o">{</span>
-        <span class="s2">&quot;ping&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 2, <span class="s2">&quot;one&quot;</span>: <span class="m">1</span> <span class="o">}</span>
-    <span class="o">}</span>,
-    <span class="s2">&quot;http&quot;</span>: <span class="o">{</span>
-        <span class="s2">&quot;req&quot;</span>: <span class="o">{</span>
-            <span class="s2">&quot;active&quot;</span>: <span class="o">{</span> <span class="s2">&quot;ms_since_reset&quot;</span>: 279958, <span class="s2">&quot;value&quot;</span>: <span class="m">1</span> <span class="o">}</span>,
-            <span class="s2">&quot;count&quot;</span>: <span class="o">{</span>
-                <span class="s2">&quot;metrics&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 1, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
-                <span class="s2">&quot;ping&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 2, <span class="s2">&quot;one&quot;</span>: <span class="m">1</span> <span class="o">}</span>
-            <span class="o">}</span>,
-            <span class="s2">&quot;time&quot;</span>: <span class="o">{</span>
-                <span class="s2">&quot;metrics&quot;</span>: <span class="o">{</span>
-                    <span class="s2">&quot;50&quot;</span>: 0,
-                    <span class="s2">&quot;75&quot;</span>: 0,
-                    <span class="s2">&quot;90&quot;</span>: 0,
-                    <span class="s2">&quot;95&quot;</span>: 0,
-                    <span class="s2">&quot;99&quot;</span>: 0,
-                    <span class="s2">&quot;999&quot;</span>: 0,
-                    <span class="s2">&quot;max&quot;</span>: 0,
-                    <span class="s2">&quot;mean&quot;</span>: 0,
-                    <span class="s2">&quot;median&quot;</span>: 0,
-                    <span class="s2">&quot;min&quot;</span>: 0,
-                    <span class="s2">&quot;n&quot;</span>: 0
-                <span class="o">}</span>,
-                <span class="s2">&quot;ping&quot;</span>: <span class="o">{</span>
-                    <span class="s2">&quot;50&quot;</span>: 0,
-                    <span class="s2">&quot;75&quot;</span>: 349,
-                    <span class="s2">&quot;90&quot;</span>: 349,
-                    <span class="s2">&quot;95&quot;</span>: 349,
-                    <span class="s2">&quot;99&quot;</span>: 349,
-                    <span class="s2">&quot;999&quot;</span>: 349,
-                    <span class="s2">&quot;max&quot;</span>: 349,
-                    <span class="s2">&quot;mean&quot;</span>: 349,
-                    <span class="s2">&quot;median&quot;</span>: 349,
-                    <span class="s2">&quot;min&quot;</span>: 349,
-                    <span class="s2">&quot;n&quot;</span>: 3
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>,
-        <span class="s2">&quot;resp&quot;</span>: <span class="o">{</span>
-            <span class="s2">&quot;by_code&quot;</span>: <span class="o">{</span>
-                <span class="s2">&quot;200&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 3, <span class="s2">&quot;one&quot;</span>: <span class="m">1</span> <span class="o">}</span>,
-                <span class="s2">&quot;201&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 0, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
+{
+    &quot;core&quot;: {
+        &quot;ping&quot;: { &quot;count&quot;: 2, &quot;one&quot;: 1 }
+    },
+    &quot;http&quot;: {
+        &quot;req&quot;: {
+            &quot;active&quot;: { &quot;ms_since_reset&quot;: 279958, &quot;value&quot;: 1 },
+            &quot;count&quot;: {
+                &quot;metrics&quot;: { &quot;count&quot;: 1, &quot;one&quot;: 0 },
+                &quot;ping&quot;: { &quot;count&quot;: 2, &quot;one&quot;: 1 }
+            },
+            &quot;time&quot;: {
+                &quot;metrics&quot;: {
+                    &quot;50&quot;: 0,
+                    &quot;75&quot;: 0,
+                    &quot;90&quot;: 0,
+                    &quot;95&quot;: 0,
+                    &quot;99&quot;: 0,
+                    &quot;999&quot;: 0,
+                    &quot;max&quot;: 0,
+                    &quot;mean&quot;: 0,
+                    &quot;median&quot;: 0,
+                    &quot;min&quot;: 0,
+                    &quot;n&quot;: 0
+                },
+                &quot;ping&quot;: {
+                    &quot;50&quot;: 0,
+                    &quot;75&quot;: 349,
+                    &quot;90&quot;: 349,
+                    &quot;95&quot;: 349,
+                    &quot;99&quot;: 349,
+                    &quot;999&quot;: 349,
+                    &quot;max&quot;: 349,
+                    &quot;mean&quot;: 349,
+                    &quot;median&quot;: 349,
+                    &quot;min&quot;: 349,
+                    &quot;n&quot;: 3
+                }
+            }
+        },
+        &quot;resp&quot;: {
+            &quot;by_code&quot;: {
+                &quot;200&quot;: { &quot;count&quot;: 3, &quot;one&quot;: 1 },
+                &quot;201&quot;: { &quot;count&quot;: 0, &quot;one&quot;: 0 },
                 ...
-                <span class="s2">&quot;400&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 0, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
-                <span class="s2">&quot;401&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 0, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
+                &quot;400&quot;: { &quot;count&quot;: 0, &quot;one&quot;: 0 },
+                &quot;401&quot;: { &quot;count&quot;: 0, &quot;one&quot;: 0 },
                 ...
-                <span class="s2">&quot;404&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 0, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
+                &quot;404&quot;: { &quot;count&quot;: 0, &quot;one&quot;: 0 },
                 ...
-                <span class="s2">&quot;500&quot;</span>: <span class="o">{</span> <span class="s2">&quot;count&quot;</span>: 0, <span class="s2">&quot;one&quot;</span>: <span class="m">0</span> <span class="o">}</span>,
+                &quot;500&quot;: { &quot;count&quot;: 0, &quot;one&quot;: 0 },
                 ...
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>,
-    <span class="s2">&quot;node&quot;</span>: <span class="o">{</span>
-        <span class="s2">&quot;abs&quot;</span>: <span class="o">{</span>
-            <span class="s2">&quot;error_logger_queue_len&quot;</span>: 0,
-            <span class="s2">&quot;memory_atoms&quot;</span>: 471362,
-            <span class="s2">&quot;memory_bin&quot;</span>: 224392,
-            <span class="s2">&quot;memory_ets&quot;</span>: 1579592,
-            <span class="s2">&quot;memory_procs&quot;</span>: 31886248,
-            <span class="s2">&quot;memory_total&quot;</span>: 51342840,
-            <span class="s2">&quot;process_count&quot;</span>: 432,
-            <span class="s2">&quot;run_queue&quot;</span>: 0
-        <span class="o">}</span>,
-        <span class="s2">&quot;inc&quot;</span>: <span class="o">{</span>
-            <span class="s2">&quot;bytes_in&quot;</span>: 0,
-            <span class="s2">&quot;bytes_out&quot;</span>: 0,
-            <span class="s2">&quot;gc_count&quot;</span>: 2,
-            <span class="s2">&quot;gc_words_reclaimed&quot;</span>: 6624,
-            <span class="s2">&quot;reductions&quot;</span>: 695770,
-            <span class="s2">&quot;scheduler_usage&quot;</span>: <span class="o">{</span>
-                <span class="s2">&quot;1&quot;</span>: 0.16108125753314584,
-                <span class="s2">&quot;2&quot;</span>: 0.5187896583972728,
-                <span class="s2">&quot;3&quot;</span>: 0.18046079477682214,
-                <span class="s2">&quot;4&quot;</span>: 0.15292436095407036
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>,
-    <span class="s2">&quot;tanodb&quot;</span>: <span class="o">{</span>
+            }
+        }
+    },
+    &quot;node&quot;: {
+        &quot;abs&quot;: {
+            &quot;error_logger_queue_len&quot;: 0,
+            &quot;memory_atoms&quot;: 471362,
+            &quot;memory_bin&quot;: 224392,
+            &quot;memory_ets&quot;: 1579592,
+            &quot;memory_procs&quot;: 31886248,
+            &quot;memory_total&quot;: 51342840,
+            &quot;process_count&quot;: 432,
+            &quot;run_queue&quot;: 0
+        },
+        &quot;inc&quot;: {
+            &quot;bytes_in&quot;: 0,
+            &quot;bytes_out&quot;: 0,
+            &quot;gc_count&quot;: 2,
+            &quot;gc_words_reclaimed&quot;: 6624,
+            &quot;reductions&quot;: 695770,
+            &quot;scheduler_usage&quot;: {
+                &quot;1&quot;: 0.16108125753314584,
+                &quot;2&quot;: 0.5187896583972728,
+                &quot;3&quot;: 0.18046079477682214,
+                &quot;4&quot;: 0.15292436095407036
+            }
+        }
+    },
+    &quot;tanodb&quot;: {
         ...
-    <span class="o">}</span>
-<span class="o">}</span>
+    }
+}
 </pre></div>
 </div>
 </div>
@@ -385,6 +386,8 @@ server: Cowboy
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>

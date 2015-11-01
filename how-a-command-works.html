@@ -113,11 +113,9 @@ and an atom, let&#8217;s try changing the number 1:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nv">PrefList2</span> <span class="o">=</span> <span class="nn">riak_core_apl</span><span class="p">:</span><span class="nf">get_primary_apl</span><span class="p">(</span><span class="nv">DocIdx</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">tanodb</span><span class="p">).</span>
 
 <span class="p">[{{</span><span class="mi">730750818665451459101842416358141509827966271488</span><span class="p">,</span>
-   <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">},</span>
-  <span class="n">primary</span><span class="p">},</span>
+   <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">},</span> <span class="n">primary</span><span class="p">},</span>
  <span class="p">{{</span><span class="mi">753586781748746817198774991869333432010090217472</span><span class="p">,</span>
-   <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">},</span>
-  <span class="n">primary</span><span class="p">}]</span>
+   <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">},</span> <span class="n">primary</span><span class="p">}]</span>
 </pre></div>
 </div>
 <p>Now we get two tuples, the first one is the same, so what this does is to return
@@ -304,6 +302,8 @@ be:</p>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
