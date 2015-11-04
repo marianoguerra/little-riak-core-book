@@ -12,10 +12,27 @@ Ricon 2015 | San Francisco | November 4-6th, 2015
 About This Talk
 ===============
 
-* Overview of `Little Riak Core Book <http://marianoguerra.github.io/little-riak-core-book/>`_ (~60 page html/pdf/epub)
-* Step by Step creation of `tanodb <https://github.com/marianoguerra/tanodb>`_
+Overview of `Little Riak Core Book <http://marianoguerra.github.io/little-riak-core-book/>`_
 
-  + In memory key value store with a REST API
+`marianoguerra.github.io/little-riak-core-book <http://marianoguerra.github.io/little-riak-core-book/>`_
+
+.. figure:: imgs/lrcb.png
+    :align: center
+    :width: 40%
+
+About This Talk
+===============
+
+Step by Step creation of `tanodb <https://github.com/marianoguerra/tanodb>`_, an in memory key value store with a REST API
+
+`github.com/marianoguerra/tanodb <https://github.com/marianoguerra/tanodb>`_
+
+.. figure:: imgs/tanodb.png
+    :align: center
+    :width: 40%
+
+About This Talk
+===============
 
 * Will go fast
 * Don't worry, all is written down in the book
@@ -25,12 +42,31 @@ About This Talk
 About Me
 ========
 
-* Argentinian
-* Software Engineer
+* Argentinian Software Engineer
 * Python, Clojure[script], Erlang, Javascript, `Efene <http://efene.org/>`_ ;)
 * Co-Founder of `Event Fabric <http://event-fabric.com/>`_
 
   + Build Custom Real Time Dashboards on the Web without Code
+
+Vocabulary
+==========
+
+Nodes
+    Physical Instance
+Cluster
+    Group of Nodes
+VNodes == Partition
+    Virtual Node, Abstraction
+    1 Node can have more than 1 VNode
+Ring
+    Group of VNodes (64 by default)
+
+Required Slide :)
+=================
+
+.. figure:: imgs/riak-ring.png
+    :align: center
+    :width: 50%
 
 Tools
 =====
@@ -61,7 +97,7 @@ Initial Setup
 Initial Setup
 =============
 
-* Create Project
+Create Project
 
 .. class:: prettyprint lang-sh
 
@@ -76,17 +112,20 @@ Project Structure
 
 ::
 
+    ===> Writing tanodb/.gitignore
+    ===> Writing tanodb/rebar.config
+
     ===> Writing tanodb/apps/tanodb/src/tanodb.app.src
     ===> Writing tanodb/apps/tanodb/src/tanodb.erl
     ===> Writing tanodb/apps/tanodb/src/tanodb_app.erl
     ===> Writing tanodb/apps/tanodb/src/tanodb_sup.erl
     ===> Writing tanodb/apps/tanodb/src/tanodb_console.erl
     ===> Writing tanodb/apps/tanodb/src/tanodb_vnode.erl
-    ===> Writing tanodb/rebar.config
-    ===> Writing tanodb/.editorconfig
-    ===> Writing tanodb/.gitignore
+
     ===> Writing tanodb/README.rst
     ===> Writing tanodb/Makefile
+
+    ===> Writing tanodb/.editorconfig
 
 Project Structure
 =================
@@ -188,9 +227,9 @@ Joining Nodes
     ================================= Membership ===============
     Status     Ring    Pending    Node
     ------------------------------------------------------------
+    valid     100.0%      --      'tanodb1@127.0.0.1'
     joining     0.0%      --      'tanodb2@127.0.0.1'
     joining     0.0%      --      'tanodb3@127.0.0.1'
-    valid     100.0%      --      'tanodb1@127.0.0.1'
     ------------------------------------------------------------
     Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0
 
@@ -388,8 +427,6 @@ Ping as a Service (PaaS)
     HTTP/1.1 200 OK
     content-length: 59
     content-type: application/json
-    date: Thu, 29 Oct 2015 19:07:23 GMT
-    server: Cowboy
 
     {
     "pong": "981946412581700398168100746981252653831329677312"
@@ -461,7 +498,7 @@ Metrics
 VM Metrics
 ==========
 
-* `recon <https://github.com/ferd/recon>`_
+We use `recon <https://github.com/ferd/recon>`_
 
 .. class:: prettyprint lang-erlang
 
@@ -486,9 +523,7 @@ VM Metrics
 Web Server Metrics
 ==================
 
-* `cowboy_exometer <https://github.com/marianoguerra/cowboy_exometer>`_
-
-  + Middleware and response hooks
+`cowboy_exometer <https://github.com/marianoguerra/cowboy_exometer>`_, uses cowboy middleware and response hooks features
 
 .. class:: prettyprint lang-erlang
 
@@ -578,42 +613,34 @@ Metrics Via HTTP
         "tanodb": { ...  }
     }
 
-Metrics Extra
-=============
-
-* `lager exometer backend <https://github.com/marianoguerra/lager_exometer_backend>`_
-
-  + lager backend
-  + sends log metrics by level to exometer
-
 Users, Groups and Permissions
 =============================
 
-* riak_core provides riak_core_security module
+riak_core provides riak_core_security module
 
-  + Roles: Users and Groups
-  + Permissions
-  + Grants
-  + Resources
+* Roles: Users and Groups
+* Permissions
+* Grants
+* Resources
 
 Exposing riak_core_security
 ===========================
 
-* `rcs_cowboy <https://github.com/marianoguerra/rcs_cowboy>`_
+`rcs_cowboy <https://github.com/marianoguerra/rcs_cowboy>`_
 
-  + Cowboy rest handler
-  + Utility library
-  + REST API for riak_core_security
-  + As a library
+* Cowboy rest handler
+* Utility library
+* REST API for riak_core_security
+* As a library
 
 riak_core_security UI
 =====================
 
-* `iorioui <https://github.com/marianoguerra/iorioui>`_
+`iorioui <https://github.com/marianoguerra/iorioui>`_
 
-  + clojurescript + om.next + bootstrap
-  + Web Admin for riak_core_security
-  + Uses rcs_cowboy
+* clojurescript + om.next + bootstrap
+* Web Admin for riak_core_security
+* Uses rcs_cowboy
 
 rcs_cowboy and iorioui
 ======================
@@ -800,17 +827,15 @@ Ping Implementation
     -behaviour(riak_core_vnode).
 
     -export([start_vnode/1,
-             init/1,
-             terminate/2,
+             init/1, terminate/2,
+
              handle_command/3,
+
              is_empty/1,
              delete/1,
              handle_handoff_command/3,
-             handoff_starting/2,
-             handoff_cancelled/1,
-             handoff_finished/2,
-             handle_handoff_data/2,
-             encode_handoff_item/2,
+             handoff_starting/2, handoff_cancelled/1, handoff_finished/2,
+             handle_handoff_data/2, encode_handoff_item/2,
              handle_coverage/4,
              handle_exit/3]).
 
@@ -839,9 +864,9 @@ How to Add a New Command?
 Adding our First Command
 ========================
 
-* get
-* put
-* delete
+* Get
+* Put
+* Delete
 
 API
 ===
@@ -926,7 +951,7 @@ VNode Delete
 Testing our New Commands
 ========================
 
-Get Not Found
+Get not found
 
 .. class:: prettyprint lang-erlang
 
@@ -946,7 +971,7 @@ Put
 
     {ok,22...}
 
-Get Found
+Get found
 
 .. class:: prettyprint lang-erlang
 
@@ -971,7 +996,7 @@ Delete
     {found,22...,
            {{<<"mybucket">>,<<"k1">>},{{<<"mybucket">>,<<"k1">>},42}}}
 
-Get Not Found
+Get not found
 
 .. class:: prettyprint lang-erlang
 
@@ -1394,6 +1419,8 @@ Quorum based Writes
 Handoff
 =======
 
+Handoff happens when:
+
 * A ring update event for a ring that all other nodes have already seen.
 * A secondary vnode is idle for a period of time and the primary, original
   owner of the partition is up again.
@@ -1431,6 +1458,8 @@ Handoff
 Handoff
 =======
 
+Fold Request:
+
 .. class:: prettyprint lang-erlang
 
 ::
@@ -1447,6 +1476,8 @@ Handoff
 Handoff
 =======
 
+Is Empty:
+
 .. class:: prettyprint lang-erlang
 
 ::
@@ -1459,6 +1490,8 @@ Handoff
 Handoff
 =======
 
+Encode:
+
 .. class:: prettyprint lang-erlang
 
 ::
@@ -1468,6 +1501,8 @@ Handoff
 
 Handoff
 =======
+
+Receive/Decode:
 
 .. class:: prettyprint lang-erlang
 
@@ -1482,6 +1517,8 @@ Handoff
 
 Handoff
 =======
+
+Delete:
 
 .. class:: prettyprint lang-erlang
 
@@ -1499,9 +1536,13 @@ Missing
 
   + `JWT <http://jwt.io/>`_
 
-* Pub/Sub
+Metrics Extra
+=============
 
-* Rate Limit per User
+* `lager exometer backend <https://github.com/marianoguerra/lager_exometer_backend>`_
+
+  + lager backend
+  + sends log metrics by level to exometer
 
 Thanks
 ======

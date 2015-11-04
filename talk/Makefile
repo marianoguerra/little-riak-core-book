@@ -1,6 +1,6 @@
 
 build:
-	rst2html5 --pretty-print-code --traceback --title "Little Riak Core Talk" --jquery --reveal-js --reveal-js-opts theme=serif talk.rst > index.html
+	rst2html5 --pretty-print-code --traceback --title "Little Riak Core Talk" --jquery --reveal-js --reveal-js-opts theme=serif --stylesheet-path style.css talk.rst > index.html
 
 serve:
 	python -m SimpleHTTPServer
