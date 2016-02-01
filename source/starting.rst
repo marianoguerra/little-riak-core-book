@@ -130,7 +130,7 @@ First this files are created::
     apps/tanodb/src/tanodb_vnode.erl
 
 Those are the meat of this project, the source code we start with, if you
-know a little of erlang you will recognice them many of them, let's explain them briefly,
+know a little of erlang you will recognice many of them, let's explain them briefly,
 if you think you need more information I recommend you this awesome book which
 you can read online: `Learn You Some Erlang for great good!  <http://learnyousomeerlang.com/>`_
 
@@ -185,7 +185,7 @@ README.rst
 
 Makefile
     A make file with some targets that will make it easier to achieve some
-    complex tasks without copying and pasting to much.
+    complex tasks without copying and pasting too much.
 
 config/nodetool
     An `escript <http://www.erlang.org/doc/man/escript.html>`_ that makes it
@@ -267,7 +267,7 @@ Now open 3 consoles and run the following commands one on each console::
     make dev2-console
     make dev3-console
 
-This will start the 3 nodes but the won't know about eachother, for them
+This will start the 3 nodes but they won't know about eachother, for them
 to know about eachother we need to "join" them, that is to tell one of them
 about the other two, this is achieved using the tanodb-admin command, here is
 how you should run it manually (don't run them)::
@@ -355,7 +355,7 @@ Check the status of the cluster again::
     make devrel-status
 
 You can see the vnodes transfering, this means the content of some virtual
-nodes on one tanodb node are being transfered to another tanodb node::
+nodes on one tanodb node are being transferred to another tanodb node::
 
     ================================= Membership ==================================
     Status     Ring    Pending    Node
