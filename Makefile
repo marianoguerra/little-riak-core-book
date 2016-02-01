@@ -19,7 +19,8 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) sou
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext site
+
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -45,6 +46,10 @@ help:
 	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+
+site: html latexpdf epub
+	cp epub/LittleRiakCoreBook.epub downloads
+	cp latex/LittleRiakCoreBook.pdf downloads/LittleRiakCoreBook.pdf
 
 clean:
 	rm -rf $(BUILDDIR)/*
