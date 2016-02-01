@@ -146,7 +146,7 @@ brief overview of the files created here.</p>
 </pre></div>
 </div>
 <p>Those are the meat of this project, the source code we start with, if you
-know a little of Erlang you will recognize them many of them, let&#8217;s explain them briefly,
+know a little of erlang you will recognice many of them, let&#8217;s explain them briefly,
 if you think you need more information I recommend you this awesome book which
 you can read online: <a class="reference external" href="http://learnyousomeerlang.com/">Learn You Some Erlang for great good!</a></p>
 <dl class="docutils">
@@ -192,7 +192,7 @@ on the <a class="reference external" href="http://editorconfig.org/">editorconfi
 <dd>The README of the project</dd>
 <dt>Makefile</dt>
 <dd>A make file with some targets that will make it easier to achieve some
-complex tasks without copying and pasting to much.</dd>
+complex tasks without copying and pasting too much.</dd>
 <dt>config/nodetool</dt>
 <dd>An <a class="reference external" href="http://www.erlang.org/doc/man/escript.html">escript</a> that makes it
 easier to interact with an erlang node from the command line, it will be
@@ -264,8 +264,8 @@ make dev2-console
 make dev3-console
 </pre></div>
 </div>
-<p>This will start the 3 nodes but the won&#8217;t know about each other, for them
-to know about each other we need to &#8220;join&#8221; them, that is to tell one of them
+<p>This will start the 3 nodes but they won&#8217;t know about eachother, for them
+to know about eachother we need to &#8220;join&#8221; them, that is to tell one of them
 about the other two, this is achieved using the tanodb-admin command, here is
 how you should run it manually (don&#8217;t run them):</p>
 <div class="highlight-python"><div class="highlight"><pre>_build/dev2/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
@@ -349,8 +349,8 @@ is happening describing the process.</p>
 <div class="highlight-python"><div class="highlight"><pre>make devrel-status
 </pre></div>
 </div>
-<p>You can see the vnodes transferring, this means the content of some virtual
-nodes on one tanodb node are being transfered to another tanodb node:</p>
+<p>You can see the vnodes transfering, this means the content of some virtual
+nodes on one tanodb node are being transferred to another tanodb node:</p>
 <div class="highlight-python"><div class="highlight"><pre>================================= Membership =============
 Status     Ring    Pending    Node
 ----------------------------------------------------------
@@ -490,8 +490,6 @@ production release and run it on a fresh server.</p>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
 </ul>
