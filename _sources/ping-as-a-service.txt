@@ -25,6 +25,29 @@ we `wrap the json library in our own module <https://github.com/marianoguerra/ta
 
 Finally we create a `cowboy rest handler <http://ninenines.eu/docs/en/cowboy/1.0/manual/cowboy_rest/>`_ for our ping resource, `tanodb_http_ping.erl <https://github.com/marianoguerra/tanodb/blob/220bcade820538aec05993065ac4edf19f3ebcde/apps/tanodb/src/tanodb_http_ping.erl>`_ and `initialize cowboy in tanodb_app <https://github.com/marianoguerra/tanodb/commit/220bcade820538aec05993065ac4edf19f3ebcde>`_.
 
+UPDATE: changes required to make this code run as of 2016-05-03
+...............................................................
+
+Since this chapter was written some things changed in rebar3 and the plugins
+that we use, the best way would be for you to start with the current version
+of `rebar3 riak_core template <https://github.com/marianoguerra/rebar3_template_riak_core/>`_
+and apply the changes there, but if you want to make this commit run you have to do the following changes:
+
+* `Add cowboy and jsx to applications section in tanodb.app.src <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-de0bb192480d6c77fc513569c365f507R12>`_
+* `Add crash_dump config variable to vars.config to avoid malformed generated config file <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-a3d3e872d1ee1809a4e8de03058809abR18>`_
+* `Add riak_core to list of dependencies on rebar.config <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979R16>`_
+* `Remove now unneeded config fields for relx in rebar.config <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L19>`_
+* `Make rebar3_release a project_plugin <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L49>`_
+* `Remove cuttlefish provider_hook <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L64>`_
+* `Add override to make riak_ensemble compile correctly <https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L87>`_
+
+All this changes are in a branch that you can fetch and try::
+
+    git checkout ping-as-a-service-fix-1
+    rebar3 run
+
+Make sure you have the latest rebar3 release before trying this otherwise it won't work.
+
 Testing it
 ..........
 

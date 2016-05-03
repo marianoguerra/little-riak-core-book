@@ -28,15 +28,15 @@
     <link rel="prev" title="Adding our First Commands" href="adding-our-first-commands.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="listing-keys-from-a-bucket">
 <h1>Listing Keys from a Bucket<a class="headerlink" href="#listing-keys-from-a-bucket" title="Permalink to this headline">¶</a></h1>
@@ -193,7 +193,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <div class="section" id="id1">
 <h3>Test It<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Like in the previous test, let&#8217;s start listing an empty bucket:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
 <div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
@@ -206,7 +206,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>Let&#8217;s put a value in that bucket:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
+<div class="highlight-sh"><div class="highlight"><pre>$ http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
 </pre></div>
 </div>
 <div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
@@ -217,7 +217,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>And list it again:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
 <div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
@@ -232,7 +232,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>Yet another one:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http post localhost:8080/store/mybucket/patrick <span class="nv">name</span><span class="o">=</span>patrick <span class="nv">color</span><span class="o">=</span>pink
+<div class="highlight-sh"><div class="highlight"><pre>$ http post localhost:8080/store/mybucket/patrick <span class="nv">name</span><span class="o">=</span>patrick <span class="nv">color</span><span class="o">=</span>pink
 </pre></div>
 </div>
 <div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
@@ -243,7 +243,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>List again:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
 <div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
@@ -266,7 +266,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
 
@@ -278,6 +278,8 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
+
+
 
 
 <h3>Navigation</h3>
@@ -307,7 +309,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -328,8 +330,8 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
       &copy;2015, Mariano Guerra.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/listing-keys-from-a-bucket.txt"

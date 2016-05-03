@@ -28,15 +28,15 @@
     <link rel="prev" title="Starting" href="starting.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="ping-as-a-service-paas">
 <h1>Ping as a Service (PaaS)<a class="headerlink" href="#ping-as-a-service-paas" title="Permalink to this headline">¶</a></h1>
@@ -57,6 +57,28 @@ file to make our builds reproducible.</p>
 <p>Just in case we want to use another json library later and to simplify the calls
 we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/fdccd5e2863c8c71599bcd38a26e8b8b5fcd5219">wrap the json library in our own module</a>.</p>
 <p>Finally we create a <a class="reference external" href="http://ninenines.eu/docs/en/cowboy/1.0/manual/cowboy_rest/">cowboy rest handler</a> for our ping resource, <a class="reference external" href="https://github.com/marianoguerra/tanodb/blob/220bcade820538aec05993065ac4edf19f3ebcde/apps/tanodb/src/tanodb_http_ping.erl">tanodb_http_ping.erl</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/220bcade820538aec05993065ac4edf19f3ebcde">initialize cowboy in tanodb_app</a>.</p>
+</div>
+<div class="section" id="update-changes-required-to-make-this-code-run-as-of-2016-05-03">
+<h2>UPDATE: changes required to make this code run as of 2016-05-03<a class="headerlink" href="#update-changes-required-to-make-this-code-run-as-of-2016-05-03" title="Permalink to this headline">¶</a></h2>
+<p>Since this chapter was written some things changed in rebar3 and the plugins
+that we use, the best way would be for you to start with the current version
+of <a class="reference external" href="https://github.com/marianoguerra/rebar3_template_riak_core/">rebar3 riak_core template</a>
+and apply the changes there, but if you want to make this commit run you have to do the following changes:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-de0bb192480d6c77fc513569c365f507R12">Add cowboy and jsx to applications section in tanodb.app.src</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-a3d3e872d1ee1809a4e8de03058809abR18">Add crash_dump config variable to vars.config to avoid malformed generated config file</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979R16">Add riak_core to list of dependencies on rebar.config</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L19">Remove now unneeded config fields for relx in rebar.config</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L49">Make rebar3_release a project_plugin</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L64">Remove cuttlefish provider_hook</a></li>
+<li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L87">Add override to make riak_ensemble compile correctly</a></li>
+</ul>
+<p>All this changes are in a branch that you can fetch and try:</p>
+<div class="highlight-python"><div class="highlight"><pre>git checkout ping-as-a-service-fix-1
+rebar3 run
+</pre></div>
+</div>
+<p>Make sure you have the latest rebar3 release before trying this otherwise it won&#8217;t work.</p>
 </div>
 <div class="section" id="testing-it">
 <h2>Testing it<a class="headerlink" href="#testing-it" title="Permalink to this headline">¶</a></h2>
@@ -131,7 +153,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
 
@@ -145,11 +167,14 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 </p>
 
 
+
+
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Ping as a Service (PaaS)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up">Setting Up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#update-changes-required-to-make-this-code-run-as-of-2016-05-03">UPDATE: changes required to make this code run as of 2016-05-03</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-it">Testing it</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#changing-some-configuration">Changing Some Configuration</a></li>
 </ul>
@@ -173,7 +198,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -194,8 +219,8 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
       &copy;2015, Mariano Guerra.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.2.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/ping-as-a-service.txt"
