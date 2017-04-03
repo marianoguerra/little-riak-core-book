@@ -12,3 +12,4 @@ Welcome to Little Riak Core Book
    starting
    riak_core_metadata
    riak_core_security
+   riak_core_resize
