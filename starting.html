@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Starting &mdash; Little Riak Core Book 1.0 documentation</title>
+    <title>Starting &#8212; Little Riak Core Book 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,25 @@
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Ping as a Service (PaaS)" href="ping-as-a-service.html" />
     <link rel="prev" title="Little Riak Core Book" href="index.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -55,7 +59,7 @@ started.</p>
 <h2>Installing the Template<a class="headerlink" href="#installing-the-template" title="Permalink to this headline">¶</a></h2>
 <p>At this point you should have <a class="reference external" href="http://www.erlang.org/">erlang</a> and <a class="reference external" href="http://www.rebar3.org/docs/getting-started">rebar3</a> installed, now let&#8217;s install the
 template we are going to use.</p>
-<div class="highlight-sh"><div class="highlight"><pre>mkdir -p ~/.config/rebar3/templates
+<div class="highlight-sh"><div class="highlight"><pre><span></span>mkdir -p ~/.config/rebar3/templates
 git clone https://github.com/marianoguerra/rebar3_template_riak_core/ ~/.config/rebar3/templates/rebar3_template_riak_core
 </pre></div>
 </div>
@@ -68,37 +72,37 @@ case it wasn&#8217;t there and cloned our template inside of it.</p>
 <p>Now that we have our tools and our template installed we can start by asking
 rebar3 to create a new project we will call tanodb using the <a class="reference external" href="https://github.com/basho/riak_core">riak_core</a> template
 we just installed:</p>
-<div class="highlight-sh"><div class="highlight"><pre>rebar3 new rebar3_riak_core <span class="nv">name</span><span class="o">=</span>tanodb
+<div class="highlight-sh"><div class="highlight"><pre><span></span>rebar3 new rebar3_riak_core <span class="nv">name</span><span class="o">=</span>tanodb
 </pre></div>
 </div>
 <p>If it fails saying it can&#8217;t find rebar3 check that it&#8217;s in your <cite>$PATH</cite>
 environment variable.</p>
 <p>The output should be something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>===&gt; Writing tanodb/apps/tanodb/src/tanodb.app.src
-===&gt; Writing tanodb/apps/tanodb/src/tanodb.erl
-===&gt; Writing tanodb/apps/tanodb/src/tanodb_app.erl
-===&gt; Writing tanodb/apps/tanodb/src/tanodb_sup.erl
-===&gt; Writing tanodb/apps/tanodb/src/tanodb_console.erl
-===&gt; Writing tanodb/apps/tanodb/src/tanodb_vnode.erl
-===&gt; Writing tanodb/rebar.config
-===&gt; Writing tanodb/.editorconfig
-===&gt; Writing tanodb/.gitignore
-===&gt; Writing tanodb/README.rst
-===&gt; Writing tanodb/Makefile
-===&gt; Writing tanodb/config/nodetool
-===&gt; Writing tanodb/config/extended_bin
-===&gt; Writing tanodb/config/admin_bin
-===&gt; Writing tanodb/config/config.schema
-===&gt; Writing tanodb/config/advanced.config
-===&gt; Writing tanodb/config/sys.config
-===&gt; Writing tanodb/config/vars.config
-===&gt; Writing tanodb/config/vars_dev1.config
-===&gt; Writing tanodb/config/vars_dev2.config
-===&gt; Writing tanodb/config/vars_dev3.config
-===&gt; Writing tanodb/config/vm.args
-===&gt; Writing tanodb/config/dev1_vm.args
-===&gt; Writing tanodb/config/dev2_vm.args
-===&gt; Writing tanodb/config/dev3_vm.args
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">src</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">erl</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_app</span><span class="o">.</span><span class="n">erl</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_sup</span><span class="o">.</span><span class="n">erl</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_console</span><span class="o">.</span><span class="n">erl</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_vnode</span><span class="o">.</span><span class="n">erl</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">rebar</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/.</span><span class="n">editorconfig</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/.</span><span class="n">gitignore</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">README</span><span class="o">.</span><span class="n">rst</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">Makefile</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">nodetool</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">extended_bin</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">admin_bin</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">schema</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">advanced</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">sys</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="nb">vars</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">vars_dev1</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">vars_dev2</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">vars_dev3</span><span class="o">.</span><span class="n">config</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">vm</span><span class="o">.</span><span class="n">args</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">dev1_vm</span><span class="o">.</span><span class="n">args</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">dev2_vm</span><span class="o">.</span><span class="n">args</span>
+<span class="o">===&gt;</span> <span class="n">Writing</span> <span class="n">tanodb</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">dev3_vm</span><span class="o">.</span><span class="n">args</span>
 </pre></div>
 </div>
 </div>
@@ -106,7 +110,7 @@ environment variable.</p>
 <h2>Building and Running<a class="headerlink" href="#building-and-running" title="Permalink to this headline">¶</a></h2>
 <p>Before explaining what the files mean so you get an idea what just happened
 let&#8217;s run it!</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd</span> tanodb
+<div class="highlight-sh"><div class="highlight"><pre><span></span><span class="nb">cd</span> tanodb
 rebar3 release
 rebar3 run
 </pre></div>
@@ -118,13 +122,13 @@ and build them.</p>
 <cite>_build/default/rel/tanodb/</cite>) we can run it, for this we use a rebar3 plugin
 called <a class="reference external" href="https://github.com/tsloughter/rebar3_run">rebar3_run</a></p>
 <p>When we run <cite>rebar3 run</cite> we get some noisy output that should end with something like this:</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">Eshell V7.0  (abort with ^G)</span>
+<div class="highlight-erl"><div class="highlight"><pre><span></span><span class="go">Eshell V7.0  (abort with ^G)</span>
 <span class="go">(tanodb@127.0.0.1)1&gt;</span>
 </pre></div>
 </div>
 <p>This is the Erlang shell, something like a REPL connected to our system,
 we now can test our system by calling <cite>tanodb:ping()</cite> on it.</p>
-<div class="highlight-erl"><div class="highlight"><pre><span class="go">(tanodb@127.0.0.1)1&gt; tanodb:ping().</span>
+<div class="highlight-erl"><div class="highlight"><pre><span></span><span class="go">(tanodb@127.0.0.1)1&gt; tanodb:ping().</span>
 <span class="go">{pong,1347321821914426127719021955160323408745312813056}</span>
 </pre></div>
 </div>
@@ -137,7 +141,7 @@ but to make it short, it&#8217;s the id of the process that replied to us.</p>
 that make magic and don&#8217;t explain what&#8217;s going on, that&#8217;s why we will get a
 brief overview of the files created here.</p>
 <p>First this files are created:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">src</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">src</span>
 <span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">erl</span>
 <span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_app</span><span class="o">.</span><span class="n">erl</span>
 <span class="n">apps</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">tanodb_sup</span><span class="o">.</span><span class="n">erl</span>
@@ -220,7 +224,7 @@ read more about it in the <a class="reference external" href="http://www.rebar3.
 </dl>
 <p>The following files are like vars.config but with slight differences to allow
 running more than one node on the same machine:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">config</span><span class="o">/</span><span class="n">vars_dev1</span><span class="o">.</span><span class="n">config</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">/</span><span class="n">vars_dev1</span><span class="o">.</span><span class="n">config</span>
 <span class="n">config</span><span class="o">/</span><span class="n">vars_dev2</span><span class="o">.</span><span class="n">config</span>
 <span class="n">config</span><span class="o">/</span><span class="n">vars_dev3</span><span class="o">.</span><span class="n">config</span>
 </pre></div>
@@ -235,7 +239,7 @@ application name to avoid collisions.</p>
 <dd>A file used to pass options to the Erlang VM when starting our application.</dd>
 </dl>
 <p>The following files are like vars_dev*.config but for vm.args:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">config</span><span class="o">/</span><span class="n">dev1_vm</span><span class="o">.</span><span class="n">args</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">/</span><span class="n">dev1_vm</span><span class="o">.</span><span class="n">args</span>
 <span class="n">config</span><span class="o">/</span><span class="n">dev2_vm</span><span class="o">.</span><span class="n">args</span>
 <span class="n">config</span><span class="o">/</span><span class="n">dev3_vm</span><span class="o">.</span><span class="n">args</span>
 </pre></div>
@@ -247,97 +251,97 @@ application name to avoid collisions.</p>
 <p>Before starting to add features, let&#8217;s first play with clustering so we understand
 all those config files above work.</p>
 <p>Build 3 releases that can run on the same machine:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span>
 </pre></div>
 </div>
 <p>This will build 3 releases of the application using different parameters (the
 dev1, dev2 and dev3 files we saw earlier) and will place them under:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">_build</span><span class="o">/</span><span class="n">dev1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">dev1</span>
 <span class="n">_build</span><span class="o">/</span><span class="n">dev2</span>
 <span class="n">_build</span><span class="o">/</span><span class="n">dev3</span>
 </pre></div>
 </div>
 <p>This is achived by using the <a class="reference external" href="http://www.rebar3.org/docs/profiles">profiles feature from rebar3</a>.</p>
 <p>Now open 3 consoles and run the following commands one on each console:</p>
-<div class="highlight-python"><div class="highlight"><pre>make dev1-console
-make dev2-console
-make dev3-console
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">dev1</span><span class="o">-</span><span class="n">console</span>
+<span class="n">make</span> <span class="n">dev2</span><span class="o">-</span><span class="n">console</span>
+<span class="n">make</span> <span class="n">dev3</span><span class="o">-</span><span class="n">console</span>
 </pre></div>
 </div>
 <p>This will start the 3 nodes but they won&#8217;t know about eachother, for them
 to know about eachother we need to &#8220;join&#8221; them, that is to tell one of them
 about the other two, this is achieved using the tanodb-admin command, here is
 how you should run it manually (don&#8217;t run them):</p>
-<div class="highlight-python"><div class="highlight"><pre>_build/dev2/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
-_build/dev3/rel/tanodb/bin/tanodb-admin cluster join tanodb1@127.0.0.1
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">dev2</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">tanodb</span><span class="o">-</span><span class="n">admin</span> <span class="n">cluster</span> <span class="n">join</span> <span class="n">tanodb1</span><span class="nd">@127</span><span class="o">.</span><span class="mf">0.0</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">_build</span><span class="o">/</span><span class="n">dev3</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">tanodb</span><span class="o">-</span><span class="n">admin</span> <span class="n">cluster</span> <span class="n">join</span> <span class="n">tanodb1</span><span class="nd">@127</span><span class="o">.</span><span class="mf">0.0</span><span class="o">.</span><span class="mi">1</span>
 </pre></div>
 </div>
 <p>We tell dev2 and dev3 to join tanodb1 (dev1), to make this easier and less
 error prone run the following command:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-join
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">join</span>
 </pre></div>
 </div>
 <p>Now let&#8217;s check the status of the cluster:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-status
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">status</span>
 </pre></div>
 </div>
 <p>You can read the Makefile to get an idea of what those commands do, in this case
 devrel-status does the following:</p>
-<div class="highlight-python"><div class="highlight"><pre>_build/dev1/rel/tanodb/bin/tanodb-admin member-status
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">dev1</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">tanodb</span><span class="o">-</span><span class="n">admin</span> <span class="n">member</span><span class="o">-</span><span class="n">status</span>
 </pre></div>
 </div>
 <p>You should see something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership ===============
-Status     Ring    Pending    Node
-------------------------------------------------------------
-joining     0.0%      --      &#39;tanodb2@127.0.0.1&#39;
-joining     0.0%      --      &#39;tanodb3@127.0.0.1&#39;
-valid     100.0%      --      &#39;tanodb1@127.0.0.1&#39;
-------------------------------------------------------------
-Valid:1 / Leaving:0 / Exiting:0 / Joining:2 / Down:0
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">=================================</span> <span class="n">Membership</span> <span class="o">===============</span>
+<span class="n">Status</span>     <span class="n">Ring</span>    <span class="n">Pending</span>    <span class="n">Node</span>
+<span class="o">------------------------------------------------------------</span>
+<span class="n">joining</span>     <span class="mf">0.0</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">joining</span>     <span class="mf">0.0</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="n">valid</span>     <span class="mf">100.0</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="o">------------------------------------------------------------</span>
+<span class="n">Valid</span><span class="p">:</span><span class="mi">1</span> <span class="o">/</span> <span class="n">Leaving</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Exiting</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Joining</span><span class="p">:</span><span class="mi">2</span> <span class="o">/</span> <span class="n">Down</span><span class="p">:</span><span class="mi">0</span>
 </pre></div>
 </div>
 <p>It should say that 3 nodes are joining, now check the cluster plan:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-cluster-plan
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">cluster</span><span class="o">-</span><span class="n">plan</span>
 </pre></div>
 </div>
 <p>The output should be something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes ==============
-Action         Details(s)
--------------------------------------------------------------
-join           &#39;tanodb2@127.0.0.1&#39;
-join           &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">===============================</span> <span class="n">Staged</span> <span class="n">Changes</span> <span class="o">==============</span>
+<span class="n">Action</span>         <span class="n">Details</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="o">-------------------------------------------------------------</span>
+<span class="n">join</span>           <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">join</span>           <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">-------------------------------------------------------------</span>
 
 
-NOTE: Applying these changes will result in 1 cluster transition
+<span class="n">NOTE</span><span class="p">:</span> <span class="n">Applying</span> <span class="n">these</span> <span class="n">changes</span> <span class="n">will</span> <span class="n">result</span> <span class="ow">in</span> <span class="mi">1</span> <span class="n">cluster</span> <span class="n">transition</span>
 
-#############################################################
-                         After cluster transition 1/1
-#############################################################
+<span class="c1">#############################################################</span>
+                         <span class="n">After</span> <span class="n">cluster</span> <span class="n">transition</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>
+<span class="c1">#############################################################</span>
 
-================================= Membership ================
-Status     Ring    Pending    Node
--------------------------------------------------------------
-valid     100.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
-valid       0.0%     32.8%    &#39;tanodb2@127.0.0.1&#39;
-valid       0.0%     32.8%    &#39;tanodb3@127.0.0.1&#39;
--------------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+<span class="o">=================================</span> <span class="n">Membership</span> <span class="o">================</span>
+<span class="n">Status</span>     <span class="n">Ring</span>    <span class="n">Pending</span>    <span class="n">Node</span>
+<span class="o">-------------------------------------------------------------</span>
+<span class="n">valid</span>     <span class="mf">100.0</span><span class="o">%</span>     <span class="mf">34.4</span><span class="o">%</span>    <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">0.0</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">0.0</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">-------------------------------------------------------------</span>
+<span class="n">Valid</span><span class="p">:</span><span class="mi">3</span> <span class="o">/</span> <span class="n">Leaving</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Exiting</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Joining</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Down</span><span class="p">:</span><span class="mi">0</span>
 
-WARNING: Not all replicas will be on distinct nodes
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">replicas</span> <span class="n">will</span> <span class="n">be</span> <span class="n">on</span> <span class="n">distinct</span> <span class="n">nodes</span>
 
-Transfers resulting from cluster changes: 42
-  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb3@127.0.0.1&#39;
-  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb2@127.0.0.1&#39;
+<span class="n">Transfers</span> <span class="n">resulting</span> <span class="kn">from</span> <span class="nn">cluster</span> <span class="n">changes</span><span class="p">:</span> <span class="mi">42</span>
+  <span class="mi">21</span> <span class="n">transfers</span> <span class="kn">from</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+  <span class="mi">21</span> <span class="n">transfers</span> <span class="kn">from</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
 </pre></div>
 </div>
 <p>Now we can commit the plan:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-cluster-commit
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">cluster</span><span class="o">-</span><span class="n">commit</span>
 </pre></div>
 </div>
 <p>Which should say something like:</p>
-<div class="highlight-python"><div class="highlight"><pre>Cluster changes committed
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Cluster</span> <span class="n">changes</span> <span class="n">committed</span>
 </pre></div>
 </div>
 <p>Now riak_core started an internal process to join the nodes to the cluster,
@@ -346,35 +350,35 @@ chapters.</p>
 <p>You should see on the consoles where the nodes are running that some logging
 is happening describing the process.</p>
 <p>Check the status of the cluster again:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-status
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">status</span>
 </pre></div>
 </div>
 <p>You can see the vnodes transfering, this means the content of some virtual
 nodes on one tanodb node are being transferred to another tanodb node:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership =============
-Status     Ring    Pending    Node
-----------------------------------------------------------
-valid      75.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
-valid       9.4%     32.8%    &#39;tanodb2@127.0.0.1&#39;
-valid       7.8%     32.8%    &#39;tanodb3@127.0.0.1&#39;
-----------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">=================================</span> <span class="n">Membership</span> <span class="o">=============</span>
+<span class="n">Status</span>     <span class="n">Ring</span>    <span class="n">Pending</span>    <span class="n">Node</span>
+<span class="o">----------------------------------------------------------</span>
+<span class="n">valid</span>      <span class="mf">75.0</span><span class="o">%</span>     <span class="mf">34.4</span><span class="o">%</span>    <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">9.4</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">7.8</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">----------------------------------------------------------</span>
+<span class="n">Valid</span><span class="p">:</span><span class="mi">3</span> <span class="o">/</span> <span class="n">Leaving</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Exiting</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Joining</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Down</span><span class="p">:</span><span class="mi">0</span>
 </pre></div>
 </div>
 <p>At some point you should see something like this, which means that the nodes
 are joined and balanced:</p>
-<div class="highlight-python"><div class="highlight"><pre>================================= Membership ==============
-Status     Ring    Pending    Node
------------------------------------------------------------
-valid      34.4%      --      &#39;tanodb1@127.0.0.1&#39;
-valid      32.8%      --      &#39;tanodb2@127.0.0.1&#39;
-valid      32.8%      --      &#39;tanodb3@127.0.0.1&#39;
------------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">=================================</span> <span class="n">Membership</span> <span class="o">==============</span>
+<span class="n">Status</span>     <span class="n">Ring</span>    <span class="n">Pending</span>    <span class="n">Node</span>
+<span class="o">-----------------------------------------------------------</span>
+<span class="n">valid</span>      <span class="mf">34.4</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="n">valid</span>      <span class="mf">32.8</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">valid</span>      <span class="mf">32.8</span><span class="o">%</span>      <span class="o">--</span>      <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">-----------------------------------------------------------</span>
+<span class="n">Valid</span><span class="p">:</span><span class="mi">3</span> <span class="o">/</span> <span class="n">Leaving</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Exiting</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Joining</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Down</span><span class="p">:</span><span class="mi">0</span>
 </pre></div>
 </div>
 <p>When you are bored you can stop them:</p>
-<div class="highlight-python"><div class="highlight"><pre>make devrel-stop
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">devrel</span><span class="o">-</span><span class="n">stop</span>
 </pre></div>
 </div>
 </div>
@@ -383,7 +387,7 @@ Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
 <p>Even when our application doesn&#8217;t have the features to merit a production
 release we are going to learn how to do it here since you can later do it at
 any step and get a full release of the app:</p>
-<div class="highlight-python"><div class="highlight"><pre>rebar3 as prod release
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rebar3</span> <span class="k">as</span> <span class="n">prod</span> <span class="n">release</span>
 </pre></div>
 </div>
 <p>In that command we as rebar3 to run the release task using the prod profile,
@@ -392,41 +396,41 @@ it builds something we can unpack and run on another operating system without
 installing anything.</p>
 <p>In my case I&#8217;m developing this on ubuntu, to show you that it works I will
 copy the release to a clean ubuntu 15.04 Virtualbox and run it there:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir vm-ubuntu-1504
-cd vm-ubuntu-1504
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">vm</span><span class="o">-</span><span class="n">ubuntu</span><span class="o">-</span><span class="mi">1504</span>
+<span class="n">cd</span> <span class="n">vm</span><span class="o">-</span><span class="n">ubuntu</span><span class="o">-</span><span class="mi">1504</span>
 </pre></div>
 </div>
 <p>Inside I will create a file called <cite>Vagrantfile</cite> with the following
 content:</p>
-<div class="highlight-python"><div class="highlight"><pre>Vagrant.configure(2) do |config|
-  config.vm.box = &quot;ubuntu/vivid64&quot;
-  config.vm.provider &quot;virtualbox&quot; do |vb|
-    vb.memory = &quot;1024&quot;
-  end
-end
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;ubuntu/vivid64&quot;</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="s2">&quot;virtualbox&quot;</span> <span class="n">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+    <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="s2">&quot;1024&quot;</span>
+  <span class="n">end</span>
+<span class="n">end</span>
 </pre></div>
 </div>
 <p>And then run:</p>
-<div class="highlight-python"><div class="highlight"><pre>vagrant up
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">vagrant</span> <span class="n">up</span>
 </pre></div>
 </div>
 <p>To start the virtual machine.</p>
 <p>Now let&#8217;s package our release and copy it to a place where the VM can see it:</p>
-<div class="highlight-python"><div class="highlight"><pre>cd _build/prod/rel
-tar -czf tanodb.tgz tanodb
-cd -
-mv _build/prod/rel/tanodb.tgz vm-ubuntu-1504
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">_build</span><span class="o">/</span><span class="n">prod</span><span class="o">/</span><span class="n">rel</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">czf</span> <span class="n">tanodb</span><span class="o">.</span><span class="n">tgz</span> <span class="n">tanodb</span>
+<span class="n">cd</span> <span class="o">-</span>
+<span class="n">mv</span> <span class="n">_build</span><span class="o">/</span><span class="n">prod</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">tgz</span> <span class="n">vm</span><span class="o">-</span><span class="n">ubuntu</span><span class="o">-</span><span class="mi">1504</span>
 </pre></div>
 </div>
 <p>Let&#8217;s ssh into the virtual machine:</p>
-<div class="highlight-python"><div class="highlight"><pre>export TERM=xterm
-vagrant ssh
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">TERM</span><span class="o">=</span><span class="n">xterm</span>
+<span class="n">vagrant</span> <span class="n">ssh</span>
 </pre></div>
 </div>
 <p>Inside the virtual machine run:</p>
-<div class="highlight-python"><div class="highlight"><pre>cp /vagrant/tanodb.tgz .
-tar -xzf tanodb.tgz
-./tanodb/bin/tanodb console
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">vagrant</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">tgz</span> <span class="o">.</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">tanodb</span><span class="o">.</span><span class="n">tgz</span>
+<span class="o">./</span><span class="n">tanodb</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">tanodb</span> <span class="n">console</span>
 </pre></div>
 </div>
 <p>And it runs!</p>
@@ -464,17 +468,12 @@ production release and run it on a fresh server.</p>
 
 
 
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
 
 
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">Starting</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Starting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#tools">Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-the-template">Installing the Template</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-our-project">Creating our Project</a></li>
@@ -494,6 +493,7 @@ production release and run it on a fresh server.</p>
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_resize.html">Ring Resize Operations</a></li>
 </ul>
 
 <div class="relations">
@@ -508,14 +508,11 @@ production release and run it on a fresh server.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -523,14 +520,14 @@ production release and run it on a fresh server.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Mariano Guerra.
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
-      <a href="_sources/starting.txt"
+      <a href="_sources/starting.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Metrics &mdash; Little Riak Core Book 1.0 documentation</title>
+    <title>Metrics &#8212; Little Riak Core Book 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,25 @@
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Users, Groups and Permissions" href="users-groups-and-permissions.html" />
     <link rel="prev" title="Ping as a Service (PaaS)" href="ping-as-a-service.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -59,7 +63,7 @@ add metrics, for this we will use <a class="reference external" href="https://gi
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>Stop, build a release and run the server (I won&#8217;t tell you how from now on, check previous chapters to see how).</p>
 <p>On the server shell run:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
  <span class="p">...</span>
@@ -84,7 +88,7 @@ are quite useful but not important at this point.</p>
 <p>Let&#8217;s see the shell session step by step, first we call tanodb_metrics:all()
 and get the core ping metrics, in this case count and one are 0 since we
 didn&#8217;t call ping yet.</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
  <span class="p">...</span>
@@ -93,12 +97,12 @@ didn&#8217;t call ping yet.</p>
 </pre></div>
 </div>
 <p>Then we call ping once.</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">ping</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">ping</span><span class="p">().</span>
 <span class="p">{</span><span class="n">pong</span><span class="p">,</span><span class="mi">593735040165679310520246963290989976735222595584</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And ask for the metrics again, we can see that now it registered our call.</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
  <span class="p">...</span>
@@ -118,7 +122,7 @@ a nice API.</p>
 <div class="section" id="id1">
 <h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Stop, build a release and run. In the shell run:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
     <span class="p">...</span>
@@ -157,11 +161,11 @@ to register metrics on all requests, for that we need to <a class="reference ext
 <div class="section" id="id2">
 <h3>Test it<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>After all of this, stop, build, run and make some requests:</p>
-<div class="highlight-sh"><div class="highlight"><pre>http localhost:8080/ping
+<div class="highlight-sh"><div class="highlight"><pre><span></span>http localhost:8080/ping
 </pre></div>
 </div>
 <p>and then on the node shell ask for the metrics:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
     <span class="p">...</span>
@@ -220,11 +224,11 @@ to register metrics on all requests, for that we need to <a class="reference ext
 </pre></div>
 </div>
 <p>You can see on this line that I made one request to ping and it returned 200:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">http</span><span class="p">,[{</span><span class="n">resp</span><span class="p">,[{</span><span class="n">by_code</span><span class="p">,[{</span><span class="mi">200</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">http</span><span class="p">,[{</span><span class="n">resp</span><span class="p">,[{</span><span class="n">by_code</span><span class="p">,[{</span><span class="mi">200</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]},</span>
 </pre></div>
 </div>
 <p>You can also see request time stats per endpoint:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">req</span><span class="p">,[{</span><span class="n">time</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">req</span><span class="p">,[{</span><span class="n">time</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
               <span class="p">[{</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span>
                <span class="p">{</span><span class="n">mean</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
                <span class="p">{</span><span class="n">min</span><span class="p">,</span><span class="mi">44126</span><span class="p">},</span>
@@ -239,7 +243,7 @@ to register metrics on all requests, for that we need to <a class="reference ext
 </pre></div>
 </div>
 <p>And request count by endpoint:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">count</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]}]},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">count</span><span class="p">,[{</span><span class="o">&lt;&lt;</span><span class="s">&quot;ping&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[{</span><span class="n">count</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="n">one</span><span class="p">,</span><span class="mi">1</span><span class="p">}]}]}]}]},</span>
 </pre></div>
 </div>
 </div>
@@ -249,14 +253,14 @@ to register metrics on all requests, for that we need to <a class="reference ext
 <div class="section" id="id3">
 <h4>Test it<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
 <p>Stop, build, start and make some requests:</p>
-<div class="highlight-sh"><div class="highlight"><pre>http localhost:8080/ping
+<div class="highlight-sh"><div class="highlight"><pre><span></span>http localhost:8080/ping
 </pre></div>
 </div>
 <p>And then make a request for the metrics (result edited since it&#8217;s quite big):</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/metrics
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/metrics
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre>HTTP/1.1 200 OK
+<div class="highlight-http"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 content-length: 8079
 content-type: application/json
 date: Fri, 30 Oct 2015 10:39:27 GMT
@@ -365,11 +369,6 @@ server: Cowboy
 
 
 
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
 
 
 
@@ -377,7 +376,7 @@ server: Cowboy
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Metrics</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#api-metrics">API Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#erlang-runtime-metrics">Erlang Runtime Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#web-server-metrics-cowboy">Web Server Metrics (Cowboy)</a></li>
@@ -390,6 +389,7 @@ server: Cowboy
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_resize.html">Ring Resize Operations</a></li>
 </ul>
 
 <div class="relations">
@@ -404,14 +404,11 @@ server: Cowboy
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -419,14 +416,14 @@ server: Cowboy
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Mariano Guerra.
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
-      <a href="_sources/metrics.txt"
+      <a href="_sources/metrics.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

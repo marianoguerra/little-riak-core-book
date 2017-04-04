@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Ping as a Service (PaaS) &mdash; Little Riak Core Book 1.0 documentation</title>
+    <title>Ping as a Service (PaaS) &#8212; Little Riak Core Book 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,25 @@
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Metrics" href="metrics.html" />
     <link rel="prev" title="Starting" href="starting.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -74,8 +78,8 @@ and apply the changes there, but if you want to make this commit run you have to
 <li><a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/188ea3d0cd0278082acd20c9b7a67bb1f1092b83#diff-31d7a50c99c265ca2793c20961b60979L87">Add override to make riak_ensemble compile correctly</a></li>
 </ul>
 <p>All this changes are in a branch that you can fetch and try:</p>
-<div class="highlight-python"><div class="highlight"><pre>git checkout ping-as-a-service-fix-1
-rebar3 run
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">ping</span><span class="o">-</span><span class="k">as</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="n">fix</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">rebar3</span> <span class="n">run</span>
 </pre></div>
 </div>
 <p>Make sure you have the latest rebar3 release before trying this otherwise it won&#8217;t work.</p>
@@ -86,16 +90,16 @@ rebar3 run
 (and write) than curl, check how to install it on
 <a class="reference external" href="http://httpie.org">the httpie website</a></p>
 <p>First we build it and run it as usual (this may be the last time I show you explicitly how to do it, so learn it :):</p>
-<div class="highlight-sh"><div class="highlight"><pre>rebar3 release
+<div class="highlight-sh"><div class="highlight"><pre><span></span>rebar3 release
 rebar3 run
 </pre></div>
 </div>
 <p>Now on another shell we will make an HTTP request to our ping resource:</p>
-<div class="highlight-sh"><div class="highlight"><pre>http localhost:8080/ping
+<div class="highlight-sh"><div class="highlight"><pre><span></span>http localhost:8080/ping
 </pre></div>
 </div>
 <p>And this is what I get:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">59</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Thu, 29 Oct 2015 19:07:23 GMT</span>
@@ -114,21 +118,21 @@ made</a>.</p>
 <h2>Changing Some Configuration<a class="headerlink" href="#changing-some-configuration" title="Permalink to this headline">¶</a></h2>
 <p>Let&#8217;s say we would like to run the server on another port, for that we need
 to change the configuration, we can do this by editing the file:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">_build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">conf</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">conf</span>
 </pre></div>
 </div>
 <p>Search for 8080 and change it for 8081, save and close and stop the server if you are running it.</p>
 <p>Now we will run it again but manually to avoid rebar3 from overriding our
 change:</p>
-<div class="highlight-sh"><div class="highlight"><pre>./_build/default/rel/tanodb/bin/tanodb console
+<div class="highlight-sh"><div class="highlight"><pre><span></span>./_build/default/rel/tanodb/bin/tanodb console
 </pre></div>
 </div>
 <p>And try a request to see if the port is actually changed:</p>
-<div class="highlight-sh"><div class="highlight"><pre>http localhost:8081/ping
+<div class="highlight-sh"><div class="highlight"><pre><span></span>http localhost:8081/ping
 </pre></div>
 </div>
 <p>And this is what I get:</p>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">60</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Thu, 29 Oct 2015 19:18:03 GMT</span>
@@ -161,18 +165,13 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 
 
 
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
 
 
 
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Ping as a Service (PaaS)</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ping as a Service (PaaS)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up">Setting Up</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update-changes-required-to-make-this-code-run-as-of-2016-05-03">UPDATE: changes required to make this code run as of 2016-05-03</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-it">Testing it</a></li>
@@ -187,6 +186,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_resize.html">Ring Resize Operations</a></li>
 </ul>
 
 <div class="relations">
@@ -201,14 +201,11 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -216,14 +213,14 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Mariano Guerra.
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
-      <a href="_sources/ping-as-a-service.txt"
+      <a href="_sources/ping-as-a-service.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

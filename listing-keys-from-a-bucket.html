@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Listing Keys from a Bucket &mdash; Little Riak Core Book 1.0 documentation</title>
+    <title>Listing Keys from a Bucket &#8212; Little Riak Core Book 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,25 @@
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tolerating Node Failures" href="tolerating-node-failures.html" />
     <link rel="prev" title="Adding our First Commands" href="adding-our-first-commands.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -85,14 +89,14 @@ really simple, it uses the <a class="reference external" href="http://www.erlang
 from the matched results.</p>
 <p>You can read more about ets match specs in the <a class="reference external" href="http://www.erlang.org/doc/apps/erts/match_spec.html">match spec chapter on the Erlang documentation</a>.</p>
 <p>Relevant code from tanodb.erl:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">keys</span><span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">keys</span><span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
     <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">core_keys</span><span class="p">(),</span>
     <span class="nv">Timeout</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
     <span class="nn">tanodb_coverage_fsm</span><span class="p">:</span><span class="nf">start</span><span class="p">({</span><span class="n">keys</span><span class="p">,</span> <span class="nv">Bucket</span><span class="p">},</span> <span class="nv">Timeout</span><span class="p">).</span>
 </pre></div>
 </div>
 <p>Relevant code from tanodb_vnode.erl:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">handle_coverage</span><span class="p">({</span><span class="n">keys</span><span class="p">,</span> <span class="nv">Bucket</span><span class="p">},</span> <span class="p">_</span><span class="nv">KeySpaces</span><span class="p">,</span> <span class="p">{_,</span> <span class="nv">RefId</span><span class="p">,</span> <span class="p">_},</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">handle_coverage</span><span class="p">({</span><span class="n">keys</span><span class="p">,</span> <span class="nv">Bucket</span><span class="p">},</span> <span class="p">_</span><span class="nv">KeySpaces</span><span class="p">,</span> <span class="p">{_,</span> <span class="nv">RefId</span><span class="p">,</span> <span class="p">_},</span>
                 <span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">})</span> <span class="o">-&gt;</span>
     <span class="nv">Keys0</span> <span class="o">=</span> <span class="nn">ets</span><span class="p">:</span><span class="nf">match</span><span class="p">(</span><span class="nv">TableName</span><span class="p">,</span> <span class="p">{{</span><span class="nv">Bucket</span><span class="p">,</span> <span class="n">&#39;$1&#39;</span><span class="p">},</span> <span class="n">&#39;_&#39;</span><span class="p">}),</span>
     <span class="nv">Keys</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="n">first</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Keys0</span><span class="p">),</span>
@@ -102,7 +106,7 @@ from the matched results.</p>
 <div class="section" id="test-it">
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>Let&#8217;s start by checking keys on an empty bucket.</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="mi">1347321821914426127719021955160323408745312813056</span><span class="p">,</span>
       <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,[]},</span>
@@ -116,7 +120,7 @@ from the matched results.</p>
 </pre></div>
 </div>
 <p>The output is quite verbose, here is redacted for clarity, but we get back:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="p">[{</span><span class="nv">Partition</span><span class="p">,</span> <span class="nv">Node</span><span class="p">,</span> <span class="nv">ListOfKeys</span><span class="p">}</span><span class="o">*</span><span class="mi">64</span><span class="p">]}</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="p">[{</span><span class="nv">Partition</span><span class="p">,</span> <span class="nv">Node</span><span class="p">,</span> <span class="nv">ListOfKeys</span><span class="p">}</span><span class="o">*</span><span class="mi">64</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>That means 64 3-item tuples (one for each vnode) with the partition id, the
@@ -124,13 +128,13 @@ node where the partition is and the list of keys for that vnode, in this
 case all of them are empty and in the following cases most of them will be empty
 so we will filter them to clean the output.</p>
 <p>Now let&#8217;s put a value:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And try again listing keys but this time filtering the empty results:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -142,13 +146,13 @@ so we will filter them to clean the output.</p>
 <p>We get one partition that returns the key that we just inserted, you can also
 check that the partition id is the same as the result from the put call before.</p>
 <p>Now let&#8217;s insert another value:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">43</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">43</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And list again, now we get two partitions with keys:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -160,13 +164,13 @@ check that the partition id is the same as the result from the put call before.<
 </pre></div>
 </div>
 <p>Yet another value:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k3&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">44</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k3&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">44</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1073290264914881830555831049026020342559825461248</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>And the list again:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">7</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">7</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -193,10 +197,10 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <div class="section" id="id1">
 <h3>Test It<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Like in the previous test, let&#8217;s start listing an empty bucket:</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">2</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:12:52 GMT</span>
@@ -206,10 +210,10 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>Let&#8217;s put a value in that bucket:</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:12:58 GMT</span>
@@ -217,10 +221,10 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>And list it again:</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">7</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:00 GMT</span>
@@ -232,10 +236,10 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>Yet another one:</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http post localhost:8080/store/mybucket/patrick <span class="nv">name</span><span class="o">=</span>patrick <span class="nv">color</span><span class="o">=</span>pink
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http post localhost:8080/store/mybucket/patrick <span class="nv">name</span><span class="o">=</span>patrick <span class="nv">color</span><span class="o">=</span>pink
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">204</span> <span class="ne">No Content</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">0</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:18 GMT</span>
@@ -243,10 +247,10 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 </pre></div>
 </div>
 <p>List again:</p>
-<div class="highlight-sh"><div class="highlight"><pre>$ http localhost:8080/store/mybucket
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
-<div class="highlight-http"><div class="highlight"><pre><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">content-length</span><span class="o">:</span> <span class="l">17</span>
 <span class="na">content-type</span><span class="o">:</span> <span class="l">application/json</span>
 <span class="na">date</span><span class="o">:</span> <span class="l">Sat, 31 Oct 2015 14:13:20 GMT</span>
@@ -274,11 +278,6 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 
 
 
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
 
 
 
@@ -290,7 +289,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Listing Keys from a Bucket</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Listing Keys from a Bucket</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#implementing-the-core-api">Implementing the CORE API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#implementing-the-rest-api">Implementing the REST API</a></li>
 </ul>
@@ -298,6 +297,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_resize.html">Ring Resize Operations</a></li>
 </ul>
 
 <div class="relations">
@@ -312,14 +312,11 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -327,14 +324,14 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Mariano Guerra.
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
-      <a href="_sources/listing-keys-from-a-bucket.txt"
+      <a href="_sources/listing-keys-from-a-bucket.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

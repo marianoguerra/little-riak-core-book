@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tolerating Node Failures &mdash; Little Riak Core Book 1.0 documentation</title>
+    <title>Tolerating Node Failures &#8212; Little Riak Core Book 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,21 +17,25 @@
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Little Riak Core Book 1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Riak Core Metadata" href="riak_core_metadata.html" />
     <link rel="prev" title="Listing Keys from a Bucket" href="listing-keys-from-a-bucket.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -51,17 +55,17 @@ of vnodes and accumulate the responses or timeout if it takes to long, then
 send the result back to the caller. We will also need a supervisor for it and
 to register this supervisor in our main supervisor tree.</p>
 <p>Here is a diagram of how it works:</p>
-<div class="highlight-python"><div class="highlight"><pre>+------+    +---------+    +---------+    +---------+              +------+
-|      |    |         |    |         |    |         |remaining = 0 |      |
-| Init +---&gt;| Prepare +---&gt;| Execute +---&gt;| Waiting +-------------&gt;| Stop |
-|      |    |         |    |         |    |         |              |      |
-+------+    +---------+    +---------+    +-------+-+              +------+
-                                              ^   | |
-                                              |   | |        +---------+
-                                              +---+ +-------&gt;|         |
-                                                             | Timeout |
-                                      remaining &gt; 0  timeout |         |
-                                                             +---------+
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">+------+</span>    <span class="o">+---------+</span>    <span class="o">+---------+</span>    <span class="o">+---------+</span>              <span class="o">+------+</span>
+<span class="o">|</span>      <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span><span class="n">remaining</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">|</span>      <span class="o">|</span>
+<span class="o">|</span> <span class="n">Init</span> <span class="o">+---&gt;|</span> <span class="n">Prepare</span> <span class="o">+---&gt;|</span> <span class="n">Execute</span> <span class="o">+---&gt;|</span> <span class="n">Waiting</span> <span class="o">+-------------&gt;|</span> <span class="n">Stop</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>    <span class="o">|</span>         <span class="o">|</span>              <span class="o">|</span>      <span class="o">|</span>
+<span class="o">+------+</span>    <span class="o">+---------+</span>    <span class="o">+---------+</span>    <span class="o">+-------+-+</span>              <span class="o">+------+</span>
+                                              <span class="o">^</span>   <span class="o">|</span> <span class="o">|</span>
+                                              <span class="o">|</span>   <span class="o">|</span> <span class="o">|</span>        <span class="o">+---------+</span>
+                                              <span class="o">+---+</span> <span class="o">+-------&gt;|</span>         <span class="o">|</span>
+                                                             <span class="o">|</span> <span class="n">Timeout</span> <span class="o">|</span>
+                                      <span class="n">remaining</span> <span class="o">&gt;</span> <span class="mi">0</span>  <span class="n">timeout</span> <span class="o">|</span>         <span class="o">|</span>
+                                                             <span class="o">+---------+</span>
 </pre></div>
 </div>
 <div class="section" id="quorum-based-writes-and-deletes">
@@ -109,7 +113,7 @@ return an error.</p>
 <p>The changes on the <cite>tanodb_vnode</cite> module are that the <cite>put</cite> and <cite>delete</cite>
 commands now receive an extra argument, <cite>ReqId</cite> that is <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44">returned in the reply</a>.</p>
 <p>Relevant code from tanodb.erl:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">delete</span><span class="p">(</span><span class="nv">Key</span><span class="p">)</span> <span class="o">-&gt;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">delete</span><span class="p">(</span><span class="nv">Key</span><span class="p">)</span> <span class="o">-&gt;</span>
     <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">core_delete</span><span class="p">(),</span>
     <span class="nv">ReqID</span> <span class="o">=</span> <span class="n">make_ref</span><span class="p">(),</span>
     <span class="nv">Timeout</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
@@ -127,7 +131,7 @@ commands now receive an extra argument, <cite>ReqId</cite> that is <a class="ref
 <div class="section" id="test-it">
 <h3>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
 <p>We start by listing the bucket&#8217;s keys to make sure it&#8217;s empty:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -136,7 +140,7 @@ commands now receive an extra argument, <cite>ReqId</cite> that is <a class="ref
 </pre></div>
 </div>
 <p>Then we put a value on that bucket:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="n">ok</span><span class="p">,</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">},</span>
      <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">251195593916248939066258330623111144003363405824</span><span class="p">},</span>
@@ -146,7 +150,7 @@ commands now receive an extra argument, <cite>ReqId</cite> that is <a class="ref
 <p>Now we list the keys again, but this time there&#8217;s something different, 3
 vnodes returned that they have the key <cite>k1</cite>, this means that our put wrote
 to 3 vnodes instead of 1 as before.</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -160,7 +164,7 @@ to 3 vnodes instead of 1 as before.</p>
 </pre></div>
 </div>
 <p>Let&#8217;s delete that key to see if it deletes in the 3 vnodes:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="n">found</span><span class="p">,</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">,</span>
             <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{{</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span><span class="mi">42</span><span class="p">}}},</span>
@@ -171,7 +175,7 @@ to 3 vnodes instead of 1 as before.</p>
 </pre></div>
 </div>
 <p>Listing the keys from the bucket shows that the key went away from all vnodes:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
                                   <span class="nb">element</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">))).</span>
@@ -202,7 +206,7 @@ handoff is considered finished, if false then a call is done to
 <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R68">handle_handoff_command</a>
 passing as first parameter an opaque structure that contains two fields we are
 insterested in, foldfun and acc0, they can be unpacked with a macro like this:</p>
-<div class="code erlang highlight-python"><div class="highlight"><pre>handle_handoff_command(?FOLD_REQ{foldfun=Fun, acc0=Acc0}, _Sender, State) -&gt;
+<div class="code erlang highlight-default"><div class="highlight"><pre><span></span>handle_handoff_command(?FOLD_REQ{foldfun=Fun, acc0=Acc0}, _Sender, State) -&gt;
 </pre></div>
 </div>
 <p>The <cite>FOLD_REQ</cite> macro is defined in the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R4">riak_core_vnode.hrl header file</a> which we include.</p>
@@ -227,33 +231,33 @@ running, you can choose to do one of the followings:</p>
 </ul>
 <p>What to do depends on the design of you app, all of them have tradeoffs.</p>
 <p>The signature of all the responses is:</p>
-<div class="code erlang highlight-python"><div class="highlight"><pre>-callback handle_handoff_command(Request::term(), Sender::sender(), ModState::term()) -&gt;
-{reply, Reply::term(), NewModState::term()} |
-{noreply, NewModState::term()} |
-{async, Work::function(), From::sender(), NewModState::term()} |
-{forward, NewModState::term()} |
-{drop, NewModState::term()} |
-{stop, Reason::term(), NewModState::term()}.
+<div class="code erlang highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">callback</span> <span class="n">handle_handoff_command</span><span class="p">(</span><span class="n">Request</span><span class="p">::</span><span class="n">term</span><span class="p">(),</span> <span class="n">Sender</span><span class="p">::</span><span class="n">sender</span><span class="p">(),</span> <span class="n">ModState</span><span class="p">::</span><span class="n">term</span><span class="p">())</span> <span class="o">-&gt;</span>
+<span class="p">{</span><span class="n">reply</span><span class="p">,</span> <span class="n">Reply</span><span class="p">::</span><span class="n">term</span><span class="p">(),</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span> <span class="o">|</span>
+<span class="p">{</span><span class="n">noreply</span><span class="p">,</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span> <span class="o">|</span>
+<span class="p">{</span><span class="k">async</span><span class="p">,</span> <span class="n">Work</span><span class="p">::</span><span class="n">function</span><span class="p">(),</span> <span class="n">From</span><span class="p">::</span><span class="n">sender</span><span class="p">(),</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span> <span class="o">|</span>
+<span class="p">{</span><span class="n">forward</span><span class="p">,</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span> <span class="o">|</span>
+<span class="p">{</span><span class="n">drop</span><span class="p">,</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span> <span class="o">|</span>
+<span class="p">{</span><span class="n">stop</span><span class="p">,</span> <span class="n">Reason</span><span class="p">::</span><span class="n">term</span><span class="p">(),</span> <span class="n">NewModState</span><span class="p">::</span><span class="n">term</span><span class="p">()}</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>A diagram of the flow is as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>+-----------+      +----------+        +----------+
-|           | true |          | false  |          |
-| Starting  +------&gt; is_empty +--------&gt; fold_req |
-|           |      |          |        |          |
-+-----+-----+      +----+-----+        +----+-----+
-      |                 |                   |
-      | false           | true              | ok
-      |                 |                   |
-+-----v-----+           |              +----v-----+     +--------+
-|           |           |              |          |     |        |
-| Cancelled |           +--------------&gt; finished +-----&gt; delete |
-|           |                          |          |     |        |
-+-----------+                          +----------+     +--------+
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">+-----------+</span>      <span class="o">+----------+</span>        <span class="o">+----------+</span>
+<span class="o">|</span>           <span class="o">|</span> <span class="n">true</span> <span class="o">|</span>          <span class="o">|</span> <span class="n">false</span>  <span class="o">|</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="n">Starting</span>  <span class="o">+------&gt;</span> <span class="n">is_empty</span> <span class="o">+--------&gt;</span> <span class="n">fold_req</span> <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>      <span class="o">|</span>          <span class="o">|</span>        <span class="o">|</span>          <span class="o">|</span>
+<span class="o">+-----+-----+</span>      <span class="o">+----+-----+</span>        <span class="o">+----+-----+</span>
+      <span class="o">|</span>                 <span class="o">|</span>                   <span class="o">|</span>
+      <span class="o">|</span> <span class="n">false</span>           <span class="o">|</span> <span class="n">true</span>              <span class="o">|</span> <span class="n">ok</span>
+      <span class="o">|</span>                 <span class="o">|</span>                   <span class="o">|</span>
+<span class="o">+-----</span><span class="n">v</span><span class="o">-----+</span>           <span class="o">|</span>              <span class="o">+----</span><span class="n">v</span><span class="o">-----+</span>     <span class="o">+--------+</span>
+<span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>              <span class="o">|</span>          <span class="o">|</span>     <span class="o">|</span>        <span class="o">|</span>
+<span class="o">|</span> <span class="n">Cancelled</span> <span class="o">|</span>           <span class="o">+--------------&gt;</span> <span class="n">finished</span> <span class="o">+-----&gt;</span> <span class="n">delete</span> <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>                          <span class="o">|</span>          <span class="o">|</span>     <span class="o">|</span>        <span class="o">|</span>
+<span class="o">+-----------+</span>                          <span class="o">+----------+</span>     <span class="o">+--------+</span>
 </pre></div>
 </div>
 <p>Relevant code from tanodb_vnode.erl:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="nf">handle_handoff_command</span><span class="p">(</span><span class="o">?</span><span class="nv">FOLD_REQ</span><span class="p">{</span><span class="n">foldfun</span><span class="o">=</span><span class="nv">FoldFun</span><span class="p">,</span> <span class="n">acc0</span><span class="o">=</span><span class="nv">Acc0</span><span class="p">},</span> <span class="p">_</span><span class="nv">Sender</span><span class="p">,</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">handle_handoff_command</span><span class="p">(</span><span class="o">?</span><span class="nv">FOLD_REQ</span><span class="p">{</span><span class="n">foldfun</span><span class="o">=</span><span class="nv">FoldFun</span><span class="p">,</span> <span class="n">acc0</span><span class="o">=</span><span class="nv">Acc0</span><span class="p">},</span> <span class="p">_</span><span class="nv">Sender</span><span class="p">,</span>
                        <span class="nv">State</span><span class="o">=</span><span class="nl">#state</span><span class="p">{</span><span class="n">partition</span><span class="o">=</span><span class="nv">Partition</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="nv">TableName</span><span class="p">})</span> <span class="o">-&gt;</span>
     <span class="nn">lager</span><span class="p">:</span><span class="nf">info</span><span class="p">(</span><span class="s">&quot;fold req </span><span class="si">~p</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Partition</span><span class="p">]),</span>
     <span class="nv">AccFinal</span> <span class="o">=</span> <span class="nn">ets</span><span class="p">:</span><span class="nf">foldl</span><span class="p">(</span><span class="k">fun</span> <span class="p">({</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Val</span><span class="p">},</span> <span class="nv">AccIn</span><span class="p">)</span> <span class="o">-&gt;</span>
@@ -289,25 +293,25 @@ running, you can choose to do one of the followings:</p>
 two other nodes and see on the console the handoff happening.</p>
 <p>To make sure the nodes don&#8217;t know about each other in case you played with
 clustering already we will start by removing the devrel builds:</p>
-<div class="highlight-sh"><div class="highlight"><pre>rm -rf _build/dev*
+<div class="highlight-sh"><div class="highlight"><pre><span></span>rm -rf _build/dev*
 </pre></div>
 </div>
 <p>And build the nodes again:</p>
-<div class="highlight-sh"><div class="highlight"><pre>make devrel
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make devrel
 </pre></div>
 </div>
 <p>Now we will start the first node and connect to its console:</p>
-<div class="highlight-sh"><div class="highlight"><pre>make dev1-console
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make dev1-console
 </pre></div>
 </div>
 <p>We generate a list of some numbers:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Nums</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">Nums</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span>
 
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>And with it create some bucket names:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nv">Buckets</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nv">Buckets</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span>             <span class="nb">list_to_binary</span><span class="p">(</span><span class="s">&quot;bucket-&quot;</span> <span class="o">++</span> <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">N</span><span class="p">))</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span>           <span class="k">end</span><span class="p">,</span> <span class="nv">Nums</span><span class="p">).</span>
 
@@ -317,7 +321,7 @@ clustering already we will start by removing the devrel builds:</p>
 </pre></div>
 </div>
 <p>And some key names:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nv">Keys</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nv">Keys</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">map</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span>          <span class="nb">list_to_binary</span><span class="p">(</span><span class="s">&quot;key-&quot;</span> <span class="o">++</span> <span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">N</span><span class="p">))</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span>        <span class="k">end</span><span class="p">,</span> <span class="nv">Nums</span><span class="p">).</span>
 
@@ -327,7 +331,7 @@ clustering already we will start by removing the devrel builds:</p>
 </pre></div>
 </div>
 <p>We create a function to generate a value from a bucket and a key:</p>
-<div class="highlight-erlang"><div class="highlight"><pre>(tanodb1@127.0.0.1)4&gt; GenValue = fun (Bucket, Key) -&gt;
+<div class="highlight-erlang"><div class="highlight"><pre><span></span>(tanodb1@127.0.0.1)4&gt; GenValue = fun (Bucket, Key) -&gt;
 (tanodb1@127.0.0.1)4&gt;                    [{bucket, Bucket}, {key, Key}]
 (tanodb1@127.0.0.1)4&gt;            end.
 
@@ -335,7 +339,7 @@ clustering already we will start by removing the devrel builds:</p>
 </pre></div>
 </div>
 <p>And then put some values to the buckets and keys we created:</p>
-<div class="highlight-erlang"><div class="highlight"><pre><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
+<div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">Bucket</span><span class="p">)</span> <span class="o">-&gt;</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>   <span class="nn">lists</span><span class="p">:</span><span class="nf">foreach</span><span class="p">(</span><span class="k">fun</span> <span class="p">(</span><span class="nv">Key</span><span class="p">)</span> <span class="o">-&gt;</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>     <span class="nv">Val</span> <span class="o">=</span> <span class="nv">GenValue</span><span class="p">(</span><span class="nv">Bucket</span><span class="p">,</span> <span class="nv">Key</span><span class="p">),</span>
 <span class="p">(</span><span class="n">tanodb1</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span>       <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="nv">Bucket</span><span class="p">,</span> <span class="nv">Key</span><span class="p">},</span> <span class="nv">Val</span><span class="p">)</span>
@@ -346,117 +350,117 @@ clustering already we will start by removing the devrel builds:</p>
 </pre></div>
 </div>
 <p>Now that we have some data let&#8217;s start the other two nodes:</p>
-<div class="highlight-sh"><div class="highlight"><pre>make dev2-console
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make dev2-console
 </pre></div>
 </div>
 <p>In yet another shell:</p>
-<div class="highlight-sh"><div class="highlight"><pre>make dev3-console
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make dev3-console
 </pre></div>
 </div>
 <p>This part should remind you of the first chapter:</p>
-<div class="highlight-sh"><div class="highlight"><pre>make devrel-join
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make devrel-join
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>Success: staged join request for &#39;tanodb2@127.0.0.1&#39; to &#39;tanodb1@127.0.0.1&#39;
-Success: staged join request for &#39;tanodb3@127.0.0.1&#39; to &#39;tanodb1@127.0.0.1&#39;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Success</span><span class="p">:</span> <span class="n">staged</span> <span class="n">join</span> <span class="n">request</span> <span class="k">for</span> <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="n">Success</span><span class="p">:</span> <span class="n">staged</span> <span class="n">join</span> <span class="n">request</span> <span class="k">for</span> <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-sh"><div class="highlight"><pre>make devrel-cluster-plan
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make devrel-cluster-plan
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>=============================== Staged Changes =========================
-Action         Details(s)
-------------------------------------------------------------------------
-join           &#39;tanodb2@127.0.0.1&#39;
-join           &#39;tanodb3@127.0.0.1&#39;
-------------------------------------------------------------------------
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">===============================</span> <span class="n">Staged</span> <span class="n">Changes</span> <span class="o">=========================</span>
+<span class="n">Action</span>         <span class="n">Details</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="o">------------------------------------------------------------------------</span>
+<span class="n">join</span>           <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">join</span>           <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">------------------------------------------------------------------------</span>
 
 
-NOTE: Applying these changes will result in 1 cluster transition
+<span class="n">NOTE</span><span class="p">:</span> <span class="n">Applying</span> <span class="n">these</span> <span class="n">changes</span> <span class="n">will</span> <span class="n">result</span> <span class="ow">in</span> <span class="mi">1</span> <span class="n">cluster</span> <span class="n">transition</span>
 
-########################################################################
-                         After cluster transition 1/1
-########################################################################
+<span class="c1">########################################################################</span>
+                         <span class="n">After</span> <span class="n">cluster</span> <span class="n">transition</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>
+<span class="c1">########################################################################</span>
 
-================================= Membership ===========================
-Status     Ring    Pending    Node
-------------------------------------------------------------------------
-valid     100.0%     34.4%    &#39;tanodb1@127.0.0.1&#39;
-valid       0.0%     32.8%    &#39;tanodb2@127.0.0.1&#39;
-valid       0.0%     32.8%    &#39;tanodb3@127.0.0.1&#39;
-------------------------------------------------------------------------
-Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+<span class="o">=================================</span> <span class="n">Membership</span> <span class="o">===========================</span>
+<span class="n">Status</span>     <span class="n">Ring</span>    <span class="n">Pending</span>    <span class="n">Node</span>
+<span class="o">------------------------------------------------------------------------</span>
+<span class="n">valid</span>     <span class="mf">100.0</span><span class="o">%</span>     <span class="mf">34.4</span><span class="o">%</span>    <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">0.0</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
+<span class="n">valid</span>       <span class="mf">0.0</span><span class="o">%</span>     <span class="mf">32.8</span><span class="o">%</span>    <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+<span class="o">------------------------------------------------------------------------</span>
+<span class="n">Valid</span><span class="p">:</span><span class="mi">3</span> <span class="o">/</span> <span class="n">Leaving</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Exiting</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Joining</span><span class="p">:</span><span class="mi">0</span> <span class="o">/</span> <span class="n">Down</span><span class="p">:</span><span class="mi">0</span>
 
-WARNING: Not all replicas will be on distinct nodes
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">replicas</span> <span class="n">will</span> <span class="n">be</span> <span class="n">on</span> <span class="n">distinct</span> <span class="n">nodes</span>
 
-Transfers resulting from cluster changes: 42
-  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb3@127.0.0.1&#39;
-  21 transfers from &#39;tanodb1@127.0.0.1&#39; to &#39;tanodb2@127.0.0.1&#39;
+<span class="n">Transfers</span> <span class="n">resulting</span> <span class="kn">from</span> <span class="nn">cluster</span> <span class="n">changes</span><span class="p">:</span> <span class="mi">42</span>
+  <span class="mi">21</span> <span class="n">transfers</span> <span class="kn">from</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span>
+  <span class="mi">21</span> <span class="n">transfers</span> <span class="kn">from</span> <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="n">to</span> <span class="s1">&#39;tanodb2@127.0.0.1&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-sh"><div class="highlight"><pre>make devrel-cluster-commit
+<div class="highlight-sh"><div class="highlight"><pre><span></span>make devrel-cluster-commit
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>Cluster changes committed
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Cluster</span> <span class="n">changes</span> <span class="n">committed</span>
 </pre></div>
 </div>
 <p>On the consoles from the nodes you should see some logs like the following, I
 will just paste some as example.</p>
 <p>On the sending side:</p>
-<div class="highlight-python"><div class="highlight"><pre>00:17:24.240 [info] Starting ownership transfer of tanodb_vnode from
-&#39;tanodb1@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216 to
-&#39;tanodb2@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.240</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">Starting</span> <span class="n">ownership</span> <span class="n">transfer</span> <span class="n">of</span> <span class="n">tanodb_vnode</span> <span class="kn">from</span>
+<span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="mi">1118962191081472546749696200048404186924073353216</span> <span class="n">to</span>
+<span class="s1">&#39;tanodb2@127.0.0.1&#39;</span> <span class="mi">1118962191081472546749696200048404186924073353216</span>
 
-00:17:24.240 [info] fold req 1118962191081472546749696200048404186924073353216
-00:17:24.240 [info] fold fun {&lt;&lt;&quot;bucket-1&quot;&gt;&gt;,&lt;&lt;&quot;key-1&quot;&gt;&gt;}:
-    [{bucket,&lt;&lt;&quot;bucket-1&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-1&quot;&gt;&gt;}]
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.240</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">fold</span> <span class="n">req</span> <span class="mi">1118962191081472546749696200048404186924073353216</span>
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.240</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">fold</span> <span class="n">fun</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}:</span>
+    <span class="p">[{</span><span class="n">bucket</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{</span><span class="n">key</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}]</span>
 
-...
+<span class="o">...</span>
 
-00:17:24.241 [info] fold fun {&lt;&lt;&quot;bucket-7&quot;&gt;&gt;,&lt;&lt;&quot;key-8&quot;&gt;&gt;}:
-    [{bucket,&lt;&lt;&quot;bucket-7&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-8&quot;&gt;&gt;}]
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.241</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">fold</span> <span class="n">fun</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">}:</span>
+    <span class="p">[{</span><span class="n">bucket</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{</span><span class="n">key</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">}]</span>
 
-00:17:24.281 [info] ownership transfer of tanodb_vnode from
-&#39;tanodb1@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216 to
-&#39;tanodb2@127.0.0.1&#39; 1118962191081472546749696200048404186924073353216
-    completed: sent 575.00 B bytes in 7 of 7 objects in 0.04 seconds
-    (13.67 KB/second)
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.281</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">ownership</span> <span class="n">transfer</span> <span class="n">of</span> <span class="n">tanodb_vnode</span> <span class="kn">from</span>
+<span class="s1">&#39;tanodb1@127.0.0.1&#39;</span> <span class="mi">1118962191081472546749696200048404186924073353216</span> <span class="n">to</span>
+<span class="s1">&#39;tanodb2@127.0.0.1&#39;</span> <span class="mi">1118962191081472546749696200048404186924073353216</span>
+    <span class="n">completed</span><span class="p">:</span> <span class="n">sent</span> <span class="mf">575.00</span> <span class="n">B</span> <span class="nb">bytes</span> <span class="ow">in</span> <span class="mi">7</span> <span class="n">of</span> <span class="mi">7</span> <span class="n">objects</span> <span class="ow">in</span> <span class="mf">0.04</span> <span class="n">seconds</span>
+    <span class="p">(</span><span class="mf">13.67</span> <span class="n">KB</span><span class="o">/</span><span class="n">second</span><span class="p">)</span>
 
-00:17:24.280 [info] handoff finished
-    1141798154164767904846628775559596109106197299200:
-    {1141798154164767904846628775559596109106197299200,
-        &#39;tanodb3@127.0.0.1&#39;}
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.280</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">handoff</span> <span class="n">finished</span>
+    <span class="mi">1141798154164767904846628775559596109106197299200</span><span class="p">:</span>
+    <span class="p">{</span><span class="mi">1141798154164767904846628775559596109106197299200</span><span class="p">,</span>
+        <span class="s1">&#39;tanodb3@127.0.0.1&#39;</span><span class="p">}</span>
 
-00:17:24.285 [info] delete
-    1141798154164767904846628775559596109106197299200
+<span class="mi">00</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mf">24.285</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">delete</span>
+    <span class="mi">1141798154164767904846628775559596109106197299200</span>
 </pre></div>
 </div>
 <p>On the receiving side:</p>
-<div class="highlight-python"><div class="highlight"><pre>00:13:59.641 [info] handoff starting
-    1050454301831586472458898473514828420377701515264:
-    {hinted,{1050454301831586472458898473514828420377701515264,
-        &#39;tanodb1@127.0.0.1&#39;}}
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">00</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mf">59.641</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">handoff</span> <span class="n">starting</span>
+    <span class="mi">1050454301831586472458898473514828420377701515264</span><span class="p">:</span>
+    <span class="p">{</span><span class="n">hinted</span><span class="p">,{</span><span class="mi">1050454301831586472458898473514828420377701515264</span><span class="p">,</span>
+        <span class="s1">&#39;tanodb1@127.0.0.1&#39;</span><span class="p">}}</span>
 
-00:13:59.641 [info] is_empty
-    182687704666362864775460604089535377456991567872: true
+<span class="mi">00</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mf">59.641</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">is_empty</span>
+    <span class="mi">182687704666362864775460604089535377456991567872</span><span class="p">:</span> <span class="n">true</span>
 
-00:14:34.259 [info] Receiving handoff data for partition
-    tanodb_vnode:68507889249886074290797726533575766546371837952 from
-    {&quot;127.0.0.1&quot;,47440}
+<span class="mi">00</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mf">34.259</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">Receiving</span> <span class="n">handoff</span> <span class="n">data</span> <span class="k">for</span> <span class="n">partition</span>
+    <span class="n">tanodb_vnode</span><span class="p">:</span><span class="mi">68507889249886074290797726533575766546371837952</span> <span class="kn">from</span>
+    <span class="p">{</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="mi">47440</span><span class="p">}</span>
 
-00:14:34.296 [info] handoff data received
-    {{&lt;&lt;&quot;bucket-8&quot;&gt;&gt;,&lt;&lt;&quot;key-1&quot;&gt;&gt;},
-        [{bucket,&lt;&lt;&quot;bucket-8&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-1&quot;&gt;&gt;}]}
+<span class="mi">00</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mf">34.296</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">handoff</span> <span class="n">data</span> <span class="n">received</span>
+    <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span>
+        <span class="p">[{</span><span class="n">bucket</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-8&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{</span><span class="n">key</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}]}</span>
 
-...
+<span class="o">...</span>
 
-00:14:34.297 [info] handoff data received
-    {{&lt;&lt;&quot;bucket-3&quot;&gt;&gt;,&lt;&lt;&quot;key-7&quot;&gt;&gt;},
-        [{bucket,&lt;&lt;&quot;bucket-3&quot;&gt;&gt;},{key,&lt;&lt;&quot;key-7&quot;&gt;&gt;}]}
+<span class="mi">00</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mf">34.297</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">handoff</span> <span class="n">data</span> <span class="n">received</span>
+    <span class="p">{{</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-3&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span>
+        <span class="p">[{</span><span class="n">bucket</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;bucket-3&quot;</span><span class="o">&gt;&gt;</span><span class="p">},{</span><span class="n">key</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s2">&quot;key-7&quot;</span><span class="o">&gt;&gt;</span><span class="p">}]}</span>
 
-00:14:34.298 [info] Handoff receiver for partition
-    68507889249886074290797726533575766546371837952 exited after
-    processing 5 objects from {&quot;127.0.0.1&quot;,47440}
+<span class="mi">00</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mf">34.298</span> <span class="p">[</span><span class="n">info</span><span class="p">]</span> <span class="n">Handoff</span> <span class="n">receiver</span> <span class="k">for</span> <span class="n">partition</span>
+    <span class="mi">68507889249886074290797726533575766546371837952</span> <span class="n">exited</span> <span class="n">after</span>
+    <span class="n">processing</span> <span class="mi">5</span> <span class="n">objects</span> <span class="kn">from</span> <span class="p">{</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span><span class="mi">47440</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -475,11 +479,6 @@ will just paste some as example.</p>
 
 
 
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
 
 
 
@@ -492,13 +491,14 @@ will just paste some as example.</p>
 <li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Tolerating Node Failures</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tolerating Node Failures</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quorum-based-writes-and-deletes">Quorum Based Writes and Deletes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#handoffs">Handoffs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_resize.html">Ring Resize Operations</a></li>
 </ul>
 
 <div class="relations">
@@ -513,14 +513,11 @@ will just paste some as example.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -528,14 +525,14 @@ will just paste some as example.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Mariano Guerra.
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
-      <a href="_sources/tolerating-node-failures.txt"
+      <a href="_sources/tolerating-node-failures.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ring Resize Operations &#8212; Little Riak Core Book 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Riak Core Security" href="riak_core_security.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ring-resize-operations">
+<h1>Ring Resize Operations<a class="headerlink" href="#ring-resize-operations" title="Permalink to this headline">¶</a></h1>
+<div class="admonition hint">
+<p class="first admonition-title">Hint</p>
+<p class="last">Additional information can be found in the <a class="reference external" href="https://github.com/basho/riak_core/blob/develop/docs/ring-resizing.md">official documentation</a>.</p>
+</div>
+<p>Riak core has a method for resizing the ring. This allows a installation that was started with a certain <cite>ring_size</cite> (say 64) to either grow or shrink.</p>
+<p>As a word of warning ahead of time, this operation is risky, it requires large part of the data to be re-written and deleted so it is a risky operation.</p>
+<p>The basic procedure is performed in a few steps, some of which are fully handled by <cite>riak_core</cite> others need to be implemented.</p>
+<div class="section" id="preparation">
+<h2>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h2>
+<p>The first part is handled by <cite>riak_core</cite> itself, when a resize request is given <cite>riak_core</cite> will compute a second ring, reflecting the new size and work out what vnode goes to which node.</p>
+</div>
+<div class="section" id="handoffs">
+<h2>Handoffs<a class="headerlink" href="#handoffs" title="Permalink to this headline">¶</a></h2>
+<p>Next up are the handoffs, <cite>riak_core</cite> will use handoffs to move data from the old vnode to the new one. The handoffs will potentially be performed <strong>multiple times</strong> using filters to shard the data over new vnodes.</p>
+<p>For this to work the <code class="docutils literal"><span class="pre">handle_command</span></code> function needs to implement a case that accepts a <code class="docutils literal"><span class="pre">?FOLD_REQ</span></code>. This case needs to fold over <strong>all</strong> bucket and key combinations!</p>
+<p>The fold function that is passed in needs to be called with 3 arguments:</p>
+<ol class="arabic simple">
+<li>The bucket and key, the formate here is important! <code class="docutils literal"><span class="pre">{Bucket,</span> <span class="pre">Key}</span></code></li>
+<li>The object.</li>
+<li>The accumulator.</li>
+</ol>
+</div>
+<div class="section" id="additional-functions">
+<h2>Additional functions<a class="headerlink" href="#additional-functions" title="Permalink to this headline">¶</a></h2>
+<p>There need to be some additional functions implemented:</p>
+<p><code class="docutils literal"><span class="pre">nval_map(Ring)</span></code> This function should return a list of buckets and their nval if it differs from the standard. The following is a sample implementation taken from <cite>riak_kv</cite>. It works well if either there are no bucket specific n-values or the <code class="docutils literal"><span class="pre">riak_core_bucket</span></code> module is used to manage them.</p>
+<div class="code erlang highlight-default"><div class="highlight"><pre><span></span><span class="n">nval_map</span><span class="p">(</span><span class="n">Ring</span><span class="p">)</span> <span class="o">-&gt;</span>
+   <span class="n">riak_core_bucket</span><span class="p">:</span><span class="n">bucket_nval_map</span><span class="p">(</span><span class="n">Ring</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">object_info({Bucket,</span> <span class="pre">Key}</span></code> This function computes the hash for a bucket / key combination to determine it&#8217;s new placing. The following is sample implementation, taken from <cite>riak_kv</cite>. It works for most cases where no custom hashing or bucket naming is used.</p>
+<div class="code erlang highlight-default"><div class="highlight"><pre><span></span><span class="n">object_info</span><span class="p">({</span><span class="n">Bucket</span><span class="p">,</span> <span class="n">Key</span><span class="p">}</span><span class="o">=</span><span class="n">BKey</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="n">Hash</span> <span class="o">=</span> <span class="n">riak_core_util</span><span class="p">:</span><span class="n">chash_key</span><span class="p">(</span><span class="n">BKey</span><span class="p">),</span>
+    <span class="p">{</span><span class="n">Bucket</span><span class="p">,</span> <span class="n">Hash</span><span class="p">}</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">request_hash(Request)</span></code> This function is called for every incoming request for a vnode that is handing off data as part of a resize operation. For operations that should be forwarded it should return the <cite>hash</cite> as returned by <code class="docutils literal"><span class="pre">riak_core_util:chash_key</span></code> and <code class="docutils literal"><span class="pre">undefined</span></code> for the rest. The goal is to determine what vnode it should be forwarded to (if any). This forwarding happens <strong>in addition</strong> to executing the query locally! The normal approach is to only forward modifying operations such as writes or deletes and to return <code class="docutils literal"><span class="pre">undefined</span></code> for all others.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Little Riak Core Book</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="starting.html">Starting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ping-as-a-service.html">Ping as a Service (PaaS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-groups-and-permissions.html">Users, Groups and Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-a-command-works.html">How a Command Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding-our-first-commands.html">Adding our First Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listing-keys-from-a-bucket.html">Listing Keys from a Bucket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tolerating-node-failures.html">Tolerating Node Failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_metadata.html">Riak Core Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="riak_core_security.html">Riak Core Security</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ring Resize Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preparation">Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#handoffs">Handoffs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-functions">Additional functions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="riak_core_security.html" title="previous chapter">Riak Core Security</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Mariano Guerra, Heinz N. Gies.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/riak_core_resize.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
