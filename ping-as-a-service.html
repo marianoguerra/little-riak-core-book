@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Ping as a Service (PaaS) &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -44,6 +41,12 @@
             
   <div class="section" id="ping-as-a-service-paas">
 <h1>Ping as a Service (PaaS)<a class="headerlink" href="#ping-as-a-service-paas" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While the content of this book is still valid, the code may not run with
+latest versions of the tools and libraries, for an updated version of the
+code check the <a class="reference external" href="https://marianoguerra.github.io/riak-core-tutorial/">Riak Core Tutorial</a></p>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This chapter and the following ones will reference a real project in a
@@ -82,11 +85,11 @@ and apply the changes there, but if you want to make this commit run you have to
 <span class="n">rebar3</span> <span class="n">run</span>
 </pre></div>
 </div>
-<p>Make sure you have the latest rebar3 release before trying this otherwise it won&#8217;t work.</p>
+<p>Make sure you have the latest rebar3 release before trying this otherwise it won’t work.</p>
 </div>
 <div class="section" id="testing-it">
 <h2>Testing it<a class="headerlink" href="#testing-it" title="Permalink to this headline">¶</a></h2>
-<p>To interact with the REST API we will use httpie since it&#8217;s simpler to read
+<p>To interact with the REST API we will use httpie since it’s simpler to read
 (and write) than curl, check how to install it on
 <a class="reference external" href="http://httpie.org">the httpie website</a></p>
 <p>First we build it and run it as usual (this may be the last time I show you explicitly how to do it, so learn it :):</p>
@@ -116,7 +119,7 @@ made</a>.</p>
 </div>
 <div class="section" id="changing-some-configuration">
 <h2>Changing Some Configuration<a class="headerlink" href="#changing-some-configuration" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s say we would like to run the server on another port, for that we need
+<p>Let’s say we would like to run the server on another port, for that we need
 to change the configuration, we can do this by editing the file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">rel</span><span class="o">/</span><span class="n">tanodb</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">tanodb</span><span class="o">.</span><span class="n">conf</span>
 </pre></div>
@@ -216,7 +219,7 @@ server at least once under <cite>_build/default/rel/tanodb/generated.configs/</c
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

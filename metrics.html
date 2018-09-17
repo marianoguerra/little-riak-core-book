@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Metrics &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -44,10 +41,16 @@
             
   <div class="section" id="metrics">
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While the content of this book is still valid, the code may not run with
+latest versions of the tools and libraries, for an updated version of the
+code check the <a class="reference external" href="https://marianoguerra.github.io/riak-core-tutorial/">Riak Core Tutorial</a></p>
+</div>
 <div class="section" id="api-metrics">
 <h2>API Metrics<a class="headerlink" href="#api-metrics" title="Permalink to this headline">¶</a></h2>
-<p>Since this is meant to be a production system we can&#8217;t be far along until we
-add metrics, for this we will use <a class="reference external" href="https://github.com/Feuerlabs/exometer">exometer</a> which is already a dependency of riak_core so we don&#8217;t need to add it.</p>
+<p>Since this is meant to be a production system we can’t be far along until we
+add metrics, for this we will use <a class="reference external" href="https://github.com/Feuerlabs/exometer">exometer</a> which is already a dependency of riak_core so we don’t need to add it.</p>
 <p>We start by defining a <a class="reference external" href="https://github.com/marianoguerra/tanodb/blob/0ea3595aefce0f9098cb651eb33263933ce9d6e7/apps/tanodb/src/tanodb_metrics.erl">module named tanodb_metrics</a>.</p>
 <p>The main functions we care about are :</p>
 <dl class="docutils">
@@ -61,7 +64,7 @@ add metrics, for this we will use <a class="reference external" href="https://gi
 <p>To make the metrics actually work we need to call <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/0ea3595aefce0f9098cb651eb33263933ce9d6e7#diff-4477d4dd0aa2db0e274a56c9158207bdR13">tanodb_metrics:init/0</a> when we start the application and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/0ea3595aefce0f9098cb651eb33263933ce9d6e7#diff-6f7251bf9e224ebabd766f0331b848adR16">tanodb_metrics:core_ping/0</a> each time tanodb:ping/0 is called.</p>
 <div class="section" id="test-it">
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
-<p>Stop, build a release and run the server (I won&#8217;t tell you how from now on, check previous chapters to see how).</p>
+<p>Stop, build a release and run the server (I won’t tell you how from now on, check previous chapters to see how).</p>
 <p>On the server shell run:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
@@ -83,11 +86,11 @@ add metrics, for this we will use <a class="reference external" href="https://gi
 <span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>The <cite>...</cite> are there to skip a lot of metrics about riak_core itself that
+<p>The <cite>…</cite> are there to skip a lot of metrics about riak_core itself that
 are quite useful but not important at this point.</p>
-<p>Let&#8217;s see the shell session step by step, first we call tanodb_metrics:all()
+<p>Let’s see the shell session step by step, first we call tanodb_metrics:all()
 and get the core ping metrics, in this case count and one are 0 since we
-didn&#8217;t call ping yet.</p>
+didn’t call ping yet.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb_metrics</span><span class="p">:</span><span class="nf">all</span><span class="p">().</span>
 <span class="p">[{</span><span class="n">tanodb</span><span class="p">,[</span>
 
@@ -256,7 +259,7 @@ to register metrics on all requests, for that we need to <a class="reference ext
 <div class="highlight-sh"><div class="highlight"><pre><span></span>http localhost:8080/ping
 </pre></div>
 </div>
-<p>And then make a request for the metrics (result edited since it&#8217;s quite big):</p>
+<p>And then make a request for the metrics (result edited since it’s quite big):</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/metrics
 </pre></div>
 </div>
@@ -419,7 +422,7 @@ server: Cowboy
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

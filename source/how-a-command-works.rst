@@ -1,6 +1,12 @@
 How a Command Works
 ===================
 
+.. note::
+
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
 Enough with the setup, let's see how ping works under the covers.
 
 Its entry point and public API is the tanodb module, that means we have to

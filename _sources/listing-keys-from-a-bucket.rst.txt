@@ -1,6 +1,12 @@
 Listing Keys from a Bucket
 ==========================
 
+.. note::
+
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
 Since we already implemented some commands you may be asking yourself, why do
 we need a full chapter for another command? well, think again...
 

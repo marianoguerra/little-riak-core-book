@@ -1,6 +1,12 @@
 Starting
 ========
 
+.. note::
+
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
 We are going to build a system on top of riak_core, for that we will use some
 tools and to avoid copy paste and boilerplate we will use a template to get
 started.

@@ -1,6 +1,12 @@
 Tolerating Node Failures
 ========================
 
+.. note::
+
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
 You know computers cannot be trusted, so we may want to run our commands in
 more than one vnode and wait for a subset (or all of them) to finish before
 considering the operation to be successful, for this when a command is ran we

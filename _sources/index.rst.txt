@@ -6,6 +6,12 @@
 Little Riak Core Book
 =====================
 
+.. note::
+
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
 This book shows how to build an application using `riak_core
 <https://github.com/basho/riak_core>`_ by building an actual application called
 `tanodb <http://github.com/marianoguerra/tanodb>`_ step by step and linking to

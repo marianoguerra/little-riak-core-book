@@ -3,6 +3,12 @@ Ping as a Service (PaaS)
 
 .. note::
 
+    While the content of this book is still valid, the code may not run with
+    latest versions of the tools and libraries, for an updated version of the
+    code check the `Riak Core Tutorial <https://marianoguerra.github.io/riak-core-tutorial/>`_
+
+.. note::
+
     This chapter and the following ones will reference a real project in a
     github repository, follow the links to see the details of what is written
     here.

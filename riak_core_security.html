@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Riak Core Security &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -61,8 +58,8 @@ following keys to store its information:</p>
 </pre></div>
 </div>
 <p>How they are stored should be an implementation detail but sometimes you may
-need to fold over values to get information if it&#8217;s not supported by
-riak_core_security&#8217;s API.</p>
+need to fold over values to get information if it’s not supported by
+riak_core_security’s API.</p>
 </div>
 <div class="section" id="vocabulary">
 <h2>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this headline">¶</a></h2>
@@ -70,7 +67,7 @@ riak_core_security&#8217;s API.</p>
 <h3>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h3>
 <p>Opaque information you get back from authentication, you have to pass it back
 in to other operations.</p>
-<p>At the moment it&#8217;s a record with three fields:</p>
+<p>At the moment it’s a record with three fields:</p>
 <ul class="simple">
 <li>username</li>
 <li>grants</li>
@@ -155,7 +152,7 @@ you can allow a user to authenticate from a source but not another.</p>
 <h3>authenticate<a class="headerlink" href="#authenticate" title="Permalink to this headline">¶</a></h3>
 <p>If successful it will return {ok, Context}</p>
 <p>A username can be tied to specific sources from which he can login, if you
-don&#8217;t need this feature specify a generic source for all your users.</p>
+don’t need this feature specify a generic source for all your users.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">authenticate</span><span class="p">(</span><span class="nv">Username</span><span class="p">,</span> <span class="nv">Password</span><span class="p">,</span> <span class="nv">ConnInfo</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -165,7 +162,7 @@ don&#8217;t need this feature specify a generic source for all your users.</p>
 <p>Valid options:</p>
 <ul class="simple">
 <li>password</li>
-<li>groups: groups must be a string with comma separated groups, like &#8220;g1,g2&#8221;</li>
+<li>groups: groups must be a string with comma separated groups, like “g1,g2”</li>
 </ul>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">add_user</span><span class="p">(</span><span class="nv">Username</span><span class="p">,</span> <span class="nv">Options</span><span class="p">)</span>
 </pre></div>
@@ -183,7 +180,7 @@ don&#8217;t need this feature specify a generic source for all your users.</p>
 </div>
 <div class="section" id="alter-user">
 <h3>alter_user<a class="headerlink" href="#alter-user" title="Permalink to this headline">¶</a></h3>
-<p>Options passed will override options already in user&#8217;s details, this means if
+<p>Options passed will override options already in user’s details, this means if
 you pass a password it will be changed, if you pass groups the new groups will
 be set and the old removed.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">alter_user</span><span class="p">(</span><span class="nv">Username</span><span class="p">,</span> <span class="nv">Options</span><span class="p">)</span>
@@ -192,7 +189,7 @@ be set and the old removed.</p>
 </div>
 <div class="section" id="alter-group">
 <h3>alter_group<a class="headerlink" href="#alter-group" title="Permalink to this headline">¶</a></h3>
-<p>Options passed will override options already in groups&#8217;s details, if you pass
+<p>Options passed will override options already in groups’s details, if you pass
 groups the new groups will be set and the old removed.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">alter_group</span><span class="p">(</span><span class="nv">Groupname</span><span class="p">,</span> <span class="nv">Options</span><span class="p">)</span>
 </pre></div>
@@ -258,7 +255,7 @@ AuthMod:auth(Username, Password, UserData, SourceOptions)</li>
 <div class="section" id="del-source">
 <h3>del_source<a class="headerlink" href="#del-source" title="Permalink to this headline">¶</a></h3>
 <p>Delete source identified by CIDR for Users, Users can be the atom <strong>all</strong> to
-remove the source from all users. This won&#8217;t apply to sources added for each
+remove the source from all users. This won’t apply to sources added for each
 users, only if the source was added explicitly for the <strong>all</strong> atom.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="nf">del_source</span><span class="p">(</span><span class="nv">Users</span><span class="p">,</span> <span class="nv">CIDR</span><span class="p">)</span>
 </pre></div>
@@ -306,7 +303,7 @@ users, only if the source was added explicitly for the <strong>all</strong> atom
 rebar3 run
 </pre></div>
 </div>
-<p>First let&#8217;s setup some variables</p>
+<p>First let’s setup some variables</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nv">User1</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">.</span>
 <span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span>
 
@@ -338,12 +335,12 @@ rebar3 run
 <span class="o">&lt;&lt;</span><span class="s">&quot;readers&quot;</span><span class="o">&gt;&gt;</span>
 </pre></div>
 </div>
-<p>We didn&#8217;t add the user yet, so the following should fail</p>
+<p>We didn’t add the user yet, so the following should fail</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">11</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">authenticate</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="nv">Pass1</span><span class="p">,</span> <span class="nv">ConnInfo</span><span class="p">).</span>
 <span class="p">{</span><span class="n">error</span><span class="p">,</span><span class="n">unknown_user</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s add the user</p>
+<p>Let’s add the user</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">12</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="nb">binary_to_list</span><span class="p">(</span><span class="nv">Pass1</span><span class="p">)}]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -353,7 +350,7 @@ rebar3 run
 <span class="p">{</span><span class="n">error</span><span class="p">,</span><span class="n">role_exists</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>We didn&#8217;t add the source for the user so the following should fail</p>
+<p>We didn’t add the source for the user so the following should fail</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">14</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">authenticate</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="nv">Pass1</span><span class="p">,</span> <span class="nv">ConnInfo</span><span class="p">).</span>
 <span class="p">{</span><span class="n">error</span><span class="p">,</span><span class="n">no_matching_sources</span><span class="p">}</span>
 </pre></div>
@@ -368,13 +365,13 @@ rebar3 run
 <span class="p">{</span><span class="n">ok</span><span class="p">,{</span><span class="n">context</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[],{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">765253</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Checking permissions should fail, since we didn&#8217;t granted any permissions yet</p>
+<p>Checking permissions should fail, since we didn’t granted any permissions yet</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">17</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">check_permission</span><span class="p">({</span><span class="nv">PermGet</span><span class="p">,</span> <span class="nv">Bucket1</span><span class="p">},</span> <span class="nv">Ctx1</span><span class="p">).</span>
 <span class="p">{</span><span class="n">false</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;Permission denied: User &#39;sandy&#39; does not have &#39;tanodb.get&#39; on bucket_sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
    <span class="p">{</span><span class="n">context</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,[],{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">765253</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s grant PermGet to User1</p>
+<p>Let’s grant PermGet to User1</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">18</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="nv">User1</span><span class="p">],</span> <span class="nv">Bucket1</span><span class="p">,</span> <span class="p">[</span><span class="nv">PermGet</span><span class="p">]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -394,7 +391,7 @@ rebar3 run
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Let&#8217;s grant permissions to each group</p>
+<p>Let’s grant permissions to each group</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">22</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="nv">GroupReader</span><span class="p">],</span> <span class="nv">Bucket1</span><span class="p">,</span> <span class="p">[</span><span class="nv">PermGet</span><span class="p">]).</span>
 <span class="nf">ok</span>
 
@@ -402,7 +399,7 @@ rebar3 run
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s join User1 to some groups and try permissions</p>
+<p>Now let’s join User1 to some groups and try permissions</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">24</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">alter_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">GroupReader</span><span class="p">]}]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -428,7 +425,7 @@ permission explicitly set</p>
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">837358</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s revoke it</p>
+<p>Let’s revoke it</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">27</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_revoke</span><span class="p">([</span><span class="nv">User1</span><span class="p">],</span> <span class="nv">Bucket1</span><span class="p">,</span> <span class="p">[</span><span class="nv">PermGet</span><span class="p">]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -440,7 +437,7 @@ permission explicitly set</p>
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">847161</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>But can&#8217;t put on that bucket</p>
+<p>But can’t put on that bucket</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">29</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">check_permission</span><span class="p">({</span><span class="nv">PermPut</span><span class="p">,</span> <span class="nv">Bucket1</span><span class="p">},</span> <span class="nv">Ctx1</span><span class="p">).</span>
 <span class="p">{</span><span class="n">false</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;Permission denied: User &#39;sandy&#39; does not have &#39;tanodb.put&#39; on bucket_sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
    <span class="p">{</span><span class="n">context</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
@@ -448,7 +445,7 @@ permission explicitly set</p>
             <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">848204</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s join User1 to some groups and try permissions</p>
+<p>Now let’s join User1 to some groups and try permissions</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">30</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">alter_user</span><span class="p">(</span><span class="nv">User1</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">GroupWriter</span><span class="p">]}]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -479,7 +476,7 @@ permission explicitly set</p>
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">860961</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s add a new grant to GroupReader so they can list the bucket</p>
+<p>Now let’s add a new grant to GroupReader so they can list the bucket</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">34</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="nv">GroupReader</span><span class="p">],</span> <span class="nv">Bucket1</span><span class="p">,</span> <span class="p">[</span><span class="nv">PermList</span><span class="p">]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -493,12 +490,12 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">872565</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s remove GroupReader membership from GroupWriter</p>
+<p>Let’s remove GroupReader membership from GroupWriter</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">36</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">alter_group</span><span class="p">(</span><span class="nv">GroupWriter</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="p">[]}]).</span>
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Now User1 can&#8217;t list on Bucket1 anymore</p>
+<p>Now User1 can’t list on Bucket1 anymore</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">37</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">check_permission</span><span class="p">({</span><span class="nv">PermList</span><span class="p">,</span> <span class="nv">Bucket1</span><span class="p">},</span> <span class="nv">Ctx1</span><span class="p">).</span>
 <span class="p">{</span><span class="n">false</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;Permission denied: User &#39;sandy&#39; does not have &#39;tanodb.list&#39; on bucket_sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
    <span class="p">{</span><span class="n">context</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;sandy&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span>
@@ -506,7 +503,7 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
             <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">881585</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s try one more thing, add GroupWriter to GroupReader</p>
+<p>Let’s try one more thing, add GroupWriter to GroupReader</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">38</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">alter_group</span><span class="p">(</span><span class="nv">GroupWriter</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;groups&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">GroupReader</span><span class="p">]}]).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -519,7 +516,7 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
            <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">890698</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s now remove GroupReader completely</p>
+<p>Let’s now remove GroupReader completely</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">40</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">del_group</span><span class="p">(</span><span class="nv">GroupReader</span><span class="p">).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -532,7 +529,7 @@ which is a member of GroupReader who has permissions to list Bucket1</p>
             <span class="p">{</span><span class="mi">1444</span><span class="p">,</span><span class="mi">659568</span><span class="p">,</span><span class="mi">914573</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s clean everything up</p>
+<p>Let’s clean everything up</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">42</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">del_group</span><span class="p">(</span><span class="nv">GroupWriter</span><span class="p">).</span>
 <span class="nf">ok</span>
 
@@ -563,12 +560,12 @@ names of the groups the user is going to be member of, like this:</p>
 </div>
 <div class="section" id="prefixing-users-and-groups-to-avoid-potential-conflict">
 <h3>Prefixing Users and Groups to avoid Potential Conflict<a class="headerlink" href="#prefixing-users-and-groups-to-avoid-potential-conflict" title="Permalink to this headline">¶</a></h3>
-<p>Since there&#8217;s only one function to add grants and there&#8217;s no restriction on
-usernames or groupnames it may happen that there&#8217;s a group and a user with the
+<p>Since there’s only one function to add grants and there’s no restriction on
+usernames or groupnames it may happen that there’s a group and a user with the
 same name, if this is the case then we get an error back saying that there are
-duplicated roles, this means riak_core doesn&#8217;t know if you want to add the
+duplicated roles, this means riak_core doesn’t know if you want to add the
 grant to the user or the group.</p>
-<p>Let&#8217;s try it, this assumes you have a clean state on riak_core_security and
+<p>Let’s try it, this assumes you have a clean state on riak_core_security and
 that you uncommented the permissions section in advanced.config for this app:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_user</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="p">[{</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="s">&quot;secret&quot;</span><span class="p">}]).</span>
 <span class="nf">ok</span>
@@ -582,7 +579,7 @@ that you uncommented the permissions section in advanced.config for this app:</p
 </pre></div>
 </div>
 <p>As you can see we got the duplcate_roles error.</p>
-<p>To solve this ambiguity we can prefix the role with the type of it, let&#8217;s try it:</p>
+<p>To solve this ambiguity we can prefix the role with the type of it, let’s try it:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">riak_core_security</span><span class="p">:</span><span class="nf">add_grant</span><span class="p">([</span><span class="o">&lt;&lt;</span><span class="s">&quot;group/admin&quot;</span><span class="o">&gt;&gt;</span><span class="p">],</span> <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;bucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;key&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="p">[</span><span class="s">&quot;tanodb.get&quot;</span><span class="p">]).</span>
 <span class="nf">ok</span>
 
@@ -661,7 +658,7 @@ user.</p>
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

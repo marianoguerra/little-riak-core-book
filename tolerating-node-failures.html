@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Tolerating Node Failures &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -44,11 +41,17 @@
             
   <div class="section" id="tolerating-node-failures">
 <h1>Tolerating Node Failures<a class="headerlink" href="#tolerating-node-failures" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While the content of this book is still valid, the code may not run with
+latest versions of the tools and libraries, for an updated version of the
+code check the <a class="reference external" href="https://marianoguerra.github.io/riak-core-tutorial/">Riak Core Tutorial</a></p>
+</div>
 <p>You know computers cannot be trusted, so we may want to run our commands in
 more than one vnode and wait for a subset (or all of them) to finish before
 considering the operation to be successful, for this when a command is ran we
-will send the command to a number of vnodes, let&#8217;s call it W and wait for a
-number of them to succeed, let&#8217;s call it N.</p>
+will send the command to a number of vnodes, let’s call it W and wait for a
+number of them to succeed, let’s call it N.</p>
 <p>To do this we will need to do something similar than what we did with coverage
 calls, we will need to setup a process that will send the command to a number
 of vnodes and accumulate the responses or timeout if it takes to long, then
@@ -73,7 +76,7 @@ to register this supervisor in our main supervisor tree.</p>
 <p>To implement quorum based writes and deletes we will introduce two new modules,
 a gen_fsm implementation called <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R1">tanodb_write_fsm</a>
 and its supervisor, <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6e269238efb19bfc83c7ee43415545f3R1">tanodb_write_fsm_sup</a>. The supervisor is a simple supervisor behavior so
-I won&#8217;t go into details here other than observing that we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-8ca11d5e05a10f28aec8ac9694b1c14fR31">add it to the
+I won’t go into details here other than observing that we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-8ca11d5e05a10f28aec8ac9694b1c14fR31">add it to the
 supervisor hierarchy</a> as we did with the coverage supervisor, the gen_fsm is the one that is
 interesting.</p>
 <p>On <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R41">tanodb_write_fsm:write/6</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R45">tanodb_write_fsm:delete/4</a> we start a supervisor that calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R37">tanodb_write_fsm:start_link</a> which in turn calls <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R54">tanodb_write_fsm:init/1</a>, this function initialize the state and moves the state machine to the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R60">prepare state</a>.</p>
@@ -92,8 +95,8 @@ interesting.</p>
 <dt>action</dt>
 <dd>An atom identifying the operation type, it can be <cite>write</cite> or <cite>delete</cite></dd>
 <dt>data</dt>
-<dd>If <cite>action</cite> is <cite>write</cite> then <cite>data</cite> is the value to write, if it&#8217;s <cite>delete</cite>
-then it&#8217;s not used</dd>
+<dd>If <cite>action</cite> is <cite>write</cite> then <cite>data</cite> is the value to write, if it’s <cite>delete</cite>
+then it’s not used</dd>
 <dt>preflist</dt>
 <dd>A riak_core preflist</dd>
 <dt>num_w</dt>
@@ -108,7 +111,7 @@ the value of <cite>n</cite>, we <a class="reference external" href="https://gith
 <p>On the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R79">waiting state</a> when
 we receive a result we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-57ab62e123b72ea62fa59f06abdc9520R80">increment num_w</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8e564ba444ab8b4e8205cce1ec21f9b8cf4d1c5a#diff-57ab62e123b72ea62fa59f06abdc9520R82">add the new response to accum</a>, if <cite>num_w</cite> is equal to <cite>w</cite> we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/8e564ba444ab8b4e8205cce1ec21f9b8cf4d1c5a#diff-57ab62e123b72ea62fa59f06abdc9520R85">send the accumulated results to the requester</a> with the req_id so it can distinguis it from others <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR51">doing a selective receive</a>.</p>
 <p>On the <cite>tanodb</cite> module the changes are to call the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR26">delete</a> and <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR33">write</a> functions in the write_fsm module and then do the <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-6f7251bf9e224ebabd766f0331b848adR49">selective
-receive waiting for the req_id we sent</a> if the response doesn&#8217;t come after <cite>Timeout</cite> milliseconds we
+receive waiting for the req_id we sent</a> if the response doesn’t come after <cite>Timeout</cite> milliseconds we
 return an error.</p>
 <p>The changes on the <cite>tanodb_vnode</cite> module are that the <cite>put</cite> and <cite>delete</cite>
 commands now receive an extra argument, <cite>ReqId</cite> that is <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/47d1e713c1a0977147d8a6f822977409063ef331#diff-942e4ef944df628266f096d2fbcd4348R44">returned in the reply</a>.</p>
@@ -130,7 +133,7 @@ commands now receive an extra argument, <cite>ReqId</cite> that is <a class="ref
 </div>
 <div class="section" id="test-it">
 <h3>Test it<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
-<p>We start by listing the bucket&#8217;s keys to make sure it&#8217;s empty:</p>
+<p>We start by listing the bucket’s keys to make sure it’s empty:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
                                       <span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span>
                                   <span class="k">end</span><span class="p">,</span>
@@ -147,7 +150,7 @@ commands now receive an extra argument, <cite>ReqId</cite> that is <a class="ref
      <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}]}</span>
 </pre></div>
 </div>
-<p>Now we list the keys again, but this time there&#8217;s something different, 3
+<p>Now we list the keys again, but this time there’s something different, 3
 vnodes returned that they have the key <cite>k1</cite>, this means that our put wrote
 to 3 vnodes instead of 1 as before.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">filter</span><span class="p">(</span><span class="k">fun</span> <span class="p">({_,</span> <span class="p">_,</span> <span class="p">[]})</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
@@ -163,7 +166,7 @@ to 3 vnodes instead of 1 as before.</p>
   <span class="n">&#39;tanodb@127.0.0.1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">]}]</span>
 </pre></div>
 </div>
-<p>Let&#8217;s delete that key to see if it deletes in the 3 vnodes:</p>
+<p>Let’s delete that key to see if it deletes in the 3 vnodes:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">delete</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">}).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="n">found</span><span class="p">,</span><span class="mi">274031556999544297163190906134303066185487351808</span><span class="p">,</span>
@@ -197,11 +200,11 @@ and the vnodes must be rebalanced we need to handle <a class="reference external
 owner of the partition is up again.</li>
 </ul>
 <p>When this happen riak_core will inform the vnode that handoff is starting,
-<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R81">calling handoff_starting</a>, if it returns false it&#8217;s cancelled, if it returns
+<a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R81">calling handoff_starting</a>, if it returns false it’s cancelled, if it returns
 true it <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R103">calls is_empty</a>, that must return false to inform that the vnode has
-something to handoff (it&#8217;s not empty) or true to inform that the vnode is
-empty, in our case <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R104">we ask for the first element of the ets table</a> and if it&#8217;s
-the special value &#8216;$end_of_table&#8217; we know it&#8217;s empty, if it returns true the
+something to handoff (it’s not empty) or true to inform that the vnode is
+empty, in our case <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R104">we ask for the first element of the ets table</a> and if it’s
+the special value ‘$end_of_table’ we know it’s empty, if it returns true the
 handoff is considered finished, if false then a call is done to
 <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/c9f944c5448d672f1b6923cdbd8fb06bd4862239#diff-942e4ef944df628266f096d2fbcd4348R68">handle_handoff_command</a>
 passing as first parameter an opaque structure that contains two fields we are
@@ -291,7 +294,7 @@ running, you can choose to do one of the followings:</p>
 <h3>Test it<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>To test it we will first start a devrel node, put some values and then join
 two other nodes and see on the console the handoff happening.</p>
-<p>To make sure the nodes don&#8217;t know about each other in case you played with
+<p>To make sure the nodes don’t know about each other in case you played with
 clustering already we will start by removing the devrel builds:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>rm -rf _build/dev*
 </pre></div>
@@ -349,7 +352,7 @@ clustering already we will start by removing the devrel builds:</p>
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Now that we have some data let&#8217;s start the other two nodes:</p>
+<p>Now that we have some data let’s start the other two nodes:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>make dev2-console
 </pre></div>
 </div>
@@ -528,7 +531,7 @@ will just paste some as example.</p>
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

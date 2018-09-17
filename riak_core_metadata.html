@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Riak Core Metadata &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -58,10 +55,10 @@ read without blocking on communication over the network.</p>
 <div class="section" id="data-model">
 <h3>1.1 Data Model<a class="headerlink" href="#data-model" title="Permalink to this headline">¶</a></h3>
 <p>Cluster Metadata is a key-value store. It treats values as opaque
-Erlang terms that are fully addressed by their &#8220;Full Prefix&#8221; and
-&#8220;Key&#8221;. A Full Prefix is a <cite>{atom() | binary(), atom() | binary()}</cite>,
+Erlang terms that are fully addressed by their “Full Prefix” and
+“Key”. A Full Prefix is a <cite>{atom() | binary(), atom() | binary()}</cite>,
 while a Key is any Erlang term. The first element of the Full Prefix
-is referred to as the &#8220;Prefix&#8221; and the second as the &#8220;Sub-Prefix&#8221;.</p>
+is referred to as the “Prefix” and the second as the “Sub-Prefix”.</p>
 </div>
 <div class="section" id="storage">
 <h3>1.2 Storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h3>
@@ -86,7 +83,7 @@ in the previous set of members.</p>
 <h2>2. API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>The interface to Cluster Metadata is provided by the
 <a class="reference external" href="https://github.com/basho/riak_core/blob/develop/src/riak_core_metadata.erl">riak_core_metadata</a>
-module. The module&#8217;s documentation is the official source for
+module. The module’s documentation is the official source for
 information about the API, but some details are re-iterated here.</p>
 <div class="section" id="reading-and-writing">
 <h3>2.1 Reading and Writing<a class="headerlink" href="#reading-and-writing" title="Permalink to this headline">¶</a></h3>
@@ -157,7 +154,7 @@ last-write-wins. The usual caveats about the dangers of this method
 apply.</p>
 </div>
 <div class="section" id="pathological-eventual-consistency">
-<h3>3.4 &#8220;Pathological Eventual Consistency&#8221;<a class="headerlink" href="#pathological-eventual-consistency" title="Permalink to this headline">¶</a></h3>
+<h3>3.4 “Pathological Eventual Consistency”<a class="headerlink" href="#pathological-eventual-consistency" title="Permalink to this headline">¶</a></h3>
 <p>The extremely frequent writing back of resolved values after read in
 an eventually consistent store where acknowledgment is only required
 from one node for both types of operations can lead to an interesting
@@ -176,7 +173,7 @@ may be advisable to use <cite>{allow_put, false}</cite> with <cite>get/3</cite>.
 rebar3 run
 </pre></div>
 </div>
-<p>First let&#8217;s setup some variables, FullPrefix is like an identifier for the
+<p>First let’s setup some variables, FullPrefix is like an identifier for the
 place where we are going to store related values, there can be many, some of
 them are used by other components of riak_core as you will see in the next
 sections.</p>
@@ -184,7 +181,7 @@ sections.</p>
 <span class="p">{</span><span class="o">&lt;&lt;</span><span class="s">&quot;tanodb&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="o">&lt;&lt;</span><span class="s">&quot;config&quot;</span><span class="o">&gt;&gt;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>Let&#8217;s start by trying to get a value that is not set, by default we get undefined.</p>
+<p>Let’s start by trying to get a value that is not set, by default we get undefined.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nb">get</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">,</span> <span class="n">max_users</span><span class="p">).</span>
 <span class="n">undefined</span>
 </pre></div>
@@ -196,7 +193,7 @@ max_users is not set.</p>
 <span class="mi">100</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s put the value in the store.</p>
+<p>Now let’s put the value in the store.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nb">put</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">,</span> <span class="n">max_users</span><span class="p">,</span> <span class="mi">150</span><span class="p">).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -206,18 +203,18 @@ max_users is not set.</p>
 <span class="mi">150</span>
 </pre></div>
 </div>
-<p>Let&#8217;s put another value.</p>
+<p>Let’s put another value.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">6</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nb">put</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">,</span> <span class="n">max_connections</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span>
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Get all the values in this prefix as a list, the &#8220;d&#8221; there is because [100] looks
-like a string to erlang, don&#8217;t worry, your value is safe.</p>
+<p>Get all the values in this prefix as a list, the “d” there is because [100] looks
+like a string to erlang, don’t worry, your value is safe.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">7</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nf">to_list</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">).</span>
 <span class="p">[{</span><span class="n">max_connections</span><span class="p">,</span><span class="s">&quot;d&quot;</span><span class="p">},{</span><span class="n">max_users</span><span class="p">,[</span><span class="mi">150</span><span class="p">]}]</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s delete a value.</p>
+<p>Now let’s delete a value.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">8</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nf">delete</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">,</span> <span class="n">max_users</span><span class="p">).</span>
 <span class="n">ok</span>
 </pre></div>
@@ -227,8 +224,8 @@ like a string to erlang, don&#8217;t worry, your value is safe.</p>
 <span class="n">ok</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s list them again, you will see that deleted values are still there but
-<strong>marked</strong> with a &#8220;thombstone&#8221; value (the atom &#8216;$deleted&#8217;), this means we have
+<p>Now let’s list them again, you will see that deleted values are still there but
+<strong>marked</strong> with a “thombstone” value (the atom ‘$deleted’), this means we have
 to handle them in our functions if we want to avoid trouble.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">11</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nf">to_list</span><span class="p">(</span><span class="nv">FullPrefix</span><span class="p">).</span>
 <span class="p">[{</span><span class="n">max_connections</span><span class="p">,</span><span class="s">&quot;d&quot;</span><span class="p">},</span>
@@ -236,10 +233,10 @@ to handle them in our functions if we want to avoid trouble.</p>
  <span class="p">{</span><span class="n">hostname</span><span class="p">,[</span><span class="s">&quot;tanodb1&quot;</span><span class="p">]}]</span>
 </pre></div>
 </div>
-<p>Now let&#8217;s do something more complex, let&#8217;s iterate over all the values in the
-prefix, count the amount of deleted values and accumulate the &#8220;alive&#8221; ones.</p>
+<p>Now let’s do something more complex, let’s iterate over all the values in the
+prefix, count the amount of deleted values and accumulate the “alive” ones.</p>
 <p>Notice I use a function clause to match the thombstone first and then one to
-handle &#8220;alive&#8221; values.</p>
+handle “alive” values.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">11</span><span class="o">&gt;</span> <span class="nn">riak_core_metadata</span><span class="p">:</span><span class="nf">fold</span><span class="p">(</span><span class="k">fun</span>
 <span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">11</span><span class="o">&gt;</span>     <span class="p">({</span><span class="nv">Key</span><span class="p">,</span> <span class="p">[</span><span class="n">&#39;$deleted&#39;</span><span class="p">]},</span> <span class="p">{</span><span class="nv">Deleted</span><span class="p">,</span> <span class="nv">Alive</span><span class="p">})</span> <span class="o">-&gt;</span>
 <span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">11</span><span class="o">&gt;</span>         <span class="p">{</span><span class="nv">Deleted</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">Alive</span><span class="p">};</span>
@@ -250,7 +247,7 @@ handle &#8220;alive&#8221; values.</p>
 <span class="p">{</span><span class="mi">1</span><span class="p">,[{</span><span class="n">max_connections</span><span class="p">,</span><span class="mi">100</span><span class="p">},{</span><span class="n">hostname</span><span class="p">,</span><span class="s">&quot;tanodb1&quot;</span><span class="p">}]}</span>
 </pre></div>
 </div>
-<p>There are more functions I didn&#8217;t show here since this ones are the main ones
+<p>There are more functions I didn’t show here since this ones are the main ones
 you will uses, you can look at the riak_core_metadata module for the other ones,
 the module has good documentation for each function.</p>
 </div>
@@ -319,7 +316,7 @@ the module has good documentation for each function.</p>
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

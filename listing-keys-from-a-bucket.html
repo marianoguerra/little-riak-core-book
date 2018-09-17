@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Listing Keys from a Bucket &#8212; Little Riak Core Book 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -34,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -44,8 +41,14 @@
             
   <div class="section" id="listing-keys-from-a-bucket">
 <h1>Listing Keys from a Bucket<a class="headerlink" href="#listing-keys-from-a-bucket" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While the content of this book is still valid, the code may not run with
+latest versions of the tools and libraries, for an updated version of the
+code check the <a class="reference external" href="https://marianoguerra.github.io/riak-core-tutorial/">Riak Core Tutorial</a></p>
+</div>
 <p>Since we already implemented some commands you may be asking yourself, why do
-we need a full chapter for another command? well, think again...</p>
+we need a full chapter for another command? well, think again…</p>
 <p>Since bucket and key are hashed together to decide to which vnode a request
 will go it means that the keys for a given bucket may be distributed in
 multiple vnodes, and in case you are running in a cluster this means your keys
@@ -62,7 +65,7 @@ using coverage calls.</p>
 <h2>Implementing the CORE API<a class="headerlink" href="#implementing-the-core-api" title="Permalink to this headline">¶</a></h2>
 <p>We start as usual by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-afa3f67ec87f742d64ee9ed311455777R4">adding the metric for the keys function</a>.</p>
 <p>Then implement <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/3fba49431c68f14f35d088b5e98839d81ea468ab#diff-6f7251bf9e224ebabd766f0331b848adR27">tanodb:keys/1</a>, but as you
-may notice it&#8217;s not similar to the previous ones because of what we talked about
+may notice it’s not similar to the previous ones because of what we talked about
 in the introduction.</p>
 <p>In this case we call <cite>tanodb_coverage_fsm:start({keys, Bucket}, Timeout)</cite>, which
 is a new module, it implements a behavior called <cite>riak_core_coverage_fsm</cite>, short
@@ -105,7 +108,7 @@ from the matched results.</p>
 </div>
 <div class="section" id="test-it">
 <h3>Test It<a class="headerlink" href="#test-it" title="Permalink to this headline">¶</a></h3>
-<p>Let&#8217;s start by checking keys on an empty bucket.</p>
+<p>Let’s start by checking keys on an empty bucket.</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nf">keys</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,[{</span><span class="mi">1347321821914426127719021955160323408745312813056</span><span class="p">,</span>
@@ -127,7 +130,7 @@ from the matched results.</p>
 node where the partition is and the list of keys for that vnode, in this
 case all of them are empty and in the following cases most of them will be empty
 so we will filter them to clean the output.</p>
-<p>Now let&#8217;s put a value:</p>
+<p>Now let’s put a value:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k1&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">42</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">228359630832953580969325755111919221821239459840</span><span class="p">}</span>
@@ -145,7 +148,7 @@ so we will filter them to clean the output.</p>
 </div>
 <p>We get one partition that returns the key that we just inserted, you can also
 check that the partition id is the same as the result from the put call before.</p>
-<p>Now let&#8217;s insert another value:</p>
+<p>Now let’s insert another value:</p>
 <div class="highlight-erlang"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tanodb</span><span class="p">@</span><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="nn">tanodb</span><span class="p">:</span><span class="nb">put</span><span class="p">({</span><span class="o">&lt;&lt;</span><span class="s">&quot;mybucket&quot;</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;&lt;</span><span class="s">&quot;k2&quot;</span><span class="o">&gt;&gt;</span><span class="p">},</span> <span class="mi">43</span><span class="p">).</span>
 
 <span class="p">{</span><span class="n">ok</span><span class="p">,</span><span class="mi">1210306043414653979137426502093171875652569137152</span><span class="p">}</span>
@@ -188,15 +191,15 @@ check that the partition id is the same as the result from the put call before.<
 <div class="section" id="implementing-the-rest-api">
 <h2>Implementing the REST API<a class="headerlink" href="#implementing-the-rest-api" title="Permalink to this headline">¶</a></h2>
 <p>The REST API is quite straight forward, we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-4477d4dd0aa2db0e274a56c9158207bdR74">add a new route to cowboy</a>  allowing to do <cite>GET /store/:bucket</cite> without specifying the key,
-we will interpret this as a request to &#8220;get the bucket&#8221; which for us means to
+we will interpret this as a request to “get the bucket” which for us means to
 return the keys.</p>
-<p>Then when doing a GET and key is undefined we assume it&#8217;s a request to list
-the bucket&#8217;s keys so we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR44">request the keys</a>
+<p>Then when doing a GET and key is undefined we assume it’s a request to list
+the bucket’s keys so we <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR44">request the keys</a>
 and deduplicate them by <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR39">using them as keys in a map with the values set to
 true</a> and then <a class="reference external" href="https://github.com/marianoguerra/tanodb/commit/2e5fb43e44f8240132b2f4a37d3da9c2e07caa34#diff-49cafd1f97d6013b2a41319db4c7961fR49">collecting the keys of the map</a>.</p>
 <div class="section" id="id1">
 <h3>Test It<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>Like in the previous test, let&#8217;s start listing an empty bucket:</p>
+<p>Like in the previous test, let’s start listing an empty bucket:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>$ http localhost:8080/store/mybucket
 </pre></div>
 </div>
@@ -209,7 +212,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
 <span class="p">[]</span>
 </pre></div>
 </div>
-<p>Let&#8217;s put a value in that bucket:</p>
+<p>Let’s put a value in that bucket:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>$ http post localhost:8080/store/mybucket/bob <span class="nv">name</span><span class="o">=</span>bob <span class="nv">color</span><span class="o">=</span>yellow
 </pre></div>
 </div>
@@ -327,7 +330,7 @@ true</a> and then <a class="reference external" href="https://github.com/mariano
       &copy;2017, Mariano Guerra, Heinz N. Gies.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
